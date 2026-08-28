@@ -1,36 +1,82 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Bamboo Restaurant Sites
 
-## Getting Started
+One Next.js app, two deployments:
 
-First, run the development server:
+| Site | City | Domain | `NEXT_PUBLIC_LOCATION` |
+|---|---|---|---|
+| Bamboo on 2nd | Birmingham, AL | bambooon2nd.com | `birmingham` |
+| Bamboo on Main | Chattanooga, TN | bambooonmain.com (placeholder) | `chattanooga` |
+
+Both sites read one shared menu from a single Supabase project. Divergence is
+per-item: `menu_items.location_slugs` limits an item to one location, and
+`menu_item_overrides` stores per-location price / price note / availability
+exceptions. Resolution lives in `src/lib/menu.ts` (`getMenuForLocation`) and is
+used by both the page render and the JSON-LD builder.
+
+## Stack
+
+- Next.js (App Router, TypeScript), Tailwind v4 (tokens in `src/app/globals.css` `@theme`)
+- Supabase Postgres — public reads via anon key + RLS, admin writes via
+  authenticated Supabase user
+- Static generation with ISR (`revalidate: 300`) — menu edits go live within ~5 min
+- No ordering, reservations, or i18n
+
+## Local development
 
 ```bash
+npm install
+cp .env.example .env.local   # fill in Supabase URL + anon key
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Run as the other location by flipping `NEXT_PUBLIC_LOCATION` in `.env.local`
+(`birmingham` | `chattanooga`) and restarting the dev server.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm test        # unit tests for menu resolution rules
+npm run build   # production build (needs Supabase env vars)
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Database
 
-## Learn More
+Migrations and seed live in `supabase/`:
 
-To learn more about Next.js, take a look at the following resources:
+1. `migrations/0001_schema.sql` — tables
+2. `migrations/0002_rls.sql` — RLS policies (public read, authenticated write)
+3. `seed.sql` — placeholder menu incl. one location-exclusive item per city and
+   a Birmingham price override on the Sashimi Platter
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Apply via the Supabase SQL editor, the Supabase CLI (`supabase db push`), or the
+Supabase MCP tools.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Create the single owner account in Supabase Dashboard → Authentication → Users
+(email/password). That account signs into `/admin`.
 
-## Deploy on Vercel
+## Admin
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+`/admin` — not linked from public nav, `noindex`. Four screens: Menu items
+(inline edit, availability, dietary tags, locations selector, per-location
+pricing overrides), Categories (rename/re-sort), Location details (hours, phone,
+address, social, announcement banner), Login.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Public pages are ISR-cached for 5 minutes; there is no on-demand revalidation.
+Tell owners: "save, then check the site in 5 minutes."
+
+## Deploying (Vercel)
+
+Two Vercel projects, both pointing at this repo:
+
+1. **bamboo-birmingham** — env: `NEXT_PUBLIC_LOCATION=birmingham`, Supabase URL
+   + anon key. Domain: `bambooon2nd.com` (+ `www` redirect).
+2. **bamboo-chattanooga** — env: `NEXT_PUBLIC_LOCATION=chattanooga`, same
+   Supabase vars. Domain: placeholder until purchased.
+
+Each build statically renders only its own location. Legacy Birmingham paths
+(`/410-2`, `/menus`, …) 301 to the new routes via `next.config.ts`.
+
+### Adding the real Chattanooga domain
+
+1. Buy the domain; add it to the **bamboo-chattanooga** Vercel project.
+2. Update `locations.domain` for `chattanooga` in Supabase (drives canonical
+   URLs, sitemap, and the cross-site footer link).
+3. No code change needed.

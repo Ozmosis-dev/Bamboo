@@ -1,0 +1,38 @@
+import type { Metadata } from "next";
+import { JsonLd } from "@/components/JsonLd";
+import { MenuBrowser } from "@/components/MenuBrowser";
+import { getCurrentLocation, currentLocationSlug } from "@/lib/location";
+import { getMenuForLocation } from "@/lib/menu";
+import { menuJsonLd, pageMetadata } from "@/lib/seo";
+
+export const revalidate = 300;
+
+export async function generateMetadata(): Promise<Metadata> {
+  const location = await getCurrentLocation();
+  return pageMetadata(location, {
+    title: "Menu",
+    description: `Full menu at ${location.name} in ${location.city} — sushi, hot food, cocktails, sake, and beer, with prices and dietary options.`,
+    path: "/menu",
+  });
+}
+
+export default async function MenuPage() {
+  const [location, menu] = await Promise.all([
+    getCurrentLocation(),
+    getMenuForLocation(currentLocationSlug()),
+  ]);
+
+  return (
+    <div className="mx-auto max-w-3xl px-4 pb-16">
+      <JsonLd data={menuJsonLd(location, menu)} />
+      <h1 className="pt-10 text-3xl font-semibold tracking-tight text-bamboo-800">
+        Menu
+      </h1>
+      <p className="mt-2 pb-6 text-ink-soft">
+        Served at {location.name}, {location.city}. Menu items and prices are
+        updated regularly.
+      </p>
+      <MenuBrowser menu={menu} />
+    </div>
+  );
+}
