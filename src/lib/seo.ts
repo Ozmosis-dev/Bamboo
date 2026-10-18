@@ -7,7 +7,7 @@ import type { Location, LocationSlug, ResolvedMenuSection } from "@/lib/types";
  * Placeholder values until the real Chattanooga address is confirmed. */
 const GEO: Record<LocationSlug, { latitude: number; longitude: number }> = {
   birmingham: { latitude: 33.5186, longitude: -86.8073 },
-  chattanooga: { latitude: 35.0393, longitude: -85.3072 },
+  chattanooga: { latitude: 35.0485, longitude: -85.3097 },
 };
 
 const CITY_DESCRIPTOR: Record<LocationSlug, string> = {

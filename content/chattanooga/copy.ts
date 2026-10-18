@@ -2,18 +2,18 @@ import type { SiteCopy } from "../types";
 
 export const copy: SiteCopy = {
   hero: {
-    heading: "Sushi & Japanese kitchen on Main Street, Chattanooga",
+    heading: "Sushi & Japanese kitchen on Market Street, Chattanooga",
     subheading:
-      "The newest Bamboo — same fresh fish and hot bowls, now on the Southside. Come see us on Main.",
+      "The newest Bamboo — same fresh fish and hot bowls, now in downtown Chattanooga. Open for dinner Monday through Saturday.",
   },
   intro:
-    "Bamboo on Main brings our Birmingham original to Chattanooga's Southside: sushi cut to order, comforting hot food, and a focused list of sake, wine, and cocktails. Walk-ins welcome.",
+    "Bamboo on Main brings our Birmingham original to downtown Chattanooga: sushi cut to order, comforting hot food, and a focused list of sake, wine, and cocktails. Dinner only for now — walk-ins welcome.",
   about: {
     shared:
       "Bamboo started with a simple idea: Japanese food made carefully, served without fuss. One kitchen philosophy, two cities — every roll, bowl, and pour held to the same standard.",
     local:
-      "Bamboo on Main is our second home, opened on Chattanooga's Southside near the Chattanooga Choo Choo. The Main Street corridor gave us exactly what we wanted: a walkable neighborhood room with the kitchen at its center.",
+      "Bamboo on Main is our second home, opened on Market Street in the heart of downtown Chattanooga, a short walk from the Tennessee Aquarium and the riverfront. Same kitchen philosophy as Birmingham, with a few rolls you'll only find here.",
   },
   visitNotes:
-    "Free street parking on Main Street evenings and weekends. We're two blocks from the Chattanooga Choo Choo and an easy walk from the Southside's galleries and shops.",
+    "Street parking on Market Street is metered until 6pm, and several public garages sit within a block. We're an easy walk from the Tennessee Aquarium, Ross's Landing, and the Riverwalk.",
 };
