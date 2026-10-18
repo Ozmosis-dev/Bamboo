@@ -33,6 +33,10 @@ export default async function MenuPage() {
         updated regularly.
       </p>
       <MenuBrowser menu={menu} />
+      <p className="mt-12 border-t border-line pt-4 text-xs text-ink-soft">
+        *Consuming raw or undercooked meats, poultry, seafood, or shellfish may
+        increase risk of foodborne illness.
+      </p>
     </div>
   );
 }
