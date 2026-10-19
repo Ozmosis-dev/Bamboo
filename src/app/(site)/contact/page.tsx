@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
+import { MarketPageHeader } from "@/components/market/MarketPage";
 import { formatHoursEntry, telHref } from "@/lib/format";
-import { getCurrentLocation } from "@/lib/location";
+import { getCurrentLocation, currentLocationSlug } from "@/lib/location";
 import { pageMetadata } from "@/lib/seo";
 
 export const revalidate = 300;
@@ -16,6 +17,82 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function ContactPage() {
   const location = await getCurrentLocation();
+
+  if (currentLocationSlug() === "chattanooga") {
+    return (
+      <>
+        <MarketPageHeader
+          eyebrow="Contact"
+          kanji="連絡 · 竹"
+          title="Pick up the phone."
+          lead="No reservation system, no forms — the fastest way to reach us is a call. We'll pick up between prep and service."
+        />
+
+        <section className="mx-auto max-w-6xl px-5 py-14 sm:px-8">
+          <a
+            data-fx="rise"
+            href={telHref(location.phone)}
+            className="group flex flex-col gap-2 border-y border-seam py-10 transition-colors hover:border-gold/50 sm:flex-row sm:items-baseline sm:justify-between"
+          >
+            <span className="m-serif text-4xl transition-transform duration-300 group-hover:translate-x-2 sm:text-6xl">
+              {location.phone}
+            </span>
+            <span className="m-caps inline-flex items-center gap-3 text-[12px] text-gold-soft">
+              Call us
+              <span
+                aria-hidden
+                className="h-px w-10 bg-gold transition-all duration-300 group-hover:w-16"
+              />
+            </span>
+          </a>
+
+          <div data-fx-group className="mt-16 grid gap-12 sm:grid-cols-3">
+            <div>
+              <p className="m-eyebrow">Address</p>
+              <p className="mt-5 leading-relaxed text-tatami">
+                {location.address_line1}
+                <br />
+                {location.city}, {location.state} {location.zip}
+              </p>
+            </div>
+            <div>
+              <p className="m-eyebrow">Hours</p>
+              <ul className="mt-5 space-y-1.5 text-tatami">
+                {location.hours.map((entry) => (
+                  <li key={entry.days}>{formatHoursEntry(entry)}</li>
+                ))}
+              </ul>
+            </div>
+            <div>
+              <p className="m-eyebrow">Follow</p>
+              <ul className="mt-5 space-y-1.5">
+                {location.social.instagram && (
+                  <li>
+                    <a
+                      href={location.social.instagram}
+                      className="text-tatami hover:text-washi"
+                    >
+                      Instagram
+                    </a>
+                  </li>
+                )}
+                {location.social.facebook && (
+                  <li>
+                    <a
+                      href={location.social.facebook}
+                      className="text-tatami hover:text-washi"
+                    >
+                      Facebook
+                    </a>
+                  </li>
+                )}
+              </ul>
+            </div>
+          </div>
+        </section>
+      </>
+    );
+  }
 
   return (
     <div className="mx-auto max-w-2xl px-4 pb-16">

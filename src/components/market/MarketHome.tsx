@@ -6,6 +6,8 @@ import type { SiteCopy } from "@content/types";
 import { MarketFx } from "./MarketFx";
 import { SECTION_KANJI } from "./kanji";
 
+const JP_NUMERALS = ["一", "二", "三", "四", "五", "六", "七", "八"];
+
 /** Food categories get their own card; the drink list collapses into one. */
 function categoryCards(menu: ResolvedMenuSection[]) {
   const food = menu.filter((s) =>
@@ -122,78 +124,126 @@ export function MarketHome({
       </section>
 
       {/* ------------------------------------------------- The menu, by course */}
-      <section className="mx-auto max-w-6xl px-5 py-24 sm:px-8">
-        <div data-fx="rise" className="flex flex-col items-center gap-5 text-center">
-          <Image
-            src="/brand/logo-mark-white.png"
-            alt=""
-            aria-hidden
-            width={76}
-            height={63}
-            className="h-14 w-auto opacity-90"
-          />
-          <h2 className="m-serif text-3xl sm:text-4xl">The menu, by course</h2>
-          <p className="max-w-md text-sm leading-relaxed text-tatami">
-            Sushi cut to order and izakaya plates, with a focused list of sake,
-            wine, and cocktails behind them.
-          </p>
-        </div>
+      <section className="relative overflow-hidden m-seigaiha">
+        <Image
+          src="/brand/logo-mark-white.png"
+          alt=""
+          aria-hidden
+          width={400}
+          height={316}
+          data-parallax="0.25"
+          className="pointer-events-none absolute -right-24 top-14 hidden w-[430px] opacity-[0.05] lg:block"
+        />
 
-        <ul data-fx-group className="mt-14 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
-          {food.map((section) => {
-            const kanji = SECTION_KANJI[section.category.slug];
-            return (
-              <li key={section.category.id}>
-                <Link
-                  href={`/menu#${section.category.slug}`}
-                  className="group relative flex h-44 flex-col justify-end overflow-hidden border border-seam bg-smoke/40 p-5 transition-colors hover:border-gold/70 sm:h-52"
-                >
-                  {kanji && (
+        <div className="relative mx-auto max-w-6xl px-5 py-24 sm:px-8 sm:py-28">
+          <div data-fx="rise" className="max-w-xl">
+            <div className="flex items-center gap-5">
+              <span aria-hidden className="h-px w-14 bg-verm" />
+              <p className="m-eyebrow">
+                The menu <span className="m-kanji font-normal">· 献立</span>
+              </p>
+            </div>
+            <h2 className="m-serif mt-6 text-4xl leading-tight sm:text-5xl">
+              Seven courses,
+              <br />
+              one counter.
+            </h2>
+          </div>
+
+          <ul data-fx-group className="mt-14">
+            {food.map((section, i) => {
+              const kanji = SECTION_KANJI[section.category.slug];
+              return (
+                <li key={section.category.id} className="relative">
+                  <Link
+                    href={`/menu#${section.category.slug}`}
+                    className="group relative grid grid-cols-[2.25rem_1fr] items-baseline gap-4 overflow-hidden border-b border-seam py-6 sm:grid-cols-[3.5rem_1fr_auto] sm:gap-8 sm:py-7"
+                  >
+                    {kanji && (
+                      <span
+                        aria-hidden
+                        className="m-kanji pointer-events-none absolute right-16 top-1/2 -translate-y-1/2 text-7xl text-gold-soft opacity-0 transition-opacity duration-500 group-hover:opacity-[0.14] sm:text-8xl"
+                      >
+                        {kanji}
+                      </span>
+                    )}
                     <span
                       aria-hidden
-                      className="m-kanji absolute -right-2 -top-5 text-[5.5rem] leading-none text-tatami opacity-[0.09] transition-all duration-500 group-hover:opacity-20 group-hover:text-gold-soft"
+                      className="m-kanji text-lg text-verm transition-colors group-hover:text-price"
                     >
-                      {kanji}
+                      {JP_NUMERALS[i]}
                     </span>
-                  )}
-                  <span className="m-caps text-[13px] text-washi">
-                    {section.category.name}
+                    <span className="flex min-w-0 flex-wrap items-baseline gap-x-5 gap-y-1">
+                      <span className="m-serif text-3xl leading-none transition-transform duration-300 group-hover:translate-x-2 sm:text-[2.75rem]">
+                        {section.category.name}
+                      </span>
+                      {kanji && (
+                        <span aria-hidden className="m-kanji text-sm text-gold">
+                          {kanji}
+                        </span>
+                      )}
+                    </span>
+                    <span className="col-start-2 flex items-center gap-4 sm:col-start-3">
+                      <span className="m-caps text-[11px] text-tatami">
+                        {section.items.length} dishes
+                      </span>
+                      <span
+                        aria-hidden
+                        className="h-px w-8 bg-verm transition-all duration-300 group-hover:w-16"
+                      />
+                    </span>
+                  </Link>
+                </li>
+              );
+            })}
+            <li className="relative">
+              <Link
+                href="/menu#cocktails"
+                className="group relative grid grid-cols-[2.25rem_1fr] items-baseline gap-4 overflow-hidden border-b border-seam py-6 sm:grid-cols-[3.5rem_1fr_auto] sm:gap-8 sm:py-7"
+              >
+                <span
+                  aria-hidden
+                  className="m-kanji pointer-events-none absolute right-16 top-1/2 -translate-y-1/2 text-7xl text-gold-soft opacity-0 transition-opacity duration-500 group-hover:opacity-[0.14] sm:text-8xl"
+                >
+                  盃
+                </span>
+                <span aria-hidden className="m-kanji text-lg text-verm">
+                  八
+                </span>
+                <span className="flex min-w-0 flex-wrap items-baseline gap-x-5 gap-y-1">
+                  <span className="m-serif text-3xl leading-none text-gold-soft transition-transform duration-300 group-hover:translate-x-2 sm:text-[2.75rem]">
+                    Sake, Wine &amp; Cocktails
                   </span>
-                  <span className="mt-1.5 text-xs text-tatami">
-                    {section.items.length} dishes
+                  <span aria-hidden className="m-kanji text-sm text-gold">
+                    盃
+                  </span>
+                </span>
+                <span className="col-start-2 flex items-center gap-4 sm:col-start-3">
+                  <span className="m-caps text-[11px] text-tatami">
+                    {drinkCount} pours
                   </span>
                   <span
                     aria-hidden
-                    className="mt-4 h-px w-6 bg-verm transition-all duration-300 group-hover:w-12"
+                    className="h-px w-8 bg-gold transition-all duration-300 group-hover:w-16"
                   />
-                </Link>
-              </li>
-            );
-          })}
-          <li>
+                </span>
+              </Link>
+            </li>
+          </ul>
+
+          <div data-fx="rise" className="mt-12 flex justify-end">
             <Link
-              href="/menu#cocktails"
-              className="group relative flex h-44 flex-col justify-end overflow-hidden border border-seam bg-verm/90 p-5 transition-colors hover:bg-verm sm:h-52"
+              href="/menu"
+              className="m-caps group inline-flex items-center gap-3 text-[13px] text-washi hover:text-gold-soft"
             >
+              Open the full menu
               <span
                 aria-hidden
-                className="m-kanji absolute -right-2 -top-5 text-[5.5rem] leading-none text-washi opacity-15"
-              >
-                盃
-              </span>
-              <span className="m-caps text-[13px] text-washi">
-                Sake, Wine &amp; Cocktails
-              </span>
-              <span className="mt-1.5 text-xs text-washi/80">
-                {drinkCount} pours
-              </span>
-              <span
-                aria-hidden
-                className="mt-4 h-px w-6 bg-gold-soft transition-all duration-300 group-hover:w-12"
+                className="h-px w-10 bg-gold transition-all duration-300 group-hover:w-16"
               />
             </Link>
-          </li>
-        </ul>
+          </div>
+        </div>
       </section>
 
       {/* ------------------------------------------------ Behind the counter */}
