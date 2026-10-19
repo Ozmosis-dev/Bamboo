@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { getCopy } from "@content/index";
 import { MarketPageHeader } from "@/components/market/MarketPage";
+import { telHref } from "@/lib/format";
 import { getCurrentLocation, getSisterLocation, currentLocationSlug } from "@/lib/location";
 import { pageMetadata } from "@/lib/seo";
 
@@ -32,66 +33,102 @@ export default async function AboutPage() {
           title="One kitchen, two cities."
         />
 
-        <section className="mx-auto max-w-6xl px-5 py-16 sm:px-8 sm:py-20">
-          <div className="grid gap-14 md:grid-cols-[1.1fr_1fr] md:items-center">
-            <div data-fx="rise" className="space-y-8">
-              <p className="m-serif text-2xl leading-relaxed sm:text-[1.7rem]">
-                {copy.about.shared}
-              </p>
-              <p className="max-w-xl text-lg leading-relaxed text-tatami">
-                {copy.about.local}
+        {/* Full-bleed room — the image speaks for itself */}
+        <section className="relative mt-16 h-[46vh] min-h-[340px] overflow-hidden border-y border-seam sm:h-[56vh]">
+          <Image
+            src="/photos/dining-room.webp"
+            alt="The dining room at night — canvas canopy ceiling, lantern light, red banquette"
+            fill
+            sizes="100vw"
+            data-parallax="0.14"
+            className="m-photo scale-110 object-cover object-center"
+          />
+        </section>
+
+        {/* Washi: the idea */}
+        <section className="m-washi relative overflow-hidden">
+          <span
+            aria-hidden
+            className="m-kanji absolute -right-10 -top-14 text-[17rem] leading-none text-verm opacity-[0.07]"
+          >
+            竹
+          </span>
+          <div className="relative mx-auto max-w-6xl px-5 py-24 sm:px-8 sm:py-28">
+            <div data-fx="rise" className="flex items-center gap-5">
+              <span aria-hidden className="h-px w-14 bg-verm" />
+              <p className="m-eyebrow">
+                The idea <span className="m-kanji font-normal">· 簡素</span>
               </p>
             </div>
-            <div data-fx="rise" className="relative overflow-hidden border border-seam">
-              <Image
-                src="/photos/dining-room.webp"
-                alt="The dining room at night — canvas canopy ceiling, lantern light, red banquette"
-                width={800}
-                height={600}
-                className="m-photo w-full object-cover"
-              />
-              <div
-                aria-hidden
-                className="absolute inset-0 bg-gradient-to-t from-char/70 via-transparent to-transparent"
-              />
-              <p className="m-eyebrow absolute bottom-4 left-5 !text-[0.6rem]">
-                The room, after dark · 灯
+            <p data-fx="rise" className="m-serif mt-10 max-w-3xl text-3xl leading-snug sm:text-[2.6rem]">
+              {copy.about.shared}
+            </p>
+            <p data-fx="rise" className="m-soft mt-10 max-w-xl text-lg leading-relaxed">
+              {copy.about.local}
+            </p>
+          </div>
+        </section>
+
+        {/* Two cities, one standard */}
+        <section className="mx-auto max-w-6xl px-5 py-24 sm:px-8">
+          <div className="grid gap-y-14 md:grid-cols-[1fr_1px_1fr] md:gap-x-14">
+            <div data-fx="rise">
+              <p className="m-eyebrow">The original</p>
+              <p className="m-serif mt-6 text-4xl sm:text-5xl">{sister.name}</p>
+              <p className="m-caps mt-5 text-[12px] text-tatami">
+                {sister.address_line1} · {sister.city}
               </p>
+              <a
+                href={`https://${sister.domain}`}
+                className="m-caps group mt-8 inline-flex items-center gap-3 text-[12px] text-washi hover:text-gold-soft"
+              >
+                Visit the {sister.city} site
+                <span aria-hidden className="h-px w-8 bg-gold transition-all duration-300 group-hover:w-14" />
+              </a>
+            </div>
+            <div aria-hidden className="hidden bg-seam md:block" />
+            <div data-fx="rise">
+              <p className="m-eyebrow">The second home · now</p>
+              <p className="m-serif mt-6 text-4xl sm:text-5xl">{location.name}</p>
+              <p className="m-caps mt-5 text-[12px] text-tatami">
+                {location.address_line1} · {location.city}
+              </p>
+              <Link
+                href="/visit"
+                className="m-caps group mt-8 inline-flex items-center gap-3 text-[12px] text-washi hover:text-gold-soft"
+              >
+                Plan a visit
+                <span aria-hidden className="h-px w-8 bg-gold transition-all duration-300 group-hover:w-14" />
+              </Link>
             </div>
           </div>
         </section>
 
-        <section className="relative overflow-hidden border-t border-seam bg-char-deep m-seigaiha">
-          <p
+        {/* Vermilion: come eat */}
+        <section className="m-verm relative overflow-hidden">
+          <span
             aria-hidden
-            className="m-ghost-kanji absolute -right-6 -top-10 text-[16rem]"
+            className="m-kanji absolute -bottom-16 -right-8 text-[15rem] leading-none text-washi opacity-10"
           >
-            竹
-          </p>
-          <div className="relative mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-8 px-5 py-16 sm:px-8">
-            <div data-fx="rise">
-              <p className="m-eyebrow">The original</p>
-              <p className="m-serif mt-4 text-2xl sm:text-3xl">
-                {sister.name} — {sister.city}
-              </p>
-              <p className="mt-3 max-w-md text-sm leading-relaxed text-tatami">
-                Where it started. Same fish standards, same kitchen philosophy,
-                different room.
-              </p>
-            </div>
-            <div data-fx="rise" className="flex flex-wrap gap-6">
-              <a
-                href={`https://${sister.domain}`}
-                className="m-caps border border-seam px-7 py-3.5 text-[12px] text-washi transition-colors hover:border-gold hover:text-gold-soft"
-              >
-                Visit {sister.city}
-              </a>
+            味
+          </span>
+          <div className="relative mx-auto flex max-w-6xl flex-col items-start gap-8 px-5 py-20 sm:px-8 sm:py-24">
+            <p data-fx="rise" className="m-serif max-w-2xl text-3xl leading-snug sm:text-5xl">
+              Dinner, Monday through Saturday. Walk-ins welcome.
+            </p>
+            <div data-fx="rise" className="flex flex-wrap gap-5">
               <Link
                 href="/menu"
-                className="m-caps bg-verm px-7 py-3.5 text-[12px] text-washi transition-colors hover:bg-price"
+                className="m-caps bg-char px-8 py-4 text-[13px] text-washi transition-colors hover:bg-char-deep"
               >
-                See our menu
+                See the menu
               </Link>
+              <a
+                href={telHref(location.phone)}
+                className="m-caps border border-washi/60 px-8 py-4 text-[13px] text-washi transition-colors hover:border-washi"
+              >
+                Call {location.phone}
+              </a>
             </div>
           </div>
         </section>

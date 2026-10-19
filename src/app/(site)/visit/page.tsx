@@ -18,6 +18,13 @@ export async function generateMetadata(): Promise<Metadata> {
   });
 }
 
+const LANDMARKS = [
+  { name: "Creative Discovery Museum", note: "around the corner" },
+  { name: "Tennessee Aquarium", note: "straight up Market" },
+  { name: "Ross's Landing & Riverwalk", note: "on the riverfront" },
+  { name: "Walnut Street Bridge", note: "a longer stroll east" },
+];
+
 export default async function VisitPage() {
   const slug = currentLocationSlug();
   const location = await getCurrentLocation();
@@ -32,8 +39,9 @@ export default async function VisitPage() {
           title="Market Street, after five."
         />
 
+        {/* Dark: the essentials beside the door */}
         <section className="mx-auto max-w-6xl px-5 py-16 sm:px-8 sm:py-20">
-          <div className="grid gap-14 lg:grid-cols-[1fr_auto]">
+          <div className="grid gap-14 lg:grid-cols-[1fr_400px]">
             <div className="max-w-xl">
               <div data-fx="rise">
                 <p className="m-eyebrow">Hours</p>
@@ -55,12 +63,12 @@ export default async function VisitPage() {
 
               <div data-fx="rise" className="mt-14">
                 <p className="m-eyebrow">Address</p>
-                <p className="m-serif mt-5 text-3xl leading-snug">
+                <p className="m-serif mt-5 text-3xl leading-snug sm:text-4xl">
                   {location.address_line1}
                   <br />
                   {location.city}, {location.state} {location.zip}
                 </p>
-                <div className="mt-7 flex flex-wrap items-center gap-6">
+                <div className="mt-8 flex flex-wrap items-center gap-6">
                   {location.map_url && (
                     <a
                       href={location.map_url}
@@ -81,75 +89,90 @@ export default async function VisitPage() {
                   </a>
                 </div>
               </div>
-
-              <div data-fx="rise" className="mt-14">
-                <p className="m-eyebrow">Parking &amp; directions</p>
-                <p className="mt-5 max-w-lg leading-relaxed text-tatami">
-                  {copy.visitNotes}
-                </p>
-              </div>
             </div>
 
-            <div className="flex w-full flex-col gap-5 lg:w-[380px]">
-              <div data-fx="rise" className="relative overflow-hidden border border-seam">
+            <div className="flex w-full flex-col gap-5">
+              <div data-fx="rise" className="overflow-hidden border border-seam">
                 <Image
                   src="/brand/hero-door.webp"
                   alt="The vermilion front door on Market Street"
-                  width={760}
-                  height={560}
+                  width={800}
+                  height={600}
                   className="m-photo aspect-[4/3] w-full object-cover object-[62%_38%]"
                 />
-                <div
-                  aria-hidden
-                  className="absolute inset-0 bg-gradient-to-t from-char/75 via-transparent to-char/15"
-                />
-                <p className="m-eyebrow absolute bottom-4 left-5 !text-[0.6rem]">
-                  Look for the red door
-                </p>
               </div>
-              <div data-fx="rise" className="relative overflow-hidden border border-seam">
+              <div data-fx="rise" className="overflow-hidden border border-seam">
                 <Image
                   src="/photos/counter.webp"
                   alt="Inside: the sushi counter under bamboo slats"
-                  width={760}
-                  height={560}
+                  width={800}
+                  height={600}
                   className="m-photo aspect-[4/3] w-full object-cover"
                 />
-                <div
-                  aria-hidden
-                  className="absolute inset-0 bg-gradient-to-t from-char/75 via-transparent to-char/15"
-                />
-                <p className="m-eyebrow absolute bottom-4 left-5 !text-[0.6rem]">
-                  Twelve seats at the counter
-                </p>
               </div>
             </div>
           </div>
         </section>
 
-        <section className="relative overflow-hidden border-t border-seam bg-char-deep">
-          <div className="relative mx-auto max-w-6xl px-5 py-20 sm:px-8">
-            <div data-fx="rise" className="flex flex-wrap items-end justify-between gap-6">
-              <div>
+        {/* Washi: the neighborhood map, printed like an insert */}
+        <section className="m-washi border-y border-seam">
+          <div className="mx-auto max-w-6xl px-5 py-20 sm:px-8 sm:py-24">
+            <div className="grid gap-12 lg:grid-cols-[320px_1fr] lg:gap-16">
+              <div data-fx="rise">
                 <div className="flex items-center gap-5">
                   <span aria-hidden className="h-px w-14 bg-verm" />
                   <p className="m-eyebrow">
                     The neighborhood <span className="m-kanji font-normal">· 街</span>
                   </p>
                 </div>
-                <h2 className="m-serif mt-5 text-3xl sm:text-4xl">
+                <h2 className="m-serif mt-6 text-3xl leading-tight sm:text-4xl">
                   Four blocks from the river.
                 </h2>
+                <p className="m-soft mt-6 text-base leading-relaxed">
+                  Everything worth walking to is a short stroll up Market
+                  Street. Look for the stars.
+                </p>
+                <ul className="mt-10">
+                  {LANDMARKS.map((l) => (
+                    <li
+                      key={l.name}
+                      className="flex items-baseline gap-4 border-b border-[#d8cdbb] py-3.5"
+                    >
+                      <span aria-hidden className="text-[#8a6f2f]">✦</span>
+                      <span className="m-caps flex-1 text-[11.5px] text-[#262019]">
+                        {l.name}
+                      </span>
+                      <span className="m-soft text-xs">{l.note}</span>
+                    </li>
+                  ))}
+                </ul>
               </div>
-              <p className="max-w-sm text-sm leading-relaxed text-tatami">
-                Follow Market Street north and you hit the Riverwalk; the
-                Aquarium, Ross&apos;s Landing, and the Walnut Street Bridge are
-                all an easy stroll.
-              </p>
+              <div data-fx="rise" className="min-w-0">
+                <div className="overflow-x-auto">
+                  <div className="min-w-[560px]">
+                    <MarketMap variant="paper" />
+                  </div>
+                </div>
+              </div>
             </div>
-            <div data-fx="rise" className="mt-10 border border-seam bg-char p-4 sm:p-8">
-              <MarketMap />
-            </div>
+          </div>
+        </section>
+
+        {/* Vermilion: parking */}
+        <section className="m-verm relative overflow-hidden">
+          <span
+            aria-hidden
+            className="m-kanji absolute -right-6 -top-12 text-[13rem] leading-none text-washi opacity-10"
+          >
+            車
+          </span>
+          <div className="relative mx-auto grid max-w-6xl gap-10 px-5 py-18 sm:px-8 sm:py-20 md:grid-cols-[auto_1fr] md:items-center md:gap-16">
+            <p data-fx="rise" className="m-serif text-3xl sm:text-4xl">
+              Parking
+            </p>
+            <p data-fx="rise" className="max-w-2xl text-lg leading-relaxed text-washi/90">
+              {copy.visitNotes}
+            </p>
           </div>
         </section>
       </>

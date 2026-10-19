@@ -260,3 +260,56 @@ body {
   filter: brightness(0.86) saturate(1.08) contrast(1.12) sepia(0.1);
 }
 
+/* ---------------------------------------------------------------------------
+   Contrast sections: washi paper and lacquer vermilion, both with their own
+   grain so the surfaces feel like material, not flat fills */
+.m-washi {
+  position: relative;
+  isolation: isolate;
+  background: var(--color-washi);
+  color: #262019;
+}
+.m-washi::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.6;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.55' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.93 0 0 0 0 0.9 0 0 0 0 0.85 0 0 0 0.9 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23p)'/%3E%3C/svg%3E");
+}
+.m-washi .m-eyebrow {
+  color: var(--color-verm);
+}
+.m-washi .m-serif {
+  color: #262019;
+}
+.m-washi .m-soft {
+  color: #6a5e4c;
+}
+
+.m-verm {
+  position: relative;
+  isolation: isolate;
+  background: var(--color-verm);
+  color: var(--color-washi);
+}
+.m-verm::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.14;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='v'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23v)'/%3E%3C/svg%3E");
+}
+.m-verm .m-eyebrow {
+  color: var(--color-washi);
+  opacity: 0.85;
+}
+.m-verm .m-serif {
+  color: var(--color-washi);
+}
+

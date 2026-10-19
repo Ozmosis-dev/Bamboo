@@ -28,49 +28,72 @@ export default async function ContactPage() {
           lead="No reservation system, no forms — the fastest way to reach us is a call. We'll pick up between prep and service."
         />
 
-        <section className="mx-auto max-w-6xl px-5 py-14 sm:px-8">
-          <a
-            data-fx="rise"
-            href={telHref(location.phone)}
-            className="group flex flex-col gap-2 border-y border-seam py-10 transition-colors hover:border-gold/50 sm:flex-row sm:items-baseline sm:justify-between"
+        {/* Vermilion: the number IS the page */}
+        <section className="m-verm relative mt-16 overflow-hidden border-y border-seam">
+          <span
+            aria-hidden
+            className="m-kanji absolute -bottom-20 -right-6 text-[18rem] leading-none text-washi opacity-10"
           >
-            <span className="m-serif text-4xl transition-transform duration-300 group-hover:translate-x-2 sm:text-6xl">
-              {location.phone}
-            </span>
-            <span className="m-caps inline-flex items-center gap-3 text-[12px] text-gold-soft">
-              Call us
-              <span
-                aria-hidden
-                className="h-px w-10 bg-gold transition-all duration-300 group-hover:w-16"
-              />
-            </span>
-          </a>
+            電
+          </span>
+          <div className="relative mx-auto max-w-6xl px-5 py-20 sm:px-8 sm:py-28">
+            <p data-fx="rise" className="m-eyebrow">
+              By phone · Tue–Sat
+            </p>
+            <a
+              data-fx="rise"
+              href={telHref(location.phone)}
+              className="group mt-6 block"
+            >
+              <span className="m-serif block text-[13vw] leading-none transition-transform duration-300 group-hover:translate-x-3 sm:text-7xl lg:text-8xl">
+                {location.phone}
+              </span>
+              <span className="m-caps mt-6 inline-flex items-center gap-3 text-[12px] text-washi/90">
+                Tap to call
+                <span
+                  aria-hidden
+                  className="h-px w-10 bg-washi/70 transition-all duration-300 group-hover:w-16"
+                />
+              </span>
+            </a>
+          </div>
+        </section>
 
-          <div data-fx-group className="mt-16 grid gap-12 sm:grid-cols-3">
-            <div>
+        {/* Washi: the particulars */}
+        <section className="m-washi border-b border-seam">
+          <div className="mx-auto grid max-w-6xl gap-12 px-5 py-20 sm:grid-cols-3 sm:px-8">
+            <div data-fx="rise">
               <p className="m-eyebrow">Address</p>
-              <p className="mt-5 leading-relaxed text-tatami">
+              <p className="m-serif mt-5 text-2xl leading-snug">
                 {location.address_line1}
                 <br />
                 {location.city}, {location.state} {location.zip}
               </p>
+              {location.map_url && (
+                <a
+                  href={location.map_url}
+                  className="m-caps mt-6 inline-block border-b border-verm pb-1 text-[11px] text-verm hover:text-price"
+                >
+                  Open in Maps
+                </a>
+              )}
             </div>
-            <div>
+            <div data-fx="rise">
               <p className="m-eyebrow">Hours</p>
-              <ul className="mt-5 space-y-1.5 text-tatami">
+              <ul className="m-soft mt-5 space-y-2">
                 {location.hours.map((entry) => (
                   <li key={entry.days}>{formatHoursEntry(entry)}</li>
                 ))}
               </ul>
             </div>
-            <div>
+            <div data-fx="rise">
               <p className="m-eyebrow">Follow</p>
-              <ul className="mt-5 space-y-1.5">
+              <ul className="mt-5 space-y-2">
                 {location.social.instagram && (
                   <li>
                     <a
                       href={location.social.instagram}
-                      className="text-tatami hover:text-washi"
+                      className="m-caps text-[12px] text-[#262019] hover:text-verm"
                     >
                       Instagram
                     </a>
@@ -80,7 +103,7 @@ export default async function ContactPage() {
                   <li>
                     <a
                       href={location.social.facebook}
-                      className="text-tatami hover:text-washi"
+                      className="m-caps text-[12px] text-[#262019] hover:text-verm"
                     >
                       Facebook
                     </a>
