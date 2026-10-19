@@ -1,6 +1,5 @@
 import { formatHoursEntry, telHref } from "@/lib/format";
 import type { Location } from "@/lib/types";
-import { Lockup } from "./Lockup";
 
 export function MarketFooter({
   location,
@@ -19,8 +18,13 @@ export function MarketFooter({
       </p>
 
       <div className="relative mx-auto grid max-w-6xl gap-12 px-5 py-16 sm:px-8 md:grid-cols-[auto_1fr_1fr_1fr]">
-        <div className="text-xl">
-          <Lockup />
+        <div>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/brand/logo-full-white.png"
+            alt={location.name}
+            className="h-36 w-auto"
+          />
         </div>
 
         <div>

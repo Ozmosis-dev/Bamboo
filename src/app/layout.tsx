@@ -1,4 +1,11 @@
-import { Geist, Geist_Mono, Hanken_Grotesk, Jost, Zen_Old_Mincho } from "next/font/google";
+import {
+  Faculty_Glyphic,
+  Geist,
+  Geist_Mono,
+  Hanken_Grotesk,
+  Jost,
+  Zen_Old_Mincho,
+} from "next/font/google";
 import { currentLocationSlug } from "@/lib/location";
 import "./globals.css";
 
@@ -14,6 +21,12 @@ const geistMono = Geist_Mono({
 
 const jost = Jost({
   variable: "--font-jost-v",
+  subsets: ["latin"],
+});
+
+const faculty = Faculty_Glyphic({
+  variable: "--font-faculty-v",
+  weight: "400",
   subsets: ["latin"],
 });
 
@@ -37,7 +50,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html
       lang="en"
       data-theme={theme}
-      className={`${geistSans.variable} ${geistMono.variable} ${jost.variable} ${hanken.variable} ${mincho.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} ${jost.variable} ${faculty.variable} ${hanken.variable} ${mincho.variable} h-full antialiased`}
     >
       <body className={`min-h-full flex flex-col ${theme === "market" ? "m-grain" : ""}`}>
         {children}

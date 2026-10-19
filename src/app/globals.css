@@ -35,6 +35,7 @@
   --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
   --font-jost: var(--font-jost-v), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-faculty-v), Georgia, serif;
   --font-mincho: var(--font-mincho-v), "Zen Old Mincho", Georgia, serif;
   --font-hanken: var(--font-hanken-v), ui-sans-serif, system-ui, sans-serif;
 }
@@ -95,10 +96,18 @@ body {
   font-size: 0.75rem;
 }
 
+/* Display voice: Faculty Glyphic (single weight) for Latin headlines */
 .m-serif {
+  font-family: var(--font-display);
+  font-weight: 400;
+  color: var(--color-washi);
+  letter-spacing: 0.01em;
+}
+
+/* Kanji accents always render in the mincho */
+.m-kanji {
   font-family: var(--font-mincho);
   font-weight: 700;
-  color: var(--color-washi);
 }
 
 .m-caps {
@@ -205,42 +214,49 @@ body {
   pointer-events: none;
 }
 
-/* Vermilion keyline badge lockup (the working logo) */
+/* Vermilion keyline badge lockup — text styled after the real logo:
+   heavy, tight geometric caps over a wide-tracked ON MARKET with dashes */
 .m-lockup {
   display: inline-flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.3rem;
-  border: 1.5px solid var(--color-verm);
-  padding: 0.55rem 1.1rem 0.6rem;
+  gap: 0.32rem;
+  border: 2px solid var(--color-verm);
+  padding: 0.6rem 1.05rem 0.62rem;
   line-height: 1;
 }
 .m-lockup .m-lockup-name {
   font-family: var(--font-jost);
-  font-weight: 700;
-  letter-spacing: 0.26em;
+  font-weight: 800;
+  font-size: 1.2em;
+  letter-spacing: 0.13em;
   text-transform: uppercase;
   color: var(--color-washi);
-  text-indent: 0.26em;
+  text-indent: 0.13em;
 }
 .m-lockup .m-lockup-sub {
   display: flex;
   align-items: center;
-  gap: 0.45rem;
+  gap: 0.5rem;
   font-family: var(--font-jost);
-  font-weight: 400;
-  font-size: 0.5em;
-  letter-spacing: 0.4em;
+  font-weight: 600;
+  font-size: 0.52em;
+  letter-spacing: 0.36em;
   text-transform: uppercase;
   color: var(--color-washi);
-  text-indent: 0.4em;
+  text-indent: 0.36em;
 }
 .m-lockup .m-lockup-sub::before,
 .m-lockup .m-lockup-sub::after {
   content: "";
-  width: 1.1em;
-  height: 1px;
+  width: 1.4em;
+  height: 1.5px;
   background: currentColor;
-  opacity: 0.8;
+  opacity: 0.9;
+}
+
+/* House photo grade: dark, warm, consistent (from the brand spec) */
+.m-photo {
+  filter: brightness(0.86) saturate(1.08) contrast(1.12) sepia(0.1);
 }
 

@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { formatPriceShort } from "@/lib/format";
 import type { DietaryTag, ResolvedMenuSection } from "@/lib/types";
 import { MarketFx, scrollToId } from "./MarketFx";
+import { SECTION_KANJI } from "./kanji";
 
 const FILTERS: { tag: DietaryTag; label: string }[] = [
   { tag: "gluten-free", label: "Gluten-free" },
@@ -16,18 +17,6 @@ const TAG_LABELS: Record<DietaryTag, string> = {
   vegetarian: "V",
   vegan: "VG",
   spicy: "辛",
-};
-
-/** Kanji glyphs for sections we can name confidently; others go without. */
-const SECTION_KANJI: Record<string, string> = {
-  sashimi: "刺身",
-  nigiri: "握り",
-  rolls: "巻",
-  skewers: "串",
-  salads: "菜",
-  "noodle-bowls": "麺",
-  sake: "酒",
-  cocktails: "盃",
 };
 
 /** Menu browser in the printed-menu style: sticky category rail (desktop) /
@@ -203,7 +192,7 @@ export function MarketMenu({ menu }: { menu: ResolvedMenuSection[] }) {
                     {section.category.name}
                   </h2>
                   {kanji && (
-                    <span aria-hidden className="m-serif text-base text-gold">
+                    <span aria-hidden className="m-kanji text-base text-gold">
                       {kanji}
                     </span>
                   )}

@@ -31,7 +31,18 @@ export function MarketHeader({ location }: { location: Location }) {
       <div aria-hidden className="h-[3px] bg-verm" />
       <div className="border-b border-seam bg-char/90 backdrop-blur-md">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-3.5 sm:px-8">
-          <Link href="/" aria-label={`${location.name} — home`} className="text-[15px]">
+          <Link
+            href="/"
+            aria-label={`${location.name} — home`}
+            className="flex items-center gap-3.5 text-[15px]"
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/brand/logo-mark-white.png"
+              alt=""
+              aria-hidden
+              className="h-10 w-auto"
+            />
             <Lockup />
           </Link>
 
