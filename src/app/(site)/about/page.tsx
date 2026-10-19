@@ -44,10 +44,10 @@ export default async function AboutPage() {
             </div>
             <div data-fx="rise" className="relative overflow-hidden border border-seam">
               <Image
-                src="/photos/nigiri.webp"
-                alt="Nigiri and rolls from the counter"
-                width={680}
-                height={510}
+                src="/photos/dining-room.webp"
+                alt="The dining room at night — canvas canopy ceiling, lantern light, red banquette"
+                width={800}
+                height={600}
                 className="m-photo w-full object-cover"
               />
               <div
@@ -55,7 +55,7 @@ export default async function AboutPage() {
                 className="absolute inset-0 bg-gradient-to-t from-char/70 via-transparent to-transparent"
               />
               <p className="m-eyebrow absolute bottom-4 left-5 !text-[0.6rem]">
-                Cut to order · 握り
+                The room, after dark · 灯
               </p>
             </div>
           </div>

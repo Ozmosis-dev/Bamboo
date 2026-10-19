@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import { getCopy } from "@content/index";
+import { MarketMap } from "@/components/market/MarketMap";
 import { MarketPageHeader } from "@/components/market/MarketPage";
 import { formatHoursEntry, telHref } from "@/lib/format";
 import { getCurrentLocation, currentLocationSlug } from "@/lib/location";
@@ -89,24 +90,65 @@ export default async function VisitPage() {
               </div>
             </div>
 
-            <div
-              data-fx="rise"
-              className="relative hidden w-[360px] overflow-hidden border border-seam lg:block"
-            >
-              <Image
-                src="/brand/hero-door.webp"
-                alt="The vermilion front door on Market Street"
-                fill
-                sizes="360px"
-                className="m-photo object-cover object-[62%_center]"
-              />
-              <div
-                aria-hidden
-                className="absolute inset-0 bg-gradient-to-t from-char/75 via-transparent to-char/20"
-              />
-              <p className="m-eyebrow absolute bottom-4 left-5 !text-[0.6rem]">
-                Look for the red door
+            <div className="flex w-full flex-col gap-5 lg:w-[380px]">
+              <div data-fx="rise" className="relative overflow-hidden border border-seam">
+                <Image
+                  src="/brand/hero-door.webp"
+                  alt="The vermilion front door on Market Street"
+                  width={760}
+                  height={560}
+                  className="m-photo aspect-[4/3] w-full object-cover object-[62%_38%]"
+                />
+                <div
+                  aria-hidden
+                  className="absolute inset-0 bg-gradient-to-t from-char/75 via-transparent to-char/15"
+                />
+                <p className="m-eyebrow absolute bottom-4 left-5 !text-[0.6rem]">
+                  Look for the red door
+                </p>
+              </div>
+              <div data-fx="rise" className="relative overflow-hidden border border-seam">
+                <Image
+                  src="/photos/counter.webp"
+                  alt="Inside: the sushi counter under bamboo slats"
+                  width={760}
+                  height={560}
+                  className="m-photo aspect-[4/3] w-full object-cover"
+                />
+                <div
+                  aria-hidden
+                  className="absolute inset-0 bg-gradient-to-t from-char/75 via-transparent to-char/15"
+                />
+                <p className="m-eyebrow absolute bottom-4 left-5 !text-[0.6rem]">
+                  Twelve seats at the counter
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="relative overflow-hidden border-t border-seam bg-char-deep">
+          <div className="relative mx-auto max-w-6xl px-5 py-20 sm:px-8">
+            <div data-fx="rise" className="flex flex-wrap items-end justify-between gap-6">
+              <div>
+                <div className="flex items-center gap-5">
+                  <span aria-hidden className="h-px w-14 bg-verm" />
+                  <p className="m-eyebrow">
+                    The neighborhood <span className="m-kanji font-normal">· 街</span>
+                  </p>
+                </div>
+                <h2 className="m-serif mt-5 text-3xl sm:text-4xl">
+                  Four blocks from the river.
+                </h2>
+              </div>
+              <p className="max-w-sm text-sm leading-relaxed text-tatami">
+                Follow Market Street north and you hit the Riverwalk; the
+                Aquarium, Ross&apos;s Landing, and the Walnut Street Bridge are
+                all an easy stroll.
               </p>
+            </div>
+            <div data-fx="rise" className="mt-10 border border-seam bg-char p-4 sm:p-8">
+              <MarketMap />
             </div>
           </div>
         </section>
