@@ -260,6 +260,30 @@ body {
   filter: brightness(0.86) saturate(1.08) contrast(1.12) sepia(0.1);
 }
 
+/* Seamless marquee: the track holds two copies of the strip and slides
+   half its own width, so the loop never shows a seam */
+.m-marquee {
+  overflow: hidden;
+}
+.m-marquee-track {
+  display: flex;
+  width: max-content;
+  animation: m-marquee-slide 55s linear infinite;
+}
+.m-marquee:hover .m-marquee-track {
+  animation-play-state: paused;
+}
+@keyframes m-marquee-slide {
+  to {
+    transform: translateX(-50%);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .m-marquee-track {
+    animation: none;
+  }
+}
+
 /* ---------------------------------------------------------------------------
    Contrast sections: washi paper and lacquer vermilion, both with their own
    grain so the surfaces feel like material, not flat fills */

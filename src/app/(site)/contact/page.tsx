@@ -7,6 +7,19 @@ import { pageMetadata } from "@/lib/seo";
 
 export const revalidate = 300;
 
+const MARQUEE: [string, string][] = [
+  ["/photos/rolls-platter.webp", "Specialty rolls on slate boards"],
+  ["/photos/sashimi-board.webp", "Nigiri and sashimi with shaved carrot"],
+  ["/photos/ramen-close.webp", "Pork belly ramen with soft egg"],
+  ["/photos/rainbow-roll.webp", "Rainbow roll with spicy mayo"],
+  ["/photos/glazed-bowl.webp", "Glazed rice bowl beside skewers"],
+  ["/photos/roll-closeup.webp", "Torched roll with spicy mayo and sesame"],
+  ["/photos/ribs.webp", "Slow roasted baby back ribs with rice and slaw"],
+  ["/photos/nigiri.webp", "Glazed nigiri and rolls"],
+  ["/photos/skewers.webp", "Lemongrass chicken skewers"],
+  ["/photos/ramen.webp", "Noodle bowl with soft egg and crispy wonton"],
+];
+
 export async function generateMetadata(): Promise<Metadata> {
   const location = await getCurrentLocation();
   return pageMetadata(location, {
@@ -60,33 +73,32 @@ export default async function ContactPage() {
           </div>
         </section>
 
-        {/* From the kitchen: full-bleed banner */}
-        <section aria-label="From the kitchen" className="border-b border-seam">
-          <ul data-fx-group className="grid grid-cols-2 lg:grid-cols-4">
-            {(
-              [
-                ["/photos/rolls-platter.webp", "Specialty rolls on slate boards"],
-                ["/photos/roll-closeup.webp", "Torched roll with spicy mayo and sesame"],
-                ["/photos/nigiri.webp", "Glazed nigiri and rolls"],
-                ["/photos/ramen.webp", "Noodle bowl with soft egg and crispy wonton"],
-              ] as const
-            ).map(([src, alt], i) => (
-              <li
-                key={src}
-                className={`group relative aspect-square overflow-hidden lg:aspect-[3/4] lg:max-h-[340px] ${
-                  i > 0 ? "border-l border-seam" : ""
-                }`}
+        {/* From the kitchen: seamless marquee */}
+        <section aria-label="From the kitchen" className="m-marquee border-b border-seam">
+          <div className="m-marquee-track">
+            {[false, true].map((clone) => (
+              <ul
+                key={String(clone)}
+                aria-hidden={clone || undefined}
+                className="flex shrink-0"
               >
-                <Image
-                  src={src}
-                  alt={alt}
-                  fill
-                  sizes="(min-width: 1024px) 25vw, 50vw"
-                  className="m-photo object-cover transition-transform duration-700 group-hover:scale-105"
-                />
-              </li>
+                {MARQUEE.map(([src, alt]) => (
+                  <li
+                    key={src}
+                    className="relative h-56 w-[260px] shrink-0 border-r border-seam sm:h-72 sm:w-[330px]"
+                  >
+                    <Image
+                      src={src}
+                      alt={clone ? "" : alt}
+                      fill
+                      sizes="330px"
+                      className="m-photo object-cover"
+                    />
+                  </li>
+                ))}
+              </ul>
             ))}
-          </ul>
+          </div>
         </section>
       </>
     );
