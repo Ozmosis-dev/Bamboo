@@ -1,9 +1,20 @@
 # Bamboo on Market — Brand Visual Identity
 
-**Date:** 2026-10-18
-**Status:** Locked (validated section-by-section with client)
+**Date:** 2026-10-18 (revised same day against final printed menus)
+**Status:** Locked. The client's final menu designs in `docs/brand-reference/` are the CANONICAL visual reference — where this spec and the menus differ, follow the menus. The mood board remains secondary reference.
 **Mood board:** https://claude.ai/artifact/Qg4ahGd8NNKGbkbudz8Rg4
-**Scope:** Governs the Chattanooga (Market Street) location's website, menus, and marketing assets. Birmingham (Bamboo on 2nd) keeps its existing orange identity.
+**Scope:** Governs the Chattanooga (Market Street) location's website and marketing assets. Menus are done (client-designed). Birmingham (Bamboo on 2nd) keeps its existing orange identity.
+
+## Style decisions taken from the final menus
+
+- **Badge lockup is the working logo**: "BAMBOO / — ON MARKET —" heavy white caps inside a thin vermilion-keyline rectangle on dark grounds; on covers, a solid vermilion square badge with thin gold keyline, white chopstick-竹 mark + wordmark inside. The standalone chopstick-竹 mark appears separately as an accent.
+- **Prices are red** (vermilion family, ~#C0392B–#B5341C), always. Gold is NOT used for prices.
+- **Gold's role**: section eyebrows and service notes ("SAKE FLIGHT MARKET PRICE", "INQUIRE ABOUT…"), sub-labels (Glass / Bottle), fine keylines, the add-on box border. Accent of an accent.
+- **Item names**: letterspaced sans CAPS, medium/semibold, white.
+- **Section headers**: large light serif caps (SHARE, ROLLS, SAKE, COCKTAILS), generous tracking, flanked by or trailing into 1px hairlines.
+- **Descriptions**: sentence-case sans in warm grey, tight line-height, under the item name.
+- **Motifs**: red vertical kanji calligraphy strips (tategaki) as margin accents; ghost Japanese wave pattern in the background at near-invisible opacity; leather-grain black for covers; double-hairline flourishes around section titles.
+- **Density is OK**: the menus run two-column and tight; elegance comes from tracking, hairlines, and color discipline, not white space.
 
 ## Concept — "Lacquer & Gold"
 
@@ -83,6 +94,14 @@ Short declarative sentences. Confident, a little dry, zero exclamation marks. "F
 - **Social:** charred templates, graded photo full-bleed, logo reversed top-left, gold eyebrow + mincho headline bottom-left, "MARKET STREET · CHATTANOOGA" sign-off
 - **Print/signage:** logo black on washi or reversed; vermilion plane reserved for the door and one-off moments
 
-## Reference mockups
+## Reference files
 
-All on the mood-board canvas (artboards): Mark & Palette, Typography specimen, Menu Card, Web Hero, Instagram Post with photo treatment.
+- `docs/brand-reference/` — the client's FINAL menus (canonical): food menu mockup, beverage book mockups, leather cover, wine, sake, beer/zero-proof, cocktails pages
+- Mood-board canvas (secondary): Mark & Palette, Typography specimen, Menu Card, Web Hero, Instagram Post with photo treatment
+
+## Website translation notes (from the final menus)
+
+- Dark charcoal ground, white tracked-caps item names, red prices, gold eyebrows — carry this exact hierarchy into web menu pages
+- Use the vermilion-keyline badge lockup in the site header/footer rather than the bare logo art
+- Web font mapping until client supplies the menu fonts: Jost (tracked caps for item names/eyebrows, and the badge wordmark in bold), Zen Old Mincho (light serif section headers), Hanken Grotesk (descriptions)
+- Ghost wave pattern + vertical red kanji strips are approved page-furniture for web backgrounds/margins at very low opacity
