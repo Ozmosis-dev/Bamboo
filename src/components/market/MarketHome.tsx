@@ -250,11 +250,11 @@ export function MarketHome({
       <section className="relative overflow-hidden border-y border-seam">
         <div className="absolute inset-0" aria-hidden>
           <Image
-            src="/photos/chefs.webp"
+            src="/photos/counter.webp"
             alt=""
             fill
             sizes="100vw"
-            className="m-photo scale-110 object-cover object-center"
+            className="m-photo scale-110 object-cover object-[60%_center]"
             data-parallax="0.18"
           />
           <div className="absolute inset-0 bg-gradient-to-r from-char via-char/75 to-char/30" />
