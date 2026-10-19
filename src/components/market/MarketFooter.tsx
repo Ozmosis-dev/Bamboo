@@ -9,7 +9,7 @@ export function MarketFooter({
   sister: Location;
 }) {
   return (
-    <footer className="relative mt-24 overflow-hidden border-t border-seam bg-char-deep">
+    <footer className="relative overflow-hidden border-t border-seam bg-char-deep">
       <p
         aria-hidden
         className="m-ghost-kanji absolute -right-10 -top-16 text-[22rem]"
@@ -97,12 +97,12 @@ export function MarketFooter({
         </div>
       </div>
 
-      <div className="relative border-t border-seam">
-        <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-5 py-5 sm:px-8">
-          <p className="text-xs text-tatami/80">
+      <div className="m-verm relative">
+        <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-5 py-4 sm:px-8">
+          <p className="text-xs text-washi/90">
             © {new Date().getFullYear()} {location.name}
           </p>
-          <p aria-hidden className="m-serif text-sm tracking-[0.35em] text-verm">
+          <p aria-hidden className="m-kanji text-sm tracking-[0.35em] text-washi/90">
             竹 灯 味
           </p>
         </div>
