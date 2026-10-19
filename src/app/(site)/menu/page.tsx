@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { JsonLd } from "@/components/JsonLd";
 import { MenuBrowser } from "@/components/MenuBrowser";
+import { MarketMenu } from "@/components/market/MarketMenu";
 import { getCurrentLocation, currentLocationSlug } from "@/lib/location";
 import { getMenuForLocation } from "@/lib/menu";
 import { menuJsonLd, pageMetadata } from "@/lib/seo";
@@ -17,10 +18,33 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function MenuPage() {
+  const slug = currentLocationSlug();
   const [location, menu] = await Promise.all([
     getCurrentLocation(),
-    getMenuForLocation(currentLocationSlug()),
+    getMenuForLocation(slug),
   ]);
+
+  if (slug === "chattanooga") {
+    return (
+      <>
+        <JsonLd data={menuJsonLd(location, menu)} />
+        <div className="mx-auto max-w-6xl px-5 pt-14 sm:px-8">
+          <div className="flex items-center gap-5">
+            <span aria-hidden className="h-px w-14 bg-verm" />
+            <p className="m-eyebrow">The Menu · 献立</p>
+          </div>
+          <h1 className="m-serif mt-5 text-5xl sm:text-6xl">Menu</h1>
+          <p className="mt-4 max-w-xl leading-relaxed text-tatami">
+            Served at {location.name}, {location.city}. Items and prices change
+            with the fish.
+          </p>
+        </div>
+        <div className="pb-10">
+          <MarketMenu menu={menu} />
+        </div>
+      </>
+    );
+  }
 
   return (
     <div className="mx-auto max-w-3xl px-4 pb-16">

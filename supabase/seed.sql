@@ -21,7 +21,7 @@ insert into locations (slug, name, domain, address_line1, city, state, zip, phon
 ),
 (
   'chattanooga',
-  'Bamboo on Main',
+  'Bamboo on Market',
   'bambooonmain.com',
   '423 Market St',
   'Chattanooga', 'TN', '37402',

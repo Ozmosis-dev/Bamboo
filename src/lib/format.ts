@@ -7,6 +7,20 @@ export function formatPrice(item: Pick<ResolvedMenuItem, "price" | "price_note">
   return parts.join(" · ");
 }
 
+/** Menu-style price: whole dollars drop cents ($14, $9.50), like the printed menus. */
+export function formatPriceShort(
+  item: Pick<ResolvedMenuItem, "price" | "price_note">
+): string {
+  const parts: string[] = [];
+  if (item.price !== null) {
+    parts.push(
+      Number.isInteger(item.price) ? `$${item.price}` : `$${item.price.toFixed(2)}`
+    );
+  }
+  if (item.price_note) parts.push(item.price_note);
+  return parts.join(" · ");
+}
+
 export function isClosedEntry(entry: HoursEntry): boolean {
   return entry.open.toLowerCase() === "closed";
 }

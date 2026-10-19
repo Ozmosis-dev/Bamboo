@@ -1,24 +1,42 @@
 @import "tailwindcss";
 
-/* Design tokens. Structural palette only — the visual design pass comes later
-   and should happen here, not in component classes. */
+/* Design tokens.
+   Classic (Birmingham) palette stays as-is; the Market (Chattanooga) theme
+   remaps the structural tokens under [data-theme="market"] so shared pages
+   inherit the dark brand automatically. Brand spec:
+   docs/plans/2026-10-18-bamboo-on-market-brand-design.md */
 @theme {
-  /* Brand */
+  /* Classic brand (Birmingham placeholder) */
   --color-bamboo-50: #f4f7f2;
   --color-bamboo-100: #e4ebe0;
   --color-bamboo-600: #3f6b42;
   --color-bamboo-700: #33562f;
   --color-bamboo-800: #2a4527;
 
-  /* Neutrals */
+  /* Structural neutrals */
   --color-ink: #1c1c1a;
   --color-ink-soft: #55554f;
   --color-paper: #fdfcf9;
   --color-line: #e5e2da;
 
+  /* Market (Lacquer & Gold) */
+  --color-char: #1a1714;
+  --color-char-deep: #14110e;
+  --color-smoke: #2b2520;
+  --color-verm: #b5341c;
+  --color-price: #c8442b;
+  --color-gold: #b08d3e;
+  --color-gold-soft: #c8a858;
+  --color-tatami: #c9b18c;
+  --color-washi: #f3ede2;
+  --color-seam: #3a332c;
+
   /* Typography */
   --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+  --font-jost: var(--font-jost-v), ui-sans-serif, system-ui, sans-serif;
+  --font-mincho: var(--font-mincho-v), "Zen Old Mincho", Georgia, serif;
+  --font-hanken: var(--font-hanken-v), ui-sans-serif, system-ui, sans-serif;
 }
 
 body {
@@ -26,3 +44,203 @@ body {
   color: var(--color-ink);
   font-family: var(--font-sans);
 }
+
+/* ---------------------------------------------------------------------------
+   Market theme: remap structural tokens so every shared page goes dark with
+   correct contrast. Bespoke market components use the m-* classes below. */
+[data-theme="market"] {
+  --color-paper: var(--color-char);
+  --color-ink: var(--color-washi);
+  --color-ink-soft: var(--color-tatami);
+  --color-line: var(--color-seam);
+
+  --color-bamboo-50: var(--color-char-deep); /* footer / tinted bands */
+  --color-bamboo-100: var(--color-smoke); /* chips, tags */
+  --color-bamboo-600: var(--color-gold); /* hover borders */
+  --color-bamboo-700: var(--color-verm); /* buttons, links */
+  --color-bamboo-800: var(--color-washi); /* headings */
+
+  --font-sans: var(--font-hanken);
+}
+
+[data-theme="market"] body {
+  background:
+    radial-gradient(
+      90rem 40rem at 70% -10%,
+      rgba(200, 168, 88, 0.05),
+      transparent 60%
+    ),
+    var(--color-char);
+  color: var(--color-washi);
+}
+
+[data-theme="market"] ::selection {
+  background: var(--color-verm);
+  color: var(--color-washi);
+}
+
+[data-theme="market"] :focus-visible {
+  outline: 2px solid var(--color-gold-soft);
+  outline-offset: 2px;
+}
+
+/* ---------------------------------------------------------------------------
+   Market type voices */
+.m-eyebrow {
+  font-family: var(--font-jost);
+  font-weight: 400;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--color-gold);
+  font-size: 0.75rem;
+}
+
+.m-serif {
+  font-family: var(--font-mincho);
+  font-weight: 700;
+  color: var(--color-washi);
+}
+
+.m-caps {
+  font-family: var(--font-jost);
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.m-item-name {
+  font-family: var(--font-jost);
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-washi);
+}
+
+.m-price {
+  font-family: var(--font-jost);
+  font-weight: 500;
+  color: var(--color-price);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Section title flanked by hairlines, like the printed menus */
+.m-rule-title {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+.m-rule-title::before,
+.m-rule-title::after {
+  content: "";
+  height: 1px;
+  flex: 1;
+  background: var(--color-seam);
+}
+
+/* ---------------------------------------------------------------------------
+   Atmosphere: grain + seigaiha wave, both pure CSS */
+.m-grain {
+  position: relative;
+  isolation: isolate;
+}
+.m-grain::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  opacity: 0.05;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.m-seigaiha {
+  background-image:
+    radial-gradient(
+      circle at 50% 110%,
+      transparent 38%,
+      rgba(201, 177, 140, 0.055) 39%,
+      rgba(201, 177, 140, 0.055) 42%,
+      transparent 43%,
+      transparent 54%,
+      rgba(201, 177, 140, 0.045) 55%,
+      rgba(201, 177, 140, 0.045) 58%,
+      transparent 59%
+    ),
+    radial-gradient(
+      circle at 50% 110%,
+      transparent 38%,
+      rgba(201, 177, 140, 0.055) 39%,
+      rgba(201, 177, 140, 0.055) 42%,
+      transparent 43%,
+      transparent 54%,
+      rgba(201, 177, 140, 0.045) 55%,
+      rgba(201, 177, 140, 0.045) 58%,
+      transparent 59%
+    );
+  background-size: 72px 36px;
+  background-position:
+    0 0,
+    36px 18px;
+}
+
+/* Vertical kanji strip (tategaki), red like the printed margins */
+.m-tategaki {
+  writing-mode: vertical-rl;
+  font-family: var(--font-mincho);
+  font-weight: 700;
+  color: var(--color-verm);
+  letter-spacing: 0.6em;
+  user-select: none;
+}
+
+/* Ghost kanji watermark */
+.m-ghost-kanji {
+  font-family: var(--font-mincho);
+  font-weight: 900;
+  color: var(--color-tatami);
+  opacity: 0.05;
+  line-height: 1;
+  user-select: none;
+  pointer-events: none;
+}
+
+/* Vermilion keyline badge lockup (the working logo) */
+.m-lockup {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+  border: 1.5px solid var(--color-verm);
+  padding: 0.55rem 1.1rem 0.6rem;
+  line-height: 1;
+}
+.m-lockup .m-lockup-name {
+  font-family: var(--font-jost);
+  font-weight: 700;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--color-washi);
+  text-indent: 0.26em;
+}
+.m-lockup .m-lockup-sub {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-family: var(--font-jost);
+  font-weight: 400;
+  font-size: 0.5em;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--color-washi);
+  text-indent: 0.4em;
+}
+.m-lockup .m-lockup-sub::before,
+.m-lockup .m-lockup-sub::after {
+  content: "";
+  width: 1.1em;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.8;
+}
+
