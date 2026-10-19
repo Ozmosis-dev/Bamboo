@@ -97,12 +97,13 @@ export function MarketFooter({
         </div>
       </div>
 
-      <div className="m-verm relative">
+      <div className="relative bg-gold">
+        <div aria-hidden className="h-[3px] bg-verm" />
         <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-5 py-4 sm:px-8">
-          <p className="text-xs text-washi/90">
+          <p className="text-xs font-medium text-char-deep">
             © {new Date().getFullYear()} {location.name}
           </p>
-          <p aria-hidden className="m-kanji text-sm tracking-[0.35em] text-washi/90">
+          <p aria-hidden className="m-kanji text-sm tracking-[0.35em] text-char-deep">
             竹 灯 味
           </p>
         </div>
