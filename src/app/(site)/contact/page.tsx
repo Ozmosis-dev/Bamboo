@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { MarketPageHeader } from "@/components/market/MarketPage";
 import { formatHoursEntry, telHref } from "@/lib/format";
 import { getCurrentLocation, currentLocationSlug } from "@/lib/location";
@@ -59,59 +60,33 @@ export default async function ContactPage() {
           </div>
         </section>
 
-        {/* Washi: the particulars */}
-        <section className="m-washi border-b border-seam">
-          <div className="mx-auto grid max-w-6xl gap-12 px-5 py-20 sm:grid-cols-3 sm:px-8">
-            <div data-fx="rise">
-              <p className="m-eyebrow">Address</p>
-              <p className="m-serif mt-5 text-2xl leading-snug">
-                {location.address_line1}
-                <br />
-                {location.city}, {location.state} {location.zip}
-              </p>
-              {location.map_url && (
-                <a
-                  href={location.map_url}
-                  className="m-caps mt-6 inline-block border-b border-verm pb-1 text-[11px] text-verm hover:text-price"
-                >
-                  Open in Maps
-                </a>
-              )}
-            </div>
-            <div data-fx="rise">
-              <p className="m-eyebrow">Hours</p>
-              <ul className="m-soft mt-5 space-y-2">
-                {location.hours.map((entry) => (
-                  <li key={entry.days}>{formatHoursEntry(entry)}</li>
-                ))}
-              </ul>
-            </div>
-            <div data-fx="rise">
-              <p className="m-eyebrow">Follow</p>
-              <ul className="mt-5 space-y-2">
-                {location.social.instagram && (
-                  <li>
-                    <a
-                      href={location.social.instagram}
-                      className="m-caps text-[12px] text-[#262019] hover:text-verm"
-                    >
-                      Instagram
-                    </a>
-                  </li>
-                )}
-                {location.social.facebook && (
-                  <li>
-                    <a
-                      href={location.social.facebook}
-                      className="m-caps text-[12px] text-[#262019] hover:text-verm"
-                    >
-                      Facebook
-                    </a>
-                  </li>
-                )}
-              </ul>
-            </div>
-          </div>
+        {/* From the kitchen: full-bleed banner */}
+        <section aria-label="From the kitchen" className="border-b border-seam">
+          <ul data-fx-group className="grid grid-cols-2 lg:grid-cols-4">
+            {(
+              [
+                ["/photos/rolls-platter.webp", "Specialty rolls on slate boards"],
+                ["/photos/roll-closeup.webp", "Torched roll with spicy mayo and sesame"],
+                ["/photos/nigiri.webp", "Glazed nigiri and rolls"],
+                ["/photos/ramen.webp", "Noodle bowl with soft egg and crispy wonton"],
+              ] as const
+            ).map(([src, alt], i) => (
+              <li
+                key={src}
+                className={`group relative aspect-square overflow-hidden lg:aspect-[3/4] lg:max-h-[340px] ${
+                  i > 0 ? "border-l border-seam" : ""
+                }`}
+              >
+                <Image
+                  src={src}
+                  alt={alt}
+                  fill
+                  sizes="(min-width: 1024px) 25vw, 50vw"
+                  className="m-photo object-cover transition-transform duration-700 group-hover:scale-105"
+                />
+              </li>
+            ))}
+          </ul>
         </section>
       </>
     );
