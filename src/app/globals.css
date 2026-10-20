@@ -65,13 +65,7 @@ body {
 }
 
 [data-theme="market"] body {
-  background:
-    radial-gradient(
-      90rem 40rem at 70% -10%,
-      rgba(200, 168, 88, 0.05),
-      transparent 60%
-    ),
-    var(--color-char);
+  background: var(--color-char);
   color: var(--color-washi);
 }
 
