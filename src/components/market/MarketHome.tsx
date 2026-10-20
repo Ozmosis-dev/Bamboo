@@ -4,6 +4,7 @@ import { formatHoursEntry, telHref } from "@/lib/format";
 import type { Location, ResolvedMenuSection } from "@/lib/types";
 import type { SiteCopy } from "@content/types";
 import { MarketFx } from "./MarketFx";
+import { MarketMarquee } from "./MarketMarquee";
 import { SECTION_KANJI } from "./kanji";
 
 const JP_NUMERALS = ["一", "二", "三", "四", "五", "六", "七", "八"];
@@ -122,6 +123,9 @@ export function MarketHome({
           </div>
         </div>
       </section>
+
+      {/* -------------------------------------------- Kitchen marquee */}
+      <MarketMarquee />
 
       {/* ------------------------------------------------- The menu, by course */}
       <section className="relative overflow-hidden m-seigaiha">

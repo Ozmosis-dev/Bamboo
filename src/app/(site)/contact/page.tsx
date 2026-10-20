@@ -1,24 +1,11 @@
 import type { Metadata } from "next";
-import Image from "next/image";
+import { MarketMarquee } from "@/components/market/MarketMarquee";
 import { MarketPageHeader } from "@/components/market/MarketPage";
 import { formatHoursEntry, telHref } from "@/lib/format";
 import { getCurrentLocation, currentLocationSlug } from "@/lib/location";
 import { pageMetadata } from "@/lib/seo";
 
 export const revalidate = 300;
-
-const MARQUEE: [string, string][] = [
-  ["/photos/rolls-platter.webp", "Specialty rolls on slate boards"],
-  ["/photos/sashimi-board.webp", "Nigiri and sashimi with shaved carrot"],
-  ["/photos/ramen-close.webp", "Pork belly ramen with soft egg"],
-  ["/photos/rainbow-roll.webp", "Rainbow roll with spicy mayo"],
-  ["/photos/glazed-bowl.webp", "Glazed rice bowl beside skewers"],
-  ["/photos/roll-closeup.webp", "Torched roll with spicy mayo and sesame"],
-  ["/photos/ribs.webp", "Slow roasted baby back ribs with rice and slaw"],
-  ["/photos/nigiri.webp", "Glazed nigiri and rolls"],
-  ["/photos/skewers.webp", "Lemongrass chicken skewers"],
-  ["/photos/ramen.webp", "Noodle bowl with soft egg and crispy wonton"],
-];
 
 export async function generateMetadata(): Promise<Metadata> {
   const location = await getCurrentLocation();
@@ -74,32 +61,7 @@ export default async function ContactPage() {
         </section>
 
         {/* From the kitchen: seamless marquee */}
-        <section aria-label="From the kitchen" className="m-marquee border-b border-seam">
-          <div className="m-marquee-track">
-            {[false, true].map((clone) => (
-              <ul
-                key={String(clone)}
-                aria-hidden={clone || undefined}
-                className="flex shrink-0"
-              >
-                {MARQUEE.map(([src, alt]) => (
-                  <li
-                    key={src}
-                    className="relative h-56 w-[260px] shrink-0 border-r border-seam sm:h-72 sm:w-[330px]"
-                  >
-                    <Image
-                      src={src}
-                      alt={clone ? "" : alt}
-                      fill
-                      sizes="330px"
-                      className="m-photo object-cover"
-                    />
-                  </li>
-                ))}
-              </ul>
-            ))}
-          </div>
-        </section>
+        <MarketMarquee />
       </>
     );
   }
