@@ -2,8 +2,9 @@
 
 import { useEffect, useState } from "react";
 import type { DietaryTag, ResolvedMenuSection } from "@/lib/types";
+import { CategoryIcon } from "./CategoryIcon";
 import { MarketFx, scrollToId } from "./MarketFx";
-import { SECTION_KANJI } from "./kanji";
+import { FOOD_SLUGS, SECTION_KANJI } from "./kanji";
 
 const FILTERS: { tag: DietaryTag; label: string }[] = [
   { tag: "gluten-free", label: "Gluten-free" },
@@ -141,37 +142,49 @@ export function MarketMenu({ menu }: { menu: ResolvedMenuSection[] }) {
         {/* Desktop rail */}
         <aside className="hidden lg:block">
           <div className="sticky top-28">
-            <p className="m-eyebrow !text-[0.65rem]">Jump to</p>
             <nav aria-label="Menu categories">
-              <ul className="mt-5 space-y-0.5">
-                {menu.map((section) => {
-                  const slug = section.category.slug;
-                  const isCurrent = current === slug;
-                  return (
-                    <li key={slug}>
-                      <a
-                        href={`#${slug}`}
-                        onClick={onJump(slug, 120)}
-                        aria-current={isCurrent ? "true" : undefined}
-                        className={`m-caps group flex items-center gap-3 py-2 text-[12px] transition-colors ${
-                          isCurrent ? "text-washi" : "text-tatami hover:text-washi"
-                        }`}
-                      >
-                        <span
-                          aria-hidden
-                          className={`h-px bg-verm transition-all duration-300 ${
-                            isCurrent ? "w-6" : "w-0 group-hover:w-3 group-hover:bg-gold"
-                          }`}
-                        />
-                        {section.category.name}
-                      </a>
-                    </li>
-                  );
-                })}
-              </ul>
+              {(
+                [
+                  ["Food", "食", menu.filter((s) => FOOD_SLUGS.includes(s.category.slug))],
+                  ["Drinks", "飲", menu.filter((s) => !FOOD_SLUGS.includes(s.category.slug))],
+                ] as const
+              ).map(([label, glyph, sections], gi) => (
+                <div key={label} className={gi > 0 ? "mt-8 border-t border-seam pt-6" : ""}>
+                  <p className="m-eyebrow flex items-baseline gap-2 !text-[0.65rem]">
+                    {label}
+                    <span className="m-kanji font-normal text-gold/80">{glyph}</span>
+                  </p>
+                  <ul className="mt-4 space-y-0.5">
+                    {sections.map((section) => {
+                      const slug = section.category.slug;
+                      const isCurrent = current === slug;
+                      return (
+                        <li key={slug}>
+                          <a
+                            href={`#${slug}`}
+                            onClick={onJump(slug, 120)}
+                            aria-current={isCurrent ? "true" : undefined}
+                            className={`m-caps group relative block py-2 pl-8 text-[12px] transition-colors ${
+                              isCurrent ? "text-washi" : "text-tatami hover:text-washi"
+                            }`}
+                          >
+                            <span
+                              aria-hidden
+                              className={`absolute left-0 top-1/2 h-px -translate-y-1/2 bg-verm transition-all duration-300 ${
+                                isCurrent ? "w-5" : "w-0 group-hover:w-3 group-hover:bg-gold"
+                              }`}
+                            />
+                            {section.category.name}
+                          </a>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </div>
+              ))}
             </nav>
 
-            <div className="mt-10 border-t border-seam pt-6">
+            <div className="mt-8 border-t border-seam pt-6">
               <p className="m-eyebrow !text-[0.65rem]">Dietary</p>
               <div className="mt-4 flex flex-wrap gap-2">
                 {FILTERS.map(({ tag, label }) => (
@@ -215,7 +228,7 @@ export function MarketMenu({ menu }: { menu: ResolvedMenuSection[] }) {
             ))}
           </div>
 
-          {menu.map((section, i) => {
+          {menu.map((section) => {
             const visible = section.items.filter((item) => matches(item.dietary_tags));
             const kanji = SECTION_KANJI[section.category.slug];
             const isBarStart = section.category.slug === "cocktails";
@@ -246,9 +259,9 @@ export function MarketMenu({ menu }: { menu: ResolvedMenuSection[] }) {
                   >
                     {kanji ?? "竹"}
                   </span>
-                  <div className="relative flex items-baseline gap-5 px-5 py-4 sm:px-6">
-                    <span aria-hidden className="m-caps text-[11px] text-verm">
-                      {String(i + 1).padStart(2, "0")}
+                  <div className="relative flex items-center gap-5 px-5 py-4 sm:px-6">
+                    <span aria-hidden className="text-verm">
+                      <CategoryIcon slug={section.category.slug} className="h-6 w-6" />
                     </span>
                     <h2 className="m-serif text-2xl tracking-wide sm:text-3xl">
                       {section.category.name}

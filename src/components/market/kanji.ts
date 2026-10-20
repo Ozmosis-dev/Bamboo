@@ -1,3 +1,14 @@
+/** Category slugs that belong to the kitchen; everything else is the bar. */
+export const FOOD_SLUGS = [
+  "sashimi",
+  "nigiri",
+  "rolls",
+  "share",
+  "skewers",
+  "salads",
+  "noodle-bowls",
+];
+
 /** Kanji glyphs for menu sections we can name confidently; others go without. */
 export const SECTION_KANJI: Record<string, string> = {
   sashimi: "刺身",
