@@ -37,6 +37,13 @@ export default async function ContactPage() {
           >
             電
           </span>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/textures/wave.webp"
+            alt=""
+            aria-hidden
+            className="pointer-events-none absolute -bottom-8 -left-12 w-[720px] max-w-none opacity-[0.13]"
+          />
           <div className="relative mx-auto max-w-6xl px-5 py-20 sm:px-8 sm:py-28">
             <p data-fx="rise" className="m-eyebrow">
               By phone · Tue–Sat

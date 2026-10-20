@@ -146,15 +146,16 @@ export function MarketHome({
       <MarketMarquee />
 
       {/* ------------------------------------------------- The menu, by course */}
-      <section className="relative overflow-hidden m-seigaiha">
+      <section className="relative overflow-hidden">
+        <div aria-hidden className="m-paper-dark" />
         <Image
-          src="/brand/logo-mark-white.png"
+          src="/textures/wave.webp"
           alt=""
           aria-hidden
-          width={400}
-          height={316}
-          data-parallax="0.25"
-          className="pointer-events-none absolute -right-24 top-14 hidden w-[430px] opacity-[0.05] lg:block"
+          width={1400}
+          height={942}
+          data-parallax="0.15"
+          className="pointer-events-none absolute -right-16 bottom-0 w-[760px] max-w-none opacity-[0.16] sm:w-[1000px]"
         />
 
         <div className="relative mx-auto max-w-6xl px-5 py-24 sm:px-8 sm:py-28">

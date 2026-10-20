@@ -42,8 +42,11 @@ export default async function MenuPage() {
             </p>
           </div>
         </section>
-        <div className="pb-10">
-          <MarketMenu menu={menu} />
+        <div className="relative pb-10">
+          <div aria-hidden className="m-paper-dark" />
+          <div className="relative">
+            <MarketMenu menu={menu} />
+          </div>
         </div>
       </>
     );

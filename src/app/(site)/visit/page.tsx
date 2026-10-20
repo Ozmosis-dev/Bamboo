@@ -134,8 +134,16 @@ export default async function VisitPage() {
         </section>
 
         {/* Washi: the neighborhood map, printed like an insert */}
-        <section className="m-washi border-y border-seam">
-          <div className="mx-auto max-w-6xl px-5 py-20 sm:px-8 sm:py-24">
+        <section className="m-washi relative overflow-hidden border-y border-seam">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/textures/wave.webp"
+            alt=""
+            aria-hidden
+            className="pointer-events-none absolute -bottom-10 -left-14 w-[560px] max-w-none opacity-[0.12] mix-blend-multiply"
+            style={{ filter: "invert(1)" }}
+          />
+          <div className="relative mx-auto max-w-6xl px-5 py-20 sm:px-8 sm:py-24">
             <div className="grid gap-12 lg:grid-cols-[320px_1fr] lg:gap-16">
               <div data-fx="rise">
                 <div className="flex items-center gap-5">
