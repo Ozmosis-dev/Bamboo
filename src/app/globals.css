@@ -19,17 +19,17 @@
   --color-paper: #fdfcf9;
   --color-line: #e5e2da;
 
-  /* Market (Lacquer & Gold) */
-  --color-char: #1a1714;
-  --color-char-deep: #14110e;
-  --color-smoke: #2b2520;
+  /* Market (Lacquer & Gold) — near-neutral blacks with a trace of warmth */
+  --color-char: #161514;
+  --color-char-deep: #0f0e0d;
+  --color-smoke: #232120;
   --color-verm: #b5341c;
   --color-price: #c8442b;
   --color-gold: #b08d3e;
   --color-gold-soft: #c8a858;
   --color-tatami: #c9b18c;
   --color-washi: #f3ede2;
-  --color-seam: #3a332c;
+  --color-seam: #363330;
 
   /* Typography */
   --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;

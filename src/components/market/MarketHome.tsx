@@ -43,18 +43,24 @@ export function MarketHome({
       <section className="relative overflow-hidden">
         {/* Door render, held to the right, graded into the charred ground */}
         <div className="absolute inset-0" aria-hidden>
-          <div className="absolute inset-y-0 right-0 w-full md:left-[34%] md:w-auto">
+          <div className="absolute inset-y-0 right-0 w-full md:left-[20%] md:w-auto">
             <Image
               src="/brand/hero-door.webp"
               alt=""
               fill
               priority
-              sizes="(min-width: 768px) 66vw, 100vw"
+              sizes="(min-width: 768px) 80vw, 100vw"
               className="m-photo object-cover object-[72%_center]"
             />
-            {/* fade left into the text column, and down into the strip */}
-            <div className="absolute inset-0 bg-gradient-to-r from-char via-char/82 to-char/18 md:via-char/55 md:to-transparent" />
-            <div className="absolute inset-0 bg-gradient-to-t from-char via-transparent to-char/35" />
+            {/* long ramp into the text column so the image edge never shows */}
+            <div
+              className="absolute inset-0"
+              style={{
+                background:
+                  "linear-gradient(90deg, var(--color-char) 0%, var(--color-char) 18%, color-mix(in srgb, var(--color-char) 62%, transparent) 52%, transparent 85%)",
+              }}
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-char via-transparent to-char/40" />
           </div>
         </div>
 
