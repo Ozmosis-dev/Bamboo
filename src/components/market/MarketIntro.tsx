@@ -23,8 +23,8 @@ function Stalk({ x, h, lean = 0 }: { x: number; h: number; lean?: number }) {
 
 /** Full-screen opener: faint monochrome bamboo forest, the mark breathes in,
  * a vermilion rule draws, then the curtain wipes up and hands off to the
- * page's own entrance (MarketFx waits for INTRO_DONE_EVENT). Plays once per
- * session; skipped entirely under prefers-reduced-motion. */
+ * page's own entrance (MarketFx waits for INTRO_DONE_EVENT). Plays on every
+ * home load; skipped entirely under prefers-reduced-motion. */
 export function MarketIntro() {
   const [gone, setGone] = useState(false);
 
@@ -33,9 +33,6 @@ export function MarketIntro() {
     if (!el) return;
 
     const done = () => {
-      try {
-        sessionStorage.setItem("bamboo-intro", "1");
-      } catch {}
       // Mark completion on the element too: effects that run after this one
       // must not wait for an event that already fired.
       el.setAttribute("data-intro-done", "1");
@@ -44,16 +41,8 @@ export function MarketIntro() {
       document.documentElement.style.overflow = "";
     };
 
-    const seen = (() => {
-      try {
-        return sessionStorage.getItem("bamboo-intro") === "1";
-      } catch {
-        return false;
-      }
-    })();
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-    if (seen || reduced) {
+    if (reduced) {
       done();
       return;
     }
