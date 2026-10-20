@@ -53,6 +53,14 @@ export default async function AboutPage() {
           >
             竹
           </span>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/textures/wave.webp"
+            alt=""
+            aria-hidden
+            className="pointer-events-none absolute -bottom-12 -right-16 w-[620px] max-w-none opacity-[0.11] mix-blend-multiply"
+            style={{ filter: "invert(1)" }}
+          />
           <div className="relative mx-auto max-w-6xl px-5 py-24 sm:px-8 sm:py-28">
             <div data-fx="rise" className="flex items-center gap-5">
               <span aria-hidden className="h-px w-14 bg-verm" />
@@ -70,7 +78,9 @@ export default async function AboutPage() {
         </section>
 
         {/* Two cities, one standard */}
-        <section className="mx-auto max-w-6xl px-5 py-24 sm:px-8">
+        <section className="relative">
+          <div aria-hidden className="m-paper-dark" />
+          <div className="relative mx-auto max-w-6xl px-5 py-24 sm:px-8">
           <div className="grid gap-y-14 md:grid-cols-[1fr_1px_1fr] md:gap-x-14">
             <div data-fx="rise">
               <p className="m-eyebrow">The original</p>
@@ -102,6 +112,7 @@ export default async function AboutPage() {
               </Link>
             </div>
           </div>
+          </div>
         </section>
 
         {/* Vermilion: come eat */}
@@ -112,6 +123,13 @@ export default async function AboutPage() {
           >
             味
           </span>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/textures/wave.webp"
+            alt=""
+            aria-hidden
+            className="pointer-events-none absolute -bottom-6 -left-14 w-[640px] max-w-none opacity-[0.13]"
+          />
           <div className="relative mx-auto flex max-w-6xl flex-col items-start gap-8 px-5 py-20 sm:px-8 sm:py-24">
             <p data-fx="rise" className="m-serif max-w-2xl text-3xl leading-snug sm:text-5xl">
               Dinner, Monday through Saturday. Walk-ins welcome.

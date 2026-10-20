@@ -39,6 +39,7 @@ export default async function VisitPage() {
         <section className="relative border-b border-seam">
           <div className="grid lg:min-h-[86vh] lg:grid-cols-[1.08fr_1fr]">
             <div className="relative z-10 flex flex-col justify-between gap-16 px-5 pb-14 pt-16 sm:px-8 sm:pt-20 lg:pr-0 lg:pl-[max(2rem,calc((100vw-72rem)/2))]">
+              <div aria-hidden className="m-paper-dark" />
               <div>
                 <div data-hero className="flex items-center gap-5">
                   <span aria-hidden className="h-px w-14 bg-verm" />
@@ -193,6 +194,13 @@ export default async function VisitPage() {
           >
             車
           </span>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/textures/wave.webp"
+            alt=""
+            aria-hidden
+            className="pointer-events-none absolute -bottom-8 -left-12 w-[560px] max-w-none opacity-[0.12]"
+          />
           <div className="relative mx-auto grid max-w-6xl gap-10 px-5 py-18 sm:px-8 sm:py-20 md:grid-cols-[auto_1fr] md:items-center md:gap-16">
             <p data-fx="rise" className="m-serif text-3xl sm:text-4xl">
               Parking

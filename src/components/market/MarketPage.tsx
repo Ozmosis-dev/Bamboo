@@ -15,8 +15,10 @@ export function MarketPageHeader({
   lead?: string;
 }) {
   return (
-    <div className="relative mx-auto max-w-6xl px-5 pt-16 sm:px-8 sm:pt-20">
-      <MarketFx />
+    <div className="relative">
+      <div aria-hidden className="m-paper-dark" />
+      <div className="relative mx-auto max-w-6xl px-5 pt-16 sm:px-8 sm:pt-20">
+        <MarketFx />
       {kanji && (
         <p
           aria-hidden
@@ -37,6 +39,7 @@ export function MarketPageHeader({
           {lead}
         </p>
       )}
+      </div>
     </div>
   );
 }
