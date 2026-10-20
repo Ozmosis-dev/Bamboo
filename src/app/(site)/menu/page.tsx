@@ -35,11 +35,43 @@ export default async function MenuPage() {
           >
             献立
           </span>
-          <div className="relative mx-auto flex max-w-6xl flex-wrap items-baseline justify-between gap-x-10 gap-y-2 px-5 py-9 sm:px-8">
-            <h1 className="m-serif text-4xl sm:text-5xl">Menu</h1>
-            <p className="m-caps text-[11px] text-washi/85">
-              Dinner · changes with the fish
-            </p>
+          <div className="relative mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-x-10 gap-y-4 px-5 py-8 sm:px-8">
+            <div>
+              <h1 className="m-serif text-4xl sm:text-5xl">Menu</h1>
+              <p className="m-caps mt-2 text-[10.5px] text-washi/85">
+                Dinner · changes with the fish
+              </p>
+            </div>
+            <div className="flex flex-wrap gap-3">
+              {(
+                [
+                  ["/menus/bamboo-food-menu.pdf", "Food PDF"],
+                  ["/menus/bamboo-drinks-menu.pdf", "Drinks PDF"],
+                ] as const
+              ).map(([href, label]) => (
+                <a
+                  key={href}
+                  href={href}
+                  target="_blank"
+                  rel="noopener"
+                  className="m-caps inline-flex items-center gap-2.5 border border-washi/50 px-4 py-2.5 text-[11px] text-washi transition-colors hover:border-washi hover:bg-washi/10"
+                >
+                  <svg
+                    aria-hidden
+                    viewBox="0 0 16 16"
+                    className="h-3.5 w-3.5"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.4"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M8 2v8m0 0 3-3m-3 3L5 7M3 13h10" />
+                  </svg>
+                  {label}
+                </a>
+              ))}
+            </div>
           </div>
         </section>
         <div className="relative pb-10">

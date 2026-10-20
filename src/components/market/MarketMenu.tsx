@@ -24,15 +24,16 @@ function dollars(price: number) {
   return Number.isInteger(price) ? `$${price}` : `$${price.toFixed(2)}`;
 }
 
-const MOBILE_VISIBLE = 5;
-
 /** Menu browser in the printed-menu style: sticky category rail (desktop) /
- * collapsible category panel (mobile), active-section tracking, smooth
- * scroll, dietary filters, full-row section bands. */
+ * Dinner–Drinks tab panel (mobile), active-section tracking, smooth scroll,
+ * dietary filters, full-row section bands. */
 export function MarketMenu({ menu }: { menu: ResolvedMenuSection[] }) {
   const [active, setActive] = useState<DietaryTag[]>([]);
   const [current, setCurrent] = useState<string>(menu[0]?.category.slug ?? "");
-  const [moreOpen, setMoreOpen] = useState(false);
+  const [groupOverride, setGroupOverride] = useState<{
+    group: "dinner" | "drinks";
+    at: string;
+  } | null>(null);
 
   const toggle = (tag: DietaryTag) =>
     setActive((cur) =>
@@ -59,82 +60,74 @@ export function MarketMenu({ menu }: { menu: ResolvedMenuSection[] }) {
     return () => observer.disconnect();
   }, [menu]);
 
+  // The mobile tab follows the section being read; a tap overrides it until
+  // the reader scrolls into a different section.
+  const autoGroup = FOOD_SLUGS.includes(current) ? "dinner" : "drinks";
+  const group =
+    groupOverride && groupOverride.at === current ? groupOverride.group : autoGroup;
+
   const onJump = (slug: string, offsetY: number) => (e: React.MouseEvent) => {
     e.preventDefault();
-    setMoreOpen(false);
-    // Let the "More" panel finish collapsing before measuring the target.
-    window.setTimeout(() => scrollToId(slug, offsetY), moreOpen ? 340 : 0);
+    scrollToId(slug, offsetY);
   };
 
-  // Mobile: keep the active category visible even while collapsed.
-  const foundIdx = menu.findIndex((s) => s.category.slug === current);
-  const currentIdx = foundIdx === -1 ? 0 : foundIdx;
-  const mobileVisible =
-    currentIdx < MOBILE_VISIBLE
-      ? menu.slice(0, MOBILE_VISIBLE)
-      : [...menu.slice(0, MOBILE_VISIBLE - 1), menu[currentIdx]];
-  const mobileRest = menu.filter((s) => !mobileVisible.includes(s));
-
-  const chip = (slug: string, name: string, isCurrent: boolean, offsetY: number) => (
-    <a
-      key={slug}
-      href={`#${slug}`}
-      onClick={onJump(slug, offsetY)}
-      aria-current={isCurrent ? "true" : undefined}
-      className={`m-caps whitespace-nowrap border px-3 py-1.5 text-[10.5px] transition-colors ${
-        isCurrent ? "border-verm bg-verm text-washi" : "border-seam text-tatami"
-      }`}
-    >
-      {name}
-    </a>
-  );
+  const dinnerSections = menu.filter((s) => FOOD_SLUGS.includes(s.category.slug));
+  const drinkSections = menu.filter((s) => !FOOD_SLUGS.includes(s.category.slug));
+  const groupSections = group === "dinner" ? dinnerSections : drinkSections;
 
   return (
     <div className="mx-auto max-w-6xl px-5 sm:px-8">
       <MarketFx />
 
-      {/* Mobile category panel */}
+      {/* Mobile category panel: Dinner / Drinks tabs over that group's chips */}
       <nav
         aria-label="Menu categories"
         className="sticky top-[70px] z-30 -mx-5 border-b border-seam bg-char/95 px-5 pb-3 pt-3 backdrop-blur-md lg:hidden"
       >
-        <div className="flex flex-wrap items-center gap-1.5">
-          {mobileVisible.map((s) =>
-            chip(s.category.slug, s.category.name, current === s.category.slug, 185)
-          )}
-          <button
-            type="button"
-            onClick={() => setMoreOpen((v) => !v)}
-            aria-expanded={moreOpen}
-            className={`m-caps flex items-center gap-1.5 border px-3 py-1.5 text-[10.5px] transition-colors ${
-              moreOpen ? "border-gold text-gold-soft" : "border-seam text-gold-soft"
-            }`}
-          >
-            More
-            <svg
-              aria-hidden
-              viewBox="0 0 10 6"
-              className={`h-[5px] w-[9px] transition-transform duration-300 ${
-                moreOpen ? "rotate-180" : ""
+        <div className="flex gap-1.5" role="tablist" aria-label="Menu halves">
+          {(
+            [
+              ["dinner", "Dinner", "食"],
+              ["drinks", "Drinks", "飲"],
+            ] as const
+          ).map(([key, label, glyph]) => (
+            <button
+              key={key}
+              type="button"
+              role="tab"
+              aria-selected={group === key}
+              onClick={() => setGroupOverride({ group: key, at: current })}
+              className={`m-caps flex flex-1 items-center justify-center gap-2 border py-2.5 text-[11.5px] transition-colors ${
+                group === key
+                  ? "border-verm bg-verm text-washi"
+                  : "border-seam text-tatami"
               }`}
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.5"
             >
-              <path d="M1 1l4 4 4-4" />
-            </svg>
-          </button>
+              {label}
+              <span className="m-kanji text-[11px] font-normal opacity-80">{glyph}</span>
+            </button>
+          ))}
         </div>
-        <div
-          className={`grid transition-all duration-300 ${
-            moreOpen ? "mt-3 grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
-          }`}
-        >
-          <div className="flex flex-wrap gap-1.5 overflow-hidden">
-            {mobileRest.map((s) =>
-              chip(s.category.slug, s.category.name, current === s.category.slug, 185)
-            )}
-          </div>
+        <div className="mt-2.5 flex flex-wrap gap-1.5">
+          {groupSections.map((s) => {
+            const slug = s.category.slug;
+            const isCurrent = current === slug;
+            return (
+              <a
+                key={slug}
+                href={`#${slug}`}
+                onClick={onJump(slug, 205)}
+                aria-current={isCurrent ? "true" : undefined}
+                className={`m-caps whitespace-nowrap border px-3 py-1.5 text-[10.5px] transition-colors ${
+                  isCurrent
+                    ? "border-gold bg-gold/15 text-gold-soft"
+                    : "border-seam text-tatami"
+                }`}
+              >
+                {s.category.name}
+              </a>
+            );
+          })}
         </div>
       </nav>
 
