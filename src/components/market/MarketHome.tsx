@@ -52,15 +52,16 @@ export function MarketHome({
               sizes="(min-width: 768px) 80vw, 100vw"
               className="m-photo object-cover object-[72%_center]"
             />
-            {/* long ramp into the text column so the image edge never shows */}
+            {/* flat darkening tint + eased ramp so the image edge never shows */}
+            <div className="absolute inset-0 bg-char/30" />
             <div
               className="absolute inset-0"
               style={{
                 background:
-                  "linear-gradient(90deg, var(--color-char) 0%, var(--color-char) 18%, color-mix(in srgb, var(--color-char) 62%, transparent) 52%, transparent 85%)",
+                  "linear-gradient(90deg, var(--color-char) 0%, var(--color-char) 26%, color-mix(in srgb, var(--color-char) 84%, transparent) 44%, color-mix(in srgb, var(--color-char) 52%, transparent) 62%, color-mix(in srgb, var(--color-char) 22%, transparent) 80%, transparent 100%)",
               }}
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-char via-transparent to-char/40" />
+            <div className="absolute inset-0 bg-gradient-to-t from-char via-transparent to-char/45" />
           </div>
         </div>
 
@@ -112,20 +113,30 @@ export function MarketHome({
         </div>
 
         {/* Tonight strip */}
-        <div data-hero className="relative border-y border-seam bg-char-deep/70 backdrop-blur-sm">
-          <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-x-10 gap-y-2 px-5 py-4 sm:px-8">
-            <p className="m-eyebrow !text-[0.65rem]">Tonight</p>
-            {location.hours.filter((h) => h.open !== "closed").slice(0, 1).map((h) => (
-              <p key={h.days} className="text-sm text-tatami">
-                {formatHoursEntry(h)}
+        <div data-hero className="relative border-y border-seam bg-char-deep">
+          <div className="mx-auto grid max-w-6xl grid-cols-2 divide-seam px-5 sm:grid-cols-3 sm:divide-x sm:px-8">
+            <div className="py-4 sm:pr-10">
+              <p className="m-eyebrow !text-[0.6rem]">
+                Tonight <span className="m-kanji font-normal">· 今夜</span>
               </p>
-            ))}
-            <p className="text-sm text-tatami">
-              {location.address_line1}, {location.city}
-            </p>
-            <p className="m-caps ml-auto hidden text-[11px] text-gold-soft sm:block">
-              Walk-ins welcome
-            </p>
+              {location.hours.filter((h) => h.open !== "closed").slice(0, 1).map((h) => (
+                <p key={h.days} className="m-serif mt-1.5 text-lg leading-snug">
+                  {formatHoursEntry(h)}
+                </p>
+              ))}
+            </div>
+            <div className="py-4 sm:px-10">
+              <p className="m-eyebrow !text-[0.6rem]">Find us</p>
+              <p className="m-serif mt-1.5 text-lg leading-snug">
+                {location.address_line1}, {location.city}
+              </p>
+            </div>
+            <div className="col-span-2 border-t border-seam py-4 sm:col-span-1 sm:border-t-0 sm:pl-10">
+              <p className="m-eyebrow !text-[0.6rem]">No reservations</p>
+              <p className="m-serif mt-1.5 text-lg leading-snug text-gold-soft">
+                Walk-ins welcome
+              </p>
+            </div>
           </div>
         </div>
       </section>
