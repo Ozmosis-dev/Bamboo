@@ -140,7 +140,7 @@ export function MarketMenu({ menu }: { menu: ResolvedMenuSection[] }) {
 
       <div className="lg:grid lg:grid-cols-[230px_1fr] lg:gap-16">
         {/* Desktop rail */}
-        <aside className="hidden lg:block">
+        <aside className="hidden pt-8 lg:block">
           <div className="sticky top-28">
             <nav aria-label="Menu categories">
               {(
@@ -154,7 +154,7 @@ export function MarketMenu({ menu }: { menu: ResolvedMenuSection[] }) {
                     {label}
                     <span className="m-kanji font-normal text-gold/80">{glyph}</span>
                   </p>
-                  <ul className="mt-4 space-y-0.5">
+                  <ul className="mt-3">
                     {sections.map((section) => {
                       const slug = section.category.slug;
                       const isCurrent = current === slug;
@@ -164,7 +164,7 @@ export function MarketMenu({ menu }: { menu: ResolvedMenuSection[] }) {
                             href={`#${slug}`}
                             onClick={onJump(slug, 120)}
                             aria-current={isCurrent ? "true" : undefined}
-                            className={`m-caps group relative block py-2 pl-8 text-[12px] transition-colors ${
+                            className={`m-caps group relative block py-[5px] pl-8 text-[12px] leading-tight transition-colors ${
                               isCurrent ? "text-washi" : "text-tatami hover:text-washi"
                             }`}
                           >
