@@ -23,9 +23,10 @@ export function MarketFx() {
     const mm = gsap.matchMedia();
 
     mm.add("(prefers-reduced-motion: no-preference)", () => {
+      let introCleanup: (() => void) | undefined;
       const heroEls = gsap.utils.toArray<HTMLElement>("[data-hero]");
       if (heroEls.length) {
-        gsap.fromTo(
+        const reveal = gsap.fromTo(
           heroEls,
           { y: 30, autoAlpha: 0 },
           {
@@ -35,8 +36,20 @@ export function MarketFx() {
             stagger: 0.12,
             ease: "power3.out",
             clearProps: "all",
+            paused: true,
           }
         );
+        // When the intro curtain is up, wait for its hand-off; the intro
+        // dispatches the event immediately when it skips itself.
+        const introEl = document.querySelector("[data-intro]");
+        if (introEl && !introEl.hasAttribute("data-intro-done")) {
+          const start = () => reveal.play();
+          window.addEventListener("bamboo:intro-done", start, { once: true });
+          introCleanup = () =>
+            window.removeEventListener("bamboo:intro-done", start);
+        } else {
+          reveal.play();
+        }
       }
 
       gsap.utils.toArray<HTMLElement>('[data-fx="rise"]').forEach((el) => {
@@ -102,6 +115,8 @@ export function MarketFx() {
           }
         );
       });
+
+      return () => introCleanup?.();
     });
 
     return () => mm.revert();

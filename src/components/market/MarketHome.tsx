@@ -4,6 +4,7 @@ import { formatHoursEntry, telHref } from "@/lib/format";
 import type { Location, ResolvedMenuSection } from "@/lib/types";
 import type { SiteCopy } from "@content/types";
 import { MarketFx } from "./MarketFx";
+import { MarketIntro } from "./MarketIntro";
 import { MarketMarquee } from "./MarketMarquee";
 import { SECTION_KANJI } from "./kanji";
 
@@ -37,6 +38,7 @@ export function MarketHome({
 
   return (
     <>
+      <MarketIntro />
       <MarketFx />
 
       {/* ------------------------------------------------------ Hero */}
