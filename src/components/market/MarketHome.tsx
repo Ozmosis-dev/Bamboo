@@ -40,8 +40,9 @@ export function MarketHome({
       <MarketFx />
 
       {/* ------------------------------------------------------ Hero */}
-      <section className="relative overflow-hidden">
-        {/* Door render, held to the right, graded into the charred ground */}
+      <section className="relative overflow-hidden bg-char-deep">
+        {/* Door render on the right; one gradient overlays the WHOLE section
+            (ground + image) so there is no boundary to see */}
         <div className="absolute inset-0" aria-hidden>
           <div className="absolute inset-y-0 right-0 w-full md:left-[20%] md:w-auto">
             <Image
@@ -52,17 +53,15 @@ export function MarketHome({
               sizes="(min-width: 768px) 80vw, 100vw"
               className="m-photo object-cover object-[72%_center]"
             />
-            {/* flat darkening tint + eased ramp so the image edge never shows */}
-            <div className="absolute inset-0 bg-char/30" />
-            <div
-              className="absolute inset-0"
-              style={{
-                background:
-                  "linear-gradient(90deg, var(--color-char) 0%, var(--color-char) 26%, color-mix(in srgb, var(--color-char) 84%, transparent) 44%, color-mix(in srgb, var(--color-char) 52%, transparent) 62%, color-mix(in srgb, var(--color-char) 22%, transparent) 80%, transparent 100%)",
-              }}
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-char via-transparent to-char/45" />
           </div>
+          <div
+            className="absolute inset-0"
+            style={{
+              background:
+                "linear-gradient(90deg, var(--color-char-deep) 0%, var(--color-char-deep) 32%, color-mix(in srgb, var(--color-char-deep) 55%, transparent) 52%, color-mix(in srgb, var(--color-char-deep) 20%, transparent) 70%, transparent 90%)",
+            }}
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-char-deep via-transparent to-char-deep/40" />
         </div>
 
         <p
