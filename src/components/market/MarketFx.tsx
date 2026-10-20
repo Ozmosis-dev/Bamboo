@@ -2,10 +2,9 @@
 
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { ScrollToPlugin } from "gsap/ScrollToPlugin";
 import { useGSAP } from "@gsap/react";
 
-gsap.registerPlugin(ScrollTrigger, ScrollToPlugin, useGSAP);
+gsap.registerPlugin(ScrollTrigger, useGSAP);
 
 /** Declarative scroll choreography for market pages. Mount once per page.
  *
@@ -111,20 +110,20 @@ export function MarketFx() {
   return null;
 }
 
-/** Smooth-scroll helper for in-page nav (respects reduced motion). */
+/** Smooth-scroll helper for in-page nav. Native compositor scrolling (not a
+ * JS tween) so it keeps working in throttled tabs; respects reduced motion. */
 export function scrollToId(id: string, offsetY = 90) {
+  const target = document.getElementById(id);
+  if (!target) return;
   const prefersReduced = window.matchMedia(
     "(prefers-reduced-motion: reduce)"
   ).matches;
-  const target = document.getElementById(id);
-  if (!target) return;
-  if (prefersReduced) {
-    target.scrollIntoView();
-    return;
-  }
-  gsap.to(window, {
-    duration: 0.9,
-    ease: "power3.inOut",
-    scrollTo: { y: target, offsetY, autoKill: true },
-  });
+  const top = target.getBoundingClientRect().top + window.scrollY - offsetY;
+  window.scrollTo({ top, behavior: prefersReduced ? "auto" : "smooth" });
+  // Layout can shift mid-scroll (collapsing panels, lazy images); settle
+  // exactly on the target afterwards.
+  window.setTimeout(() => {
+    const delta = target.getBoundingClientRect().top - offsetY;
+    if (Math.abs(delta) > 4) window.scrollBy(0, delta);
+  }, 750);
 }

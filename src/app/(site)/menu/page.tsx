@@ -28,17 +28,20 @@ export default async function MenuPage() {
     return (
       <>
         <JsonLd data={menuJsonLd(location, menu)} />
-        <div className="mx-auto max-w-6xl px-5 pt-14 sm:px-8">
-          <div className="flex items-center gap-5">
-            <span aria-hidden className="h-px w-14 bg-verm" />
-            <p className="m-eyebrow">The Menu · 献立</p>
+        <section className="m-verm relative overflow-hidden">
+          <span
+            aria-hidden
+            className="m-kanji absolute -top-7 right-2 text-[7.5rem] leading-none text-washi opacity-15 sm:right-10"
+          >
+            献立
+          </span>
+          <div className="relative mx-auto flex max-w-6xl flex-wrap items-baseline justify-between gap-x-10 gap-y-2 px-5 py-9 sm:px-8">
+            <h1 className="m-serif text-4xl sm:text-5xl">Menu</h1>
+            <p className="m-caps text-[11px] text-washi/85">
+              Dinner · changes with the fish
+            </p>
           </div>
-          <h1 className="m-serif mt-5 text-5xl sm:text-6xl">Menu</h1>
-          <p className="mt-4 max-w-xl leading-relaxed text-tatami">
-            Served at {location.name}, {location.city}. Items and prices change
-            with the fish.
-          </p>
-        </div>
+        </section>
         <div className="pb-10">
           <MarketMenu menu={menu} />
         </div>
