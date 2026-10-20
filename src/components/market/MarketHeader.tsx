@@ -28,8 +28,8 @@ export function MarketHeader({ location }: { location: Location }) {
 
   return (
     <header className="sticky top-0 z-50">
-      <div aria-hidden className="h-[3px] bg-verm" />
-      <div className="border-b border-seam bg-char/90 backdrop-blur-md">
+      <div aria-hidden className="relative z-50 h-[3px] bg-verm" />
+      <div className="relative z-50 border-b border-seam bg-char/90 backdrop-blur-md">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-3.5 sm:px-8">
           <Link
             href="/"
@@ -104,11 +104,19 @@ export function MarketHeader({ location }: { location: Location }) {
 
       {/* Mobile overlay */}
       <div
-        className={`fixed inset-0 top-[60px] z-40 bg-char-deep/97 backdrop-blur-sm transition-opacity duration-300 md:hidden ${
+        className={`fixed inset-0 z-40 bg-char-deep transition-opacity duration-300 md:hidden ${
           open ? "opacity-100" : "pointer-events-none opacity-0"
         }`}
       >
-        <nav aria-label="Mobile" className="flex h-full flex-col px-8 pt-10 m-seigaiha">
+        <div aria-hidden className="m-paper-dark" />
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/textures/wave.webp"
+          alt=""
+          aria-hidden
+          className="pointer-events-none absolute bottom-0 left-1/2 w-[560px] max-w-none -translate-x-1/2 opacity-[0.12]"
+        />
+        <nav aria-label="Mobile" className="relative flex h-full flex-col px-8 pt-28">
           <ul className="space-y-2">
             {nav.map((item, i) => (
               <li
@@ -140,12 +148,13 @@ export function MarketHeader({ location }: { location: Location }) {
           >
             Call {location.phone}
           </a>
-          <p
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/brand/logo-full-white.png"
+            alt=""
             aria-hidden
-            className="m-ghost-kanji pointer-events-none mt-auto self-end pb-10 text-[11rem]"
-          >
-            竹
-          </p>
+            className="pointer-events-none mb-10 mt-auto w-36 self-end opacity-90"
+          />
         </nav>
       </div>
     </header>
