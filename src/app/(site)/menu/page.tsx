@@ -5,6 +5,7 @@ import { MarketMenu } from "@/components/market/MarketMenu";
 import { getCurrentLocation, currentLocationSlug } from "@/lib/location";
 import { getMenuForLocation } from "@/lib/menu";
 import { menuJsonLd, pageMetadata } from "@/lib/seo";
+import { getSiteContent } from "@/lib/content";
 
 export const revalidate = 300;
 
@@ -25,6 +26,7 @@ export default async function MenuPage() {
   ]);
 
   if (slug === "chattanooga") {
+    const content = await getSiteContent(slug);
     return (
       <>
         <JsonLd data={menuJsonLd(location, menu)} />

@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { getCopy } from "@content/index";
 import { MarketHome } from "@/components/market/MarketHome";
+import { getSiteContent } from "@/lib/content";
+import { getSiteImages } from "@/lib/images";
 import { formatHoursEntry, formatPrice, telHref } from "@/lib/format";
 import { getCurrentLocation, getSisterLocation, currentLocationSlug } from "@/lib/location";
 import { getMenuForLocation } from "@/lib/menu";
@@ -27,8 +29,19 @@ export default async function HomePage() {
   ]);
 
   if (slug === "chattanooga") {
+    const [content, siteImages] = await Promise.all([
+      getSiteContent(slug),
+      getSiteImages(),
+    ]);
     return (
-      <MarketHome copy={copy} location={location} sister={sister} menu={menu} />
+      <MarketHome
+        content={content}
+        location={location}
+        sister={sister}
+        menu={menu}
+        images={siteImages.slots}
+        gallery={siteImages.gallery}
+      />
     );
   }
 

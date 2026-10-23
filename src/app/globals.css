@@ -254,6 +254,42 @@ body {
   filter: brightness(0.86) saturate(1.08) contrast(1.12) sepia(0.1);
 }
 
+/* ---------------------------------------------------------------------------
+   Admin scope: the CMS always renders light and calm, whichever site theme
+   the deployment carries. Vermilion is the action color, gold the accent. */
+.m-admin {
+  --color-paper: #faf8f3;
+  --color-ink: #211d18;
+  --color-ink-soft: #6e6456;
+  --color-line: #e5ddcf;
+  --color-bamboo-50: #f3eee4;
+  --color-bamboo-100: #ece4d4;
+  --color-bamboo-600: #b08d3e;
+  --color-bamboo-700: #b5341c;
+  --color-bamboo-800: #211d18;
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-hanken, var(--font-sans));
+}
+.m-admin .a-eyebrow {
+  font-family: var(--font-jost);
+  font-weight: 500;
+  font-size: 0.68rem;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: #b08d3e;
+}
+.m-admin .a-card {
+  background: #fffdf9;
+  border: 1px solid var(--color-line);
+  border-radius: 10px;
+}
+.m-admin input,
+.m-admin select,
+.m-admin textarea {
+  background: #fff;
+}
+
 /* Real paper texture over dark sections: a quiet mottle, never a pattern */
 .m-paper-dark {
   position: absolute;

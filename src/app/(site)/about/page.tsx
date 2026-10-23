@@ -6,6 +6,8 @@ import { MarketPageHeader } from "@/components/market/MarketPage";
 import { telHref } from "@/lib/format";
 import { getCurrentLocation, getSisterLocation, currentLocationSlug } from "@/lib/location";
 import { pageMetadata } from "@/lib/seo";
+import { getSiteContent } from "@/lib/content";
+import { getSiteImages } from "@/lib/images";
 
 export const revalidate = 300;
 
@@ -24,7 +26,11 @@ export default async function AboutPage() {
   const location = await getCurrentLocation();
 
   if (slug === "chattanooga") {
-    const sister = await getSisterLocation();
+    const [sister, content, siteImages] = await Promise.all([
+      getSisterLocation(),
+      getSiteContent(slug),
+      getSiteImages(),
+    ]);
     return (
       <>
         <MarketPageHeader
@@ -36,7 +42,7 @@ export default async function AboutPage() {
         {/* Full-bleed room — the image speaks for itself */}
         <section className="relative mt-16 h-[46vh] min-h-[340px] overflow-hidden border-y border-seam sm:h-[56vh]">
           <Image
-            src="/photos/dining-room.webp"
+            src={siteImages.slots.dining_room}
             alt="The dining room at night — canvas canopy ceiling, lantern light, red banquette"
             fill
             sizes="100vw"
@@ -69,10 +75,10 @@ export default async function AboutPage() {
               </p>
             </div>
             <p data-fx="rise" className="m-serif mt-10 max-w-3xl text-3xl leading-snug sm:text-[2.6rem]">
-              {copy.about.shared}
+              {content.about_shared}
             </p>
             <p data-fx="rise" className="m-soft mt-10 max-w-xl text-lg leading-relaxed">
-              {copy.about.local}
+              {content.about_local}
             </p>
           </div>
         </section>

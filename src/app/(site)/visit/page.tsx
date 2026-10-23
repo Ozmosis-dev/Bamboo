@@ -6,6 +6,8 @@ import { MarketMap } from "@/components/market/MarketMap";
 import { formatHoursEntry, telHref } from "@/lib/format";
 import { getCurrentLocation, currentLocationSlug } from "@/lib/location";
 import { pageMetadata } from "@/lib/seo";
+import { getSiteContent } from "@/lib/content";
+import { getSiteImages } from "@/lib/images";
 
 export const revalidate = 300;
 
@@ -31,6 +33,10 @@ export default async function VisitPage() {
   const copy = getCopy(slug);
 
   if (slug === "chattanooga") {
+    const [content, siteImages] = await Promise.all([
+      getSiteContent(slug),
+      getSiteImages(),
+    ]);
     return (
       <>
         <MarketFx />
@@ -40,7 +46,7 @@ export default async function VisitPage() {
           <div className="absolute inset-0" aria-hidden>
             <div className="absolute inset-y-0 right-0 w-full md:left-[20%] md:w-auto">
               <Image
-                src="/brand/visit-storefront.png"
+                src={siteImages.slots.visit_storefront}
                 alt=""
                 fill
                 preload
@@ -207,7 +213,7 @@ export default async function VisitPage() {
               Parking
             </p>
             <p data-fx="rise" className="max-w-2xl text-lg leading-relaxed text-washi/90">
-              {copy.visitNotes}
+              {content.visit_notes}
             </p>
           </div>
         </section>

@@ -2,7 +2,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { formatHoursEntry, telHref } from "@/lib/format";
 import type { Location, ResolvedMenuSection } from "@/lib/types";
-import type { SiteCopy } from "@content/types";
+import type { SiteContent } from "@/lib/content";
+import type { GalleryImage } from "@/lib/images";
 import { MarketFx } from "./MarketFx";
 import { MarketIntro } from "./MarketIntro";
 import { MarketMarquee } from "./MarketMarquee";
@@ -25,15 +26,19 @@ function categoryCards(menu: ResolvedMenuSection[]) {
 }
 
 export function MarketHome({
-  copy,
+  content,
   location,
   sister,
   menu,
+  images,
+  gallery,
 }: {
-  copy: SiteCopy;
+  content: SiteContent;
   location: Location;
   sister: Location;
   menu: ResolvedMenuSection[];
+  images: Record<string, string>;
+  gallery: GalleryImage[];
 }) {
   const { food, barRows } = categoryCards(menu);
 
@@ -49,7 +54,7 @@ export function MarketHome({
         <div className="absolute inset-0" aria-hidden>
           <div className="absolute inset-y-0 right-0 w-full md:left-[20%] md:w-auto">
             <Image
-              src="/brand/hero-door.webp"
+              src={images.hero_door}
               alt=""
               fill
               priority
@@ -84,14 +89,14 @@ export function MarketHome({
             data-hero
             className="m-serif mt-8 max-w-2xl text-5xl leading-[1.08] sm:text-[4.5rem]"
           >
-            {copy.hero.heading}
+            {content.hero_heading}
           </h1>
 
           <p
             data-hero
             className="mt-7 max-w-md text-lg leading-relaxed text-tatami"
           >
-            {copy.hero.subheading}
+            {content.hero_subheading}
           </p>
 
           <div data-hero className="mt-11 flex flex-wrap items-center gap-6">
@@ -144,7 +149,7 @@ export function MarketHome({
       </section>
 
       {/* -------------------------------------------- Kitchen marquee */}
-      <MarketMarquee />
+      <MarketMarquee items={gallery} />
 
       {/* ------------------------------------------------- The menu, by course */}
       <section className="relative overflow-hidden">
@@ -307,7 +312,7 @@ export function MarketHome({
       <section className="relative overflow-hidden border-y border-seam">
         <div className="absolute inset-0" aria-hidden>
           <Image
-            src="/photos/counter.webp"
+            src={images.counter}
             alt=""
             fill
             sizes="100vw"
@@ -320,7 +325,7 @@ export function MarketHome({
           <div data-fx="rise" className="max-w-md">
             <p className="m-eyebrow">Behind the counter</p>
             <p className="m-serif mt-6 text-2xl leading-relaxed sm:text-3xl">
-              {copy.intro}
+              {content.intro}
             </p>
           </div>
         </div>

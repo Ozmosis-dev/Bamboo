@@ -4,6 +4,8 @@ import { MarketPageHeader } from "@/components/market/MarketPage";
 import { formatHoursEntry, telHref } from "@/lib/format";
 import { getCurrentLocation, currentLocationSlug } from "@/lib/location";
 import { pageMetadata } from "@/lib/seo";
+import { getSiteContent } from "@/lib/content";
+import { getSiteImages } from "@/lib/images";
 
 export const revalidate = 300;
 
@@ -20,13 +22,17 @@ export default async function ContactPage() {
   const location = await getCurrentLocation();
 
   if (currentLocationSlug() === "chattanooga") {
+    const [content, siteImages] = await Promise.all([
+      getSiteContent("chattanooga"),
+      getSiteImages(),
+    ]);
     return (
       <>
         <MarketPageHeader
           eyebrow="Contact"
           kanji="連絡 · 竹"
           title="Pick up the phone."
-          lead="No reservation system, no forms — the fastest way to reach us is a call. We'll pick up between prep and service."
+          lead={content.contact_lead}
         />
 
         {/* Vermilion: the number IS the page */}
@@ -68,7 +74,7 @@ export default async function ContactPage() {
         </section>
 
         {/* From the kitchen: seamless marquee */}
-        <MarketMarquee />
+        <MarketMarquee items={siteImages.gallery} />
       </>
     );
   }

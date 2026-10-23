@@ -139,6 +139,122 @@ export async function updateCategory(formData: FormData) {
   refreshAdmin();
 }
 
+/* ---------- page content ---------- */
+
+export async function saveCopy(formData: FormData) {
+  const supabase = await requireUser();
+  const location_slug = String(formData.get("location_slug"));
+  const keys = formData.getAll("key").map(String);
+  const rows = keys
+    .map((key) => ({
+      location_slug,
+      key,
+      value: String(formData.get(`value_${key}`) ?? "").trim(),
+    }))
+    .filter((r) => r.value !== "");
+  const empties = keys.filter(
+    (key) => String(formData.get(`value_${key}`) ?? "").trim() === ""
+  );
+  if (rows.length > 0) {
+    const { error } = await supabase
+      .from("site_copy")
+      .upsert(rows, { onConflict: "location_slug,key" });
+    if (error) throw error;
+  }
+  if (empties.length > 0) {
+    // Empty fields fall back to the built-in wording.
+    const { error } = await supabase
+      .from("site_copy")
+      .delete()
+      .eq("location_slug", location_slug)
+      .in("key", empties);
+    if (error) throw error;
+  }
+  refreshAdmin();
+}
+
+/* ---------- photos ---------- */
+
+async function uploadToBucket(
+  supabase: Awaited<ReturnType<typeof requireUser>>,
+  file: File,
+  prefix: string
+) {
+  if (!file || file.size === 0) throw new Error("Choose an image file first.");
+  if (file.size > 8 * 1024 * 1024) throw new Error("Image must be under 8 MB.");
+  const ext = (file.name.split(".").pop() || "jpg").toLowerCase();
+  const path = `${prefix}-${Date.now()}.${ext}`;
+  const { error } = await supabase.storage.from("site").upload(path, file, {
+    contentType: file.type || "image/jpeg",
+    upsert: false,
+  });
+  if (error) throw error;
+  return supabase.storage.from("site").getPublicUrl(path).data.publicUrl;
+}
+
+export async function uploadSlotImage(formData: FormData) {
+  const supabase = await requireUser();
+  const key = String(formData.get("key"));
+  const url = await uploadToBucket(supabase, formData.get("file") as File, key);
+  await supabase.from("site_images").delete().eq("key", key);
+  const { error } = await supabase.from("site_images").insert({ key, url });
+  if (error) throw error;
+  refreshAdmin();
+}
+
+export async function resetSlotImage(formData: FormData) {
+  const supabase = await requireUser();
+  const { error } = await supabase
+    .from("site_images")
+    .delete()
+    .eq("key", String(formData.get("key")));
+  if (error) throw error;
+  refreshAdmin();
+}
+
+export async function addGalleryImage(formData: FormData) {
+  const supabase = await requireUser();
+  const url = await uploadToBucket(supabase, formData.get("file") as File, "gallery");
+  const { data } = await supabase
+    .from("site_images")
+    .select("sort")
+    .eq("key", "gallery")
+    .order("sort", { ascending: false })
+    .limit(1);
+  const nextSort = (data?.[0]?.sort ?? 0) + 1;
+  const { error } = await supabase.from("site_images").insert({
+    key: "gallery",
+    url,
+    alt: String(formData.get("alt") ?? "").trim(),
+    sort: nextSort,
+  });
+  if (error) throw error;
+  refreshAdmin();
+}
+
+export async function updateGalleryImage(formData: FormData) {
+  const supabase = await requireUser();
+  const { error } = await supabase
+    .from("site_images")
+    .update({
+      alt: String(formData.get("alt") ?? "").trim(),
+      sort: Number(formData.get("sort") ?? 0),
+    })
+    .eq("id", String(formData.get("id")));
+  if (error) throw error;
+  refreshAdmin();
+}
+
+export async function deleteGalleryImage(formData: FormData) {
+  const supabase = await requireUser();
+  const { error } = await supabase
+    .from("site_images")
+    .delete()
+    .eq("id", String(formData.get("id")));
+  if (error) throw error;
+  refreshAdmin();
+}
+
 /* ---------- locations ---------- */
 
 export async function updateLocation(formData: FormData) {
