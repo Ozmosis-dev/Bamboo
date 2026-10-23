@@ -232,6 +232,17 @@ export async function addGalleryImage(formData: FormData) {
   refreshAdmin();
 }
 
+export async function replaceGalleryImage(formData: FormData) {
+  const supabase = await requireUser();
+  const url = await uploadToBucket(supabase, formData.get("file") as File, "gallery");
+  const { error } = await supabase
+    .from("site_images")
+    .update({ url })
+    .eq("id", String(formData.get("id")));
+  if (error) throw error;
+  refreshAdmin();
+}
+
 export async function updateGalleryImage(formData: FormData) {
   const supabase = await requireUser();
   const { error } = await supabase

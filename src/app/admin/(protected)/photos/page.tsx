@@ -3,6 +3,7 @@ import { IMAGE_SLOTS } from "@/lib/images";
 import {
   addGalleryImage,
   deleteGalleryImage,
+  replaceGalleryImage,
   resetSlotImage,
   updateGalleryImage,
   uploadSlotImage,
@@ -76,8 +77,9 @@ export default async function PhotosPage() {
 
       <h2 className="a-eyebrow mt-12">Food photo banner</h2>
       <p className="mt-1 text-sm text-ink-soft">
-        The scrolling strip of dishes on the homepage and Contact page. Adding
-        your first photo here replaces the built-in set.
+        Every photo in the scrolling strip on the homepage and Contact page, in
+        order. Replace or remove any of them, or add more to make the banner
+        longer.
       </p>
       <div className="mt-4 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {gallery.map((img) => (
@@ -112,12 +114,30 @@ export default async function PhotosPage() {
                   Save
                 </button>
               </form>
-              <form action={deleteGalleryImage} className="mt-2">
-                <input type="hidden" name="id" value={img.id} />
-                <button type="submit" className="text-xs text-bamboo-700 underline">
-                  Remove
-                </button>
-              </form>
+              <div className="mt-2.5 flex items-center justify-between gap-3 border-t border-line pt-2.5">
+                <form action={replaceGalleryImage} className="flex min-w-0 items-center gap-1.5">
+                  <input type="hidden" name="id" value={img.id} />
+                  <input
+                    type="file"
+                    name="file"
+                    accept="image/*"
+                    required
+                    className="min-w-0 flex-1 text-[11px] file:mr-1.5 file:rounded file:border file:border-line file:bg-white file:px-2 file:py-1 file:text-[11px] file:font-medium"
+                  />
+                  <button
+                    type="submit"
+                    className="shrink-0 rounded-md border border-line px-2 py-1 text-[11px] font-medium hover:border-bamboo-600"
+                  >
+                    Replace
+                  </button>
+                </form>
+                <form action={deleteGalleryImage} className="shrink-0">
+                  <input type="hidden" name="id" value={img.id} />
+                  <button type="submit" className="text-xs text-bamboo-700 underline">
+                    Remove
+                  </button>
+                </form>
+              </div>
             </div>
           </div>
         ))}
