@@ -6,21 +6,22 @@ import type { SiteCopy } from "@content/types";
 import { MarketFx } from "./MarketFx";
 import { MarketIntro } from "./MarketIntro";
 import { MarketMarquee } from "./MarketMarquee";
-import { SECTION_KANJI } from "./kanji";
+import { DRINK_GROUPS, FOOD_SLUGS, SECTION_KANJI } from "./kanji";
 
-const JP_NUMERALS = ["一", "二", "三", "四", "五", "六", "七", "八"];
+const JP_NUMERALS = ["一", "二", "三", "四", "五", "六", "七", "八", "九", "十"];
 
-/** Food categories get their own card; the drink list collapses into one. */
+/** Food categories list individually; the bar rows follow DRINK_GROUPS. */
 function categoryCards(menu: ResolvedMenuSection[]) {
-  const food = menu.filter((s) =>
-    ["sashimi", "nigiri", "rolls", "share", "skewers", "salads", "noodle-bowls"].includes(
-      s.category.slug
-    )
-  );
-  const drinkCount = menu
-    .filter((s) => !food.includes(s))
-    .reduce((n, s) => n + s.items.length, 0);
-  return { food, drinkCount };
+  const food = menu.filter((s) => FOOD_SLUGS.includes(s.category.slug));
+  const barRows = DRINK_GROUPS.map((g) => ({
+    title: g.title,
+    glyph: g.glyph,
+    anchor: g.slugs[0],
+    count: menu
+      .filter((s) => g.slugs.includes(s.category.slug))
+      .reduce((n, s) => n + s.items.length, 0),
+  }));
+  return { food, barRows };
 }
 
 export function MarketHome({
@@ -34,7 +35,7 @@ export function MarketHome({
   sister: Location;
   menu: ResolvedMenuSection[];
 }) {
-  const { food, drinkCount } = categoryCards(menu);
+  const { food, barRows } = categoryCards(menu);
 
   return (
     <>
@@ -250,39 +251,41 @@ export function MarketHome({
                 </li>
               );
             })}
-            <li className="relative">
-              <Link
-                href="/menu#cocktails"
-                className="group relative grid grid-cols-[2.25rem_1fr] items-baseline gap-4 overflow-hidden border-b border-seam py-6 sm:grid-cols-[3.5rem_1fr_auto] sm:gap-8 sm:py-7"
-              >
-                <span
-                  aria-hidden
-                  className="m-kanji pointer-events-none absolute right-16 top-1/2 -translate-y-1/2 text-7xl text-gold-soft opacity-0 transition-opacity duration-500 group-hover:opacity-[0.14] sm:text-8xl"
+            {barRows.map((row, i) => (
+              <li key={row.title} className="relative">
+                <Link
+                  href={`/menu#${row.anchor}`}
+                  className="group relative grid grid-cols-[2.25rem_1fr] items-baseline gap-4 overflow-hidden border-b border-seam py-6 sm:grid-cols-[3.5rem_1fr_auto] sm:gap-8 sm:py-7"
                 >
-                  盃
-                </span>
-                <span aria-hidden className="m-kanji text-lg text-verm">
-                  八
-                </span>
-                <span className="flex min-w-0 flex-wrap items-baseline gap-x-5 gap-y-1">
-                  <span className="m-serif text-3xl leading-none text-gold-soft transition-transform duration-300 group-hover:translate-x-2 sm:text-[2.75rem]">
-                    Sake, Wine &amp; Cocktails
-                  </span>
-                  <span aria-hidden className="m-kanji text-sm text-gold">
-                    盃
-                  </span>
-                </span>
-                <span className="col-start-2 flex items-center gap-4 sm:col-start-3">
-                  <span className="m-caps text-[11px] text-tatami">
-                    {drinkCount} pours
-                  </span>
                   <span
                     aria-hidden
-                    className="h-px w-8 bg-gold transition-all duration-300 group-hover:w-16"
-                  />
-                </span>
-              </Link>
-            </li>
+                    className="m-kanji pointer-events-none absolute right-16 top-1/2 -translate-y-1/2 text-7xl text-gold-soft opacity-0 transition-opacity duration-500 group-hover:opacity-[0.14] sm:text-8xl"
+                  >
+                    {row.glyph}
+                  </span>
+                  <span aria-hidden className="m-kanji text-lg text-verm">
+                    {JP_NUMERALS[food.length + i]}
+                  </span>
+                  <span className="flex min-w-0 flex-wrap items-baseline gap-x-5 gap-y-1">
+                    <span className="m-serif text-3xl leading-none text-gold-soft transition-transform duration-300 group-hover:translate-x-2 sm:text-[2.75rem]">
+                      {row.title}
+                    </span>
+                    <span aria-hidden className="m-kanji text-sm text-gold">
+                      {row.glyph}
+                    </span>
+                  </span>
+                  <span className="col-start-2 flex items-center gap-4 sm:col-start-3">
+                    <span className="m-caps text-[11px] text-tatami">
+                      {row.count} pours
+                    </span>
+                    <span
+                      aria-hidden
+                      className="h-px w-8 bg-gold transition-all duration-300 group-hover:w-16"
+                    />
+                  </span>
+                </Link>
+              </li>
+            ))}
           </ul>
 
           <div data-fx="rise" className="mt-12 flex justify-end">
