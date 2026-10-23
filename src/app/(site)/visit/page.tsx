@@ -35,11 +35,30 @@ export default async function VisitPage() {
       <>
         <MarketFx />
 
-        {/* Split composition: the door owns the right edge, full height */}
-        <section className="relative border-b border-seam">
+        {/* Continuous image and gradient treatment shared with the home hero. */}
+        <section className="relative overflow-hidden border-b border-seam bg-char-deep">
+          <div className="absolute inset-0" aria-hidden>
+            <div className="absolute inset-y-0 right-0 w-full md:left-[20%] md:w-auto">
+              <Image
+                src="/brand/visit-storefront.png"
+                alt=""
+                fill
+                preload
+                sizes="(min-width: 768px) 80vw, 100vw"
+                className="object-cover object-center"
+              />
+            </div>
+            <div
+              className="absolute inset-0"
+              style={{
+                background:
+                  "linear-gradient(90deg, var(--color-char-deep) 0%, var(--color-char-deep) 32%, color-mix(in srgb, var(--color-char-deep) 55%, transparent) 52%, color-mix(in srgb, var(--color-char-deep) 20%, transparent) 70%, transparent 90%)",
+              }}
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-char-deep via-transparent to-char-deep/40" />
+          </div>
           <div className="grid lg:min-h-[86vh] lg:grid-cols-[1.08fr_1fr]">
             <div className="relative z-10 flex flex-col justify-between gap-16 px-5 pb-14 pt-16 sm:px-8 sm:pt-20 lg:pr-0 lg:pl-[max(2rem,calc((100vw-72rem)/2))]">
-              <div aria-hidden className="m-paper-dark" />
               <div>
                 <div data-hero className="flex items-center gap-5">
                   <span aria-hidden className="h-px w-14 bg-verm" />
@@ -107,30 +126,12 @@ export default async function VisitPage() {
               </div>
             </div>
 
-            <div className="relative min-h-[52vh] lg:min-h-0">
-              <span
-                aria-hidden
-                className="absolute left-0 top-0 z-10 hidden h-full w-[3px] bg-verm lg:block"
-              />
-              <Image
-                src="/brand/hero-door.webp"
-                alt="The vermilion front door on Market Street"
-                fill
-                priority
-                sizes="(min-width: 1024px) 48vw, 100vw"
-                className="m-photo object-cover object-[55%_32%]"
-              />
-              <div
-                aria-hidden
-                className="absolute inset-0 hidden bg-gradient-to-r from-char/55 via-transparent to-transparent lg:block"
-              />
-              <p
-                aria-hidden
-                className="m-tategaki absolute right-5 top-8 z-10 text-base"
-              >
-                竹 · 灯
-              </p>
-            </div>
+            <p
+              aria-hidden
+              className="m-tategaki absolute right-5 top-8 z-10 hidden text-base lg:block"
+            >
+              竹 · 灯
+            </p>
           </div>
         </section>
 

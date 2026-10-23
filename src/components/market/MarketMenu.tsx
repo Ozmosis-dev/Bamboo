@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import type { DietaryTag, ResolvedMenuSection } from "@/lib/types";
 import { CategoryIcon } from "./CategoryIcon";
 import { MarketFx, scrollToId } from "./MarketFx";
-import { FOOD_SLUGS, SECTION_KANJI } from "./kanji";
+import { DRINK_GROUPS, FOOD_SLUGS, SECTION_KANJI } from "./kanji";
 
 const FILTERS: { tag: DietaryTag; label: string }[] = [
   { tag: "gluten-free", label: "Gluten-free" },
@@ -72,8 +72,22 @@ export function MarketMenu({ menu }: { menu: ResolvedMenuSection[] }) {
   };
 
   const dinnerSections = menu.filter((s) => FOOD_SLUGS.includes(s.category.slug));
-  const drinkSections = menu.filter((s) => !FOOD_SLUGS.includes(s.category.slug));
+  // The bar in its curated order; categories outside the groups tag along.
+  const drinkSections = [
+    ...DRINK_GROUPS.flatMap((g) =>
+      g.slugs.flatMap((slug) => menu.filter((s) => s.category.slug === slug))
+    ),
+    ...menu.filter(
+      (s) =>
+        !FOOD_SLUGS.includes(s.category.slug) &&
+        !DRINK_GROUPS.some((g) => g.slugs.includes(s.category.slug))
+    ),
+  ];
+  const orderedMenu = [...dinnerSections, ...drinkSections];
   const groupSections = group === "dinner" ? dinnerSections : drinkSections;
+  /** Divider band to render before a section: the drink group it opens. */
+  const bandFor = (slug: string) =>
+    DRINK_GROUPS.find((g) => g.slugs[0] === slug);
 
   return (
     <div className="mx-auto max-w-6xl px-5 sm:px-8">
@@ -138,8 +152,8 @@ export function MarketMenu({ menu }: { menu: ResolvedMenuSection[] }) {
             <nav aria-label="Menu categories">
               {(
                 [
-                  ["Food", "食", menu.filter((s) => FOOD_SLUGS.includes(s.category.slug))],
-                  ["Drinks", "飲", menu.filter((s) => !FOOD_SLUGS.includes(s.category.slug))],
+                  ["Food", "食", dinnerSections],
+                  ["Drinks", "飲", drinkSections],
                 ] as const
               ).map(([label, glyph, sections], gi) => (
                 <div key={label} className={gi > 0 ? "mt-8 border-t border-seam pt-6" : ""}>
@@ -221,26 +235,26 @@ export function MarketMenu({ menu }: { menu: ResolvedMenuSection[] }) {
             ))}
           </div>
 
-          {menu.map((section) => {
+          {orderedMenu.map((section) => {
             const visible = section.items.filter((item) => matches(item.dietary_tags));
             const kanji = SECTION_KANJI[section.category.slug];
-            const isBarStart = section.category.slug === "cocktails";
+            const groupBand = bandFor(section.category.slug);
             return (
               <section
                 key={section.category.id}
                 id={section.category.slug}
                 className="scroll-mt-44 pt-12 first:pt-8 lg:scroll-mt-32"
               >
-                {isBarStart && (
+                {groupBand && (
                   <div className="m-verm relative mb-12 overflow-hidden px-6 py-7 sm:px-8">
                     <span
                       aria-hidden
                       className="m-kanji absolute -top-5 right-3 text-[6rem] leading-none text-washi opacity-15"
                     >
-                      盃
+                      {groupBand.glyph}
                     </span>
-                    <p className="m-eyebrow !text-[0.65rem]">Second half</p>
-                    <p className="m-serif mt-2 text-3xl">The bar</p>
+                    <p className="m-eyebrow !text-[0.65rem]">The bar</p>
+                    <p className="m-serif mt-2 text-3xl">{groupBand.title}</p>
                   </div>
                 )}
 

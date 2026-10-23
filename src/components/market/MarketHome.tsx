@@ -159,18 +159,49 @@ export function MarketHome({
         />
 
         <div className="relative mx-auto max-w-6xl px-5 py-24 sm:px-8 sm:py-28">
-          <div data-fx="rise" className="max-w-xl">
-            <div className="flex items-center gap-5">
-              <span aria-hidden className="h-px w-14 bg-verm" />
-              <p className="m-eyebrow">
-                The menu <span className="m-kanji font-normal">· 献立</span>
-              </p>
+          <div
+            data-fx="rise"
+            className="flex flex-wrap items-end justify-between gap-x-10 gap-y-6"
+          >
+            <div>
+              <div className="flex items-center gap-5">
+                <span aria-hidden className="h-px w-14 bg-verm" />
+                <p className="m-eyebrow">
+                  By course <span className="m-kanji font-normal">· 献立</span>
+                </p>
+              </div>
+              <h2 className="m-serif mt-6 text-4xl leading-tight sm:text-5xl">Menu</h2>
             </div>
-            <h2 className="m-serif mt-6 text-4xl leading-tight sm:text-5xl">
-              Seven courses,
-              <br />
-              one counter.
-            </h2>
+            <div className="flex flex-wrap gap-3">
+              {(
+                [
+                  ["/menus/bamboo-food-menu.pdf", "PDF Food Menu"],
+                  ["/menus/bamboo-drinks-menu.pdf", "PDF Drink Menu"],
+                ] as const
+              ).map(([href, label]) => (
+                <a
+                  key={href}
+                  href={href}
+                  target="_blank"
+                  rel="noopener"
+                  className="m-caps inline-flex items-center gap-2.5 border border-seam px-4 py-2.5 text-[11px] text-washi transition-colors hover:border-gold hover:text-gold-soft"
+                >
+                  <svg
+                    aria-hidden
+                    viewBox="0 0 16 16"
+                    className="h-3.5 w-3.5"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.4"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M8 2v8m0 0 3-3m-3 3L5 7M3 13h10" />
+                  </svg>
+                  {label}
+                </a>
+              ))}
+            </div>
           </div>
 
           <ul data-fx-group className="mt-14">
