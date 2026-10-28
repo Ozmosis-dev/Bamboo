@@ -99,11 +99,11 @@ export const WALLS: WallSeg[] = [
   // east dining storefront onto the NE patio, with gaps for its doors
   W(77, 13.4, 87.5, 13.4, "glass"),
   W(90.5, 13.4, 97.4, 13.4, "glass"),
-  // east face (Market St — the front): brick flanks, patio door at z 36.5,
-  // and the main entrance opening at z 44.8–48.6
-  W(105.5, 13.4, 105.5, 35, "brick"),
-  W(105.5, 38, 105.5, 44.8, "brick"),
-  W(105.5, 48.6, 105.5, 51.6, "brick"),
+  // east face (Market St — the front): the patios are OPEN to the street
+  // behind fences; the only built mass is the entry vestibule's glazing
+  // around the front door (z 44.8–48.6 opening)
+  W(105.5, 43.1, 105.5, 44.8, "glass"),
+  W(105.5, 48.6, 105.5, 51.6, "glass"),
   // south party wall: z=70 west of the demise step, z=66.3 east of it
   W(0, 70, 30, 70, "brick", 1.5),
   W(30, 66.3, 30, 70, "brick", 1.5),
@@ -119,7 +119,10 @@ export const WALLS: WallSeg[] = [
   // NE patio street edges, gate at x 88–91
   W(77, 0, 87.5, 0, "low"),
   W(90.5, 0, 105.5, 0, "low"),
-  W(105.5, 0, 105.5, 13.4, "low"),
+  // east street edge: open fence the full length of the dining patio,
+  // with a sidewalk gate at z 37.5–40.5
+  W(105.5, 0, 105.5, 37.5, "low"),
+  W(105.5, 40.5, 105.5, 43.1, "low"),
   // waiting patio street edge
   W(105.5, 51.6, 105.5, 66.3, "low"),
 
@@ -152,7 +155,7 @@ export const WALLS: WallSeg[] = [
   { x1: 42.0, z1: 13.8, x2: 49.0, z2: 13.8, h: 5.5, t: 1.1, kind: "solid" },
   // vestibule / entry sequence at the southeast
   inner(93.5, 43.1, 97.4, 43.1, EXT_H),
-  W(97.4, 13.4, 97.4, 43.1, "glass", EXT_H, 0.3), // patio divider
+  W(97.4, 43.1, 105.5, 43.1, "glass", EXT_H, 0.3), // vestibule north glazing
   inner(97.4, 51.6, 99, 51.6, EXT_H),
   inner(103, 51.6, 105.5, 51.6, EXT_H),
 ];
@@ -248,7 +251,7 @@ for (const x of [49.9, 54.3, 58.8, 63.3, 67.8, 72.3, 76.1]) {
 }
 for (const z of [17.5, 20.8, 24.1, 27.4, 30.7, 34.0]) {
   BENCH_TABLES_E.push([80.2, z]);
-  CHAIRS.push({ x: 82.0, z, rot: R.W });
+  CHAIRS.push({ x: 82.0, z, rot: R.E }); // east of the table, facing west
 }
 
 // sushi bar stools: 5 on the north arm, 10 down the east arm
@@ -259,11 +262,28 @@ for (let i = 0; i < 10; i++) STOOLS.push({ x: 46.0, z: 44.5 + i * 1.85, rot: R.W
 for (let i = 0; i < 13; i++) STOOLS.push({ x: 59.6 + i * 2.35, z: 57.3, rot: R.N });
 for (const z of [59.4, 61.1, 62.9, 64.8]) STOOLS.push({ x: 89.2, z, rot: R.W });
 
-/* booth clusters on the east patio: bench / table / bench, facing north-south */
-export const BOOTHS: Array<{ x: number; z: number }> = [
-  { x: 101.2, z: 21.0 },
-  { x: 101.2, z: 29.9 },
+/* east dining patio: wall banquette against the storefront divider with
+   square tables and a single facing chair each (2-table + 3-table clusters) */
+export const PATIO_BENCHES: Array<{ z1: number; z2: number }> = [
+  { z1: 18.2, z2: 23.6 },
+  { z1: 26.1, z2: 34.1 },
 ];
+export const PATIO_BENCH_X = 98.1; // bench centerline against the divider
+export const PATIO_BENCH_TABLES: Array<[number, number]> = [];
+for (const z of [19.6, 22.2, 27.5, 30.1, 32.7]) {
+  PATIO_BENCH_TABLES.push([100.2, z]);
+  CHAIRS.push({ x: 102.3, z, rot: R.E });
+}
+
+/* brick-pier + glass storefront between the east dining room and its patio
+   (the facade behind the patio in the exterior photo) */
+export const STOREFRONT = {
+  x: 97.4,
+  z1: 13.4,
+  z2: 43.1,
+  pierEvery: 5.6,
+  pierW: 1.2,
+};
 
 /* ---------------------------------------------------------------- objects */
 
