@@ -9,30 +9,32 @@ import FloorPlanModel from "./FloorPlanModel";
 function Lights() {
   return (
     <>
-      {/* warm candlelit base, cool fill from the glazing side */}
-      <hemisphereLight args={["#f3ede2", "#2b2520", 0.9]} />
-      <ambientLight intensity={0.18} color="#f3ede2" />
+      <hemisphereLight args={["#f3ede2", "#2b2520", 1.0]} />
+      <ambientLight intensity={0.25} color="#f3ede2" />
+      {/* warm key from the street side */}
       <directionalLight
-        position={[70, 90, -55]}
-        intensity={1.35}
-        color="#ffe8c4"
+        position={[70, 95, -65]}
+        intensity={1.3}
+        color="#ffe3ba"
         castShadow
         shadow-mapSize-width={2048}
         shadow-mapSize-height={2048}
-        shadow-camera-left={-85}
-        shadow-camera-right={85}
-        shadow-camera-top={85}
-        shadow-camera-bottom={-85}
+        shadow-camera-left={-95}
+        shadow-camera-right={95}
+        shadow-camera-top={95}
+        shadow-camera-bottom={-95}
         shadow-camera-near={10}
-        shadow-camera-far={260}
+        shadow-camera-far={280}
         shadow-bias={-0.0004}
       />
-      <directionalLight position={[-60, 40, 60]} intensity={0.25} color="#aebfc4" />
-      {/* hospitality glow over the two bars and the dining room */}
-      <pointLight position={[-10, 9, 15]} intensity={520} color="#e8b96a" distance={46} decay={2} />
-      <pointLight position={[16, 9, 31]} intensity={620} color="#e8b96a" distance={50} decay={2} />
-      <pointLight position={[-24, 9, -14]} intensity={430} color="#ffdfae" distance={44} decay={2} />
-      <pointLight position={[36, 9, 0]} intensity={340} color="#ffdfae" distance={40} decay={2} />
+      <directionalLight position={[-70, 45, 70]} intensity={0.22} color="#aebfc4" />
+      {/* hospitality pools: sushi bar, spirits bar, core rails, dining rooms */}
+      <pointLight position={[-18, 8, 15]} intensity={650} color="#e8b96a" distance={42} decay={2} />
+      <pointLight position={[20, 8, 26]} intensity={780} color="#e8b96a" distance={46} decay={2} />
+      <pointLight position={[10, 8, 3]} intensity={480} color="#ffdfae" distance={40} decay={2} />
+      <pointLight position={[-22, 8, -18]} intensity={520} color="#ffdfae" distance={42} decay={2} />
+      <pointLight position={[41, 8, -6]} intensity={460} color="#ffdfae" distance={38} decay={2} />
+      <pointLight position={[11, 8, 14]} intensity={400} color="#e8b96a" distance={36} decay={2} />
     </>
   );
 }
@@ -44,10 +46,10 @@ export default function FloorPlanCanvas() {
       shadows
       dpr={[1, 2]}
       gl={{ antialias: true, alpha: true }}
-      camera={{ position: [95, 78, 118], fov: 30, near: 1, far: 800 }}
+      camera={{ position: [100, 82, 125], fov: 30, near: 1, far: 800 }}
       onCreated={({ gl }) => {
         gl.toneMapping = THREE.ACESFilmicToneMapping;
-        gl.toneMappingExposure = 1.25;
+        gl.toneMappingExposure = 1.35;
       }}
     >
       <Suspense fallback={null}>
@@ -60,7 +62,7 @@ export default function FloorPlanCanvas() {
         enableDamping
         dampingFactor={0.08}
         minDistance={30}
-        maxDistance={240}
+        maxDistance={260}
         maxPolarAngle={Math.PI * 0.46}
         autoRotate={!interacted}
         autoRotateSpeed={0.55}

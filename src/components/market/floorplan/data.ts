@@ -1,21 +1,27 @@
 /**
  * Layout data for the Bamboo on Market 3D floor model.
  *
- * All coordinates are in feet, traced from the architect's A1-1 floor plan
- * (elemi, release 01 Sept 2026). Plan origin is the building's top-left
- * corner: +x runs east (right on the sheet), +z runs south (down the sheet).
- * The model group recenters the footprint before rendering, so data here can
- * stay in plan coordinates.
+ * Traced from the architect's A1-1 floor plan (elemi, release 01 Sept 2026)
+ * rasterized at 200 DPI, where the sheet's 1/4" = 1'-0" scale gives exactly
+ * 50 px per foot. Origin: the building's west face (x=0) and north face at
+ * the sidewalk line (z=0). +x runs east, +z runs south. Units are feet.
  *
- * This is a stylized presentation maquette, not a construction document —
- * dimensions are faithful to the plan's proportions, not survey-accurate.
+ * Key geometry (from the plan):
+ *  - envelope: x 0→105.5; south wall z=70 west of x≈30, z=66.3 east of it
+ *  - north dining patio: a 5.4'-deep sidewalk strip, x 6→49, six 2-tops
+ *  - existing stair core (N.I.C.): x 49→77, z 0→36, with two counter rails
+ *    (7 seats on its south face, 6 on its east face)
+ *  - sushi bar: C-shaped counter wrapping the storage room; 5 stools on the
+ *    north arm + 10 on the east arm
+ *  - spirits bar: 25'-0" + 2'-6" flaps, 13 stools north + 4 on the east end
+ *  - east dining: column of three 4-tops; east patio with two booth pairs
+ *  - entry: vestibule at the southeast, off the waiting patio
  */
 
 export const PLAN = {
-  width: 100,
-  depth: 72,
-  /** world-space offset applied to the whole model so it orbits around 0,0 */
-  center: [50, 36] as const,
+  width: 105.5,
+  depth: 70,
+  center: [52.75, 35] as const,
 };
 
 /* ---------------------------------------------------------------- palette */
@@ -39,6 +45,7 @@ export const COLORS = {
   concrete: "#2e2b28",
   deck: "#a88a62",
   bamboo: "#b09a56",
+  brick: "#8c4a38",
 } as const;
 
 /* ------------------------------------------------------------------ walls */
@@ -50,66 +57,105 @@ export type WallSeg = {
   z2: number;
   h: number;
   t: number;
-  kind: "solid" | "glass" | "low";
+  kind: "solid" | "glass" | "low" | "brick";
 };
 
 const EXT_H = 6.5;
 const INT_H = 4.5;
-const EXT_T = 0.7;
+const EXT_T = 0.8;
 const INT_T = 0.45;
 
-function seg(
+function W(
   x1: number,
   z1: number,
   x2: number,
   z2: number,
-  kind: WallSeg["kind"] = "solid",
-  h = kind === "solid" ? EXT_H : kind === "glass" ? EXT_H : 3,
-  t = kind === "glass" ? 0.3 : EXT_T,
+  kind: WallSeg["kind"],
+  h?: number,
+  t?: number,
 ): WallSeg {
-  return { x1, z1, x2, z2, h, t, kind };
+  return {
+    x1, z1, x2, z2, kind,
+    h: h ?? (kind === "low" ? 3 : kind === "solid" || kind === "brick" ? EXT_H : EXT_H),
+    t: t ?? (kind === "glass" ? 0.3 : kind === "low" ? 0.3 : EXT_T),
+  };
 }
 
-function inner(x1: number, z1: number, x2: number, z2: number): WallSeg {
-  return { x1, z1, x2, z2, h: INT_H, t: INT_T, kind: "solid" };
+function inner(x1: number, z1: number, x2: number, z2: number, h = INT_H): WallSeg {
+  return { x1, z1, x2, z2, h, t: INT_T, kind: "solid" };
 }
 
 export const WALLS: WallSeg[] = [
-  // north (top of sheet) — storefront glazing at both dining patios
-  seg(0, 0, 8, 0),
-  seg(8, 0, 55, 0, "glass"),
-  seg(55, 0, 68, 0),
-  seg(68, 0, 100, 0, "glass"),
-  // east (Market St) — glazing with the entry cut out at z 48–54
-  seg(100, 0, 100, 48, "glass"),
-  seg(100, 54, 100, 72, "glass"),
-  // south — party wall (adjacent tenant not in scope)
-  seg(0, 72, 100, 72),
-  // west — service side
-  seg(0, 0, 0, 72),
+  /* ---- envelope ---- */
+  // west + south faces cut low (dollhouse cutaway) so the room stays visible
+  W(0, 5.4, 0, 70, "brick", 1.5),
+  // north: storefront behind the sidewalk patio (x 6–49)
+  W(6, 5.4, 49, 5.4, "glass"),
+  W(0, 5.4, 6, 5.4, "brick"),
+  // north face of the stair-core band (existing building, N.I.C.)
+  W(49, 0, 77, 0, "brick"),
+  // east dining storefront onto the NE patio, with gaps for its doors
+  W(77, 13.4, 87.5, 13.4, "glass"),
+  W(90.5, 13.4, 97.4, 13.4, "glass"),
+  // east face: solid brick beside the booths' patio divider, door at z 36.5
+  W(105.5, 13.4, 105.5, 35, "brick"),
+  W(105.5, 38, 105.5, 51.6, "brick"),
+  // south party wall: z=70 west of the demise step, z=66.3 east of it
+  W(0, 70, 30, 70, "brick", 1.5),
+  W(30, 66.3, 30, 70, "brick", 1.5),
+  W(30, 66.3, 105.5, 66.3, "brick", 1.5),
 
-  // back-of-house partitions (cutaway height)
-  inner(0, 8, 14, 8),
-  inner(14, 8, 14, 18),
-  inner(0, 18, 14, 18),
-  inner(0, 20, 13, 20),
-  inner(13, 20, 13, 30),
-  inner(0, 30, 20, 30),
-  inner(20, 30, 20, 42),
-  inner(0, 42, 20, 42),
-  inner(10, 30, 10, 42),
-  inner(0, 44, 22, 44),
-  inner(22, 44, 22, 48),
-  inner(22, 52, 22, 72),
+  /* ---- patio railings (open-air edges) ---- */
+  // sidewalk patio street edge, gates at both ends
+  W(6, 0, 7.5, 0, "low"),
+  W(10.5, 0, 45, 0, "low"),
+  W(48, 0, 49, 0, "low"),
+  W(6, 0, 6, 5.4, "low"),
+  W(49, 0, 49, 5.4, "low"),
+  // NE patio street edges, gate at x 88–91
+  W(77, 0, 87.5, 0, "low"),
+  W(90.5, 0, 105.5, 0, "low"),
+  W(105.5, 0, 105.5, 13.4, "low"),
+  // waiting patio street edge
+  W(105.5, 51.6, 105.5, 66.3, "low"),
+
+  /* ---- interior ---- */
+  // dry storage (door on its east side)
+  inner(0, 15.6, 13, 15.6),
+  inner(13, 5.4, 13, 10),
+  inner(13, 12.5, 13, 15.6),
+  // manager's office (9'-9" wide)
+  inner(0, 17, 9.75, 17),
+  inner(9.75, 17, 9.75, 22),
+  inner(0, 26, 9.75, 26),
+  // restroom block
+  inner(0, 26, 20, 26, 5.4),
+  inner(20, 26, 20, 33, 5.4),
+  inner(20, 35.5, 20, 40.6, 5.4),
+  inner(0, 40.6, 20, 40.6, 5.4),
+  inner(10, 26, 10, 40.6, 5.4),
+  // kitchen north wall + grease zone
+  inner(0, 42.7, 14, 42.7),
+  // P.O.S. room
+  inner(29.3, 32.6, 37, 32.6),
+  inner(29.3, 32.6, 29.3, 38),
+  inner(37, 32.6, 37, 38),
+  inner(29.3, 38, 32, 38),
+  // existing demising stubs between the two dining rooms
+  { x1: 14.2, z1: 13.8, x2: 26.2, z2: 13.8, h: 5.5, t: 1.1, kind: "solid" },
+  { x1: 42.0, z1: 13.8, x2: 49.0, z2: 13.8, h: 5.5, t: 1.1, kind: "solid" },
+  // vestibule / entry sequence at the southeast
+  inner(93.5, 43.1, 97.4, 43.1, EXT_H),
+  W(97.4, 13.4, 97.4, 43.1, "glass", EXT_H, 0.3), // patio divider
+  inner(97.4, 51.6, 99, 51.6, EXT_H),
+  inner(103, 51.6, 105.5, 51.6, EXT_H),
 ];
 
-/** low rails separating patios from the dining room */
-export const RAILS: Array<[number, number, number, number]> = [
-  [8, 10, 55, 10],
-  [70, 16, 100, 16],
-  [82, 28, 82, 56],
-  [84, 60, 84, 72],
-  [84, 60, 100, 60],
+/* walk-in rooms rendered as walled boxes */
+export const ROOMS: Array<{ x: number; z: number; w: number; d: number; label?: string }> = [
+  { x: 17.8, z: 43.6, w: 6.9, d: 10.8, label: "COOLER" },
+  { x: 17.8, z: 54.6, w: 6.9, d: 9.7, label: "FREEZER" },
+  { x: 25.4, z: 52.9, w: 16.7, d: 11.4, label: "STORAGE" },
 ];
 
 /* ------------------------------------------------------------ floor zones */
@@ -124,82 +170,87 @@ export type Zone = {
 };
 
 export const ZONES: Zone[] = [
-  // patio decking
-  { x: 8, z: 0.5, w: 47, d: 9.5, color: COLORS.deck, kind: "deck" },
-  { x: 68, z: 0.5, w: 32, d: 15.5, color: COLORS.deck, kind: "deck" },
-  { x: 82, z: 28, w: 18, d: 28, color: COLORS.deck, kind: "deck" },
-  { x: 84, z: 60, w: 16, d: 12, color: COLORS.deck, kind: "deck" },
+  // patios (decking)
+  { x: 6, z: 0, w: 43, d: 5.4, color: COLORS.deck, kind: "deck" },
+  { x: 77, z: 0, w: 28.5, d: 13.4, color: COLORS.deck, kind: "deck" },
+  { x: 97.4, z: 13.4, w: 8.1, d: 29.7, color: COLORS.deck, kind: "deck" },
+  { x: 97.4, z: 51.6, w: 8.1, d: 14.7, color: COLORS.deck, kind: "deck" },
   // kitchen + BOH slab
-  { x: 0, z: 44, w: 22, d: 28, color: COLORS.charDeep, kind: "slab" },
-  // tatami runner under the sushi bar
-  { x: 29, z: 43, w: 17, d: 17, color: COLORS.smoke, kind: "mat" },
-  // spirits bar apron
-  { x: 50, z: 62.5, w: 32, d: 9, color: COLORS.smoke, kind: "mat" },
+  { x: 0, z: 42.7, w: 25, d: 27.3, color: COLORS.charDeep, kind: "slab" },
+  // mats under the two bars
+  { x: 24.5, z: 42.7, w: 21.5, d: 19.5, color: COLORS.smoke, kind: "mat" },
+  { x: 50, z: 56.5, w: 40, d: 9.8, color: COLORS.smoke, kind: "mat" },
 ];
 
 /* -------------------------------------------------------------- furniture */
 
 export type Table = { x: number; z: number; w: number; d: number };
-/** chair: position + facing (radians, 0 faces −z i.e. plan-north) */
 export type Chair = { x: number; z: number; rot: number };
-export type Stool = { x: number; z: number };
-
-function fourTop(x: number, z: number, tables: Table[], chairs: Chair[]) {
-  tables.push({ x, z, w: 2.9, d: 2.9 });
-  chairs.push(
-    { x, z: z - 2.3, rot: Math.PI },
-    { x, z: z + 2.3, rot: 0 },
-    { x: x - 2.3, z, rot: Math.PI / 2 },
-    { x: x + 2.3, z, rot: -Math.PI / 2 },
-  );
-}
-
-function twoTop(x: number, z: number, tables: Table[], chairs: Chair[], axis: "x" | "z" = "z") {
-  tables.push({ x, z, w: 2.4, d: 2.4 });
-  if (axis === "z") {
-    chairs.push({ x, z: z - 2, rot: Math.PI }, { x, z: z + 2, rot: 0 });
-  } else {
-    chairs.push({ x: x - 2, z, rot: Math.PI / 2 }, { x: x + 2, z, rot: -Math.PI / 2 });
-  }
-}
+export type Stool = { x: number; z: number; rot: number };
 
 export const TABLES: Table[] = [];
 export const CHAIRS: Chair[] = [];
 export const STOOLS: Stool[] = [];
 
-// north dining patio — 2-tops along the storefront
-for (const x of [13, 20, 27, 34, 41, 48]) twoTop(x, 5, TABLES, CHAIRS);
+const R = { N: Math.PI, S: 0, E: -Math.PI / 2, W: Math.PI / 2 };
 
-// northwest dining room — grid of 4-tops
-for (const x of [18, 26, 34]) for (const z of [14, 22, 30]) fourTop(x, z, TABLES, CHAIRS);
-twoTop(40, 36, TABLES, CHAIRS, "x");
-
-// center dining east of the sushi bar
-for (const x of [48, 56, 64]) for (const z of [50, 58]) fourTop(x, z, TABLES, CHAIRS);
-
-// northeast dining patio
-for (const x of [74, 82, 90, 97]) fourTop(x, 6, TABLES, CHAIRS);
-for (const x of [78, 86, 94]) twoTop(x, 12.5, TABLES, CHAIRS, "x");
-
-// east dining patio — 2-tops in two columns
-for (const z of [32, 40, 48]) {
-  twoTop(87, z, TABLES, CHAIRS, "x");
-  twoTop(95, z, TABLES, CHAIRS, "x");
+function fourTop(x: number, z: number) {
+  TABLES.push({ x, z, w: 2.9, d: 2.9 });
+  CHAIRS.push(
+    { x, z: z - 2.3, rot: R.N },
+    { x, z: z + 2.3, rot: R.S },
+    { x: x - 2.3, z, rot: R.W },
+    { x: x + 2.3, z, rot: R.E },
+  );
 }
 
-// counter rail seating against the stair core
-for (let i = 0; i < 7; i++) STOOLS.push({ x: 48.5 + i * 2.7, z: 44.6 });
+/** 2-top with chairs on the east/west ends (as drawn on the patio) */
+function twoTopEW(x: number, z: number) {
+  TABLES.push({ x, z, w: 2.2, d: 2.4 });
+  CHAIRS.push({ x: x - 2, z, rot: R.W }, { x: x + 2, z, rot: R.E });
+}
 
-// sushi bar stools (east face + south return)
-for (let i = 0; i < 5; i++) STOOLS.push({ x: 44.8, z: 46.5 + i * 2.4 });
-for (const x of [33, 36]) STOOLS.push({ x, z: 48.8 });
+// north sidewalk patio — six 2-tops tight to the facade
+for (const x of [7.5, 22.0, 27.9, 33.5, 39.6, 45.8]) twoTopEW(x, 2.6);
 
-// spirits bar stools
-for (let i = 0; i < 9; i++) STOOLS.push({ x: 54 + i * 3, z: 64.4 });
+// northwest dining room (10 4-tops + one 2-top, as scattered on the plan)
+for (const [x, z] of [
+  [17.6, 9.5], [24.5, 9.5], [31.7, 9.5], [44.3, 9.5],
+  [27.0, 19.3], [34.1, 19.3], [44.8, 20.2],
+  [30.6, 28.2], [45.0, 26.1], [45.0, 34.1],
+] as const) fourTop(x, z);
+twoTopEW(20.3, 17.2);
 
-/* booths along the east wall south of the stair core */
-export const BOOTHS: Array<{ z: number }> = [22, 27.2, 32.4, 37.6, 42.8].map((z) => ({ z }));
-export const BOOTH_X = 76; // table centerline
+// center dining — single row of four 4-tops south of the core
+for (const x of [52.1, 59.3, 66.3, 73.5]) fourTop(x, 48.8);
+
+// east dining room — column of three 4-tops
+for (const z of [19.6, 29.4, 39.3]) fourTop(93.8, z);
+
+// northeast patio — three 4-tops
+for (const x of [83.3, 94.8, 102.0]) fourTop(x, 8.6);
+
+// stair-core counter rails
+export const RAIL_SOUTH = { x1: 49, x2: 77, z: 36.6, depth: 1.4 };
+for (const x of [49.9, 54.3, 58.8, 63.3, 67.8, 72.3, 76.1])
+  STOOLS.push({ x, z: 38.7, rot: R.N });
+export const RAIL_EAST = { z1: 15.4, z2: 35.9, x: 78.4, depth: 1.4 };
+for (const z of [17.5, 20.8, 24.1, 27.4, 30.7, 34.0])
+  STOOLS.push({ x: 80.3, z, rot: R.W });
+
+// sushi bar stools: 5 on the north arm, 10 down the east arm
+for (const x of [35.1, 37.3, 39.5, 41.7, 43.9]) STOOLS.push({ x, z: 42.6, rot: R.N });
+for (let i = 0; i < 10; i++) STOOLS.push({ x: 46.0, z: 44.5 + i * 1.85, rot: R.W });
+
+// spirits bar stools: 13 along the front, 4 on the east return
+for (let i = 0; i < 13; i++) STOOLS.push({ x: 59.6 + i * 2.35, z: 57.3, rot: R.N });
+for (const z of [59.4, 61.1, 62.9, 64.8]) STOOLS.push({ x: 89.2, z, rot: R.W });
+
+/* booth clusters on the east patio: bench / table / bench, facing north-south */
+export const BOOTHS: Array<{ x: number; z: number }> = [
+  { x: 101.2, z: 21.0 },
+  { x: 101.2, z: 29.9 },
+];
 
 /* ---------------------------------------------------------------- objects */
 
@@ -210,67 +261,80 @@ export type Block = {
   d: number;
   h: number;
   color: string;
-  label?: string;
 };
 
 export const BLOCKS: Block[] = [
-  // existing stair / elevator core — hatched "NOT IN SCOPE" on the plan
-  { x: 47, z: 20, w: 19, d: 22, h: EXT_H, color: COLORS.smoke, label: "EXISTING STAIR" },
-  // walk-ins and dry goods
-  { x: 24, z: 48, w: 6, d: 8, h: 4.5, color: COLORS.seam, label: "COOLER" },
-  { x: 24, z: 58, w: 6, d: 8, h: 4.5, color: COLORS.seam, label: "FREEZER" },
-  { x: 30.5, z: 58, w: 5.5, d: 8, h: 4.2, color: COLORS.concrete },
-  // P.O.S. station
-  { x: 23, z: 36, w: 6, d: 5, h: 3.4, color: COLORS.concrete, label: "P.O.S." },
-  // kitchen lines (stainless)
-  { x: 1.5, z: 46, w: 18, d: 3.2, h: 4.8, color: COLORS.chrome },
-  { x: 2, z: 53, w: 16, d: 3, h: 3, color: COLORS.chrome },
-  { x: 2, z: 60, w: 16, d: 3, h: 3, color: COLORS.chrome },
-  // server station beside the spirits bar
-  { x: 46.5, z: 64.5, w: 4.5, d: 6, h: 3.4, color: COLORS.woodDark },
+  // kitchen line: hood run along the west wall, center island, north sinks
+  { x: 0.6, z: 46, w: 2.8, d: 19, h: 4.6, color: COLORS.chrome },
+  { x: 8.3, z: 44.5, w: 3.4, d: 19, h: 3, color: COLORS.chrome },
+  { x: 4.2, z: 43.1, w: 9, d: 2.2, h: 3, color: COLORS.chrome },
+  // server station west of the spirits bar
+  { x: 50.3, z: 59.5, w: 6.8, d: 4, h: 3.4, color: COLORS.woodDark },
 ];
 
-/* pendant cone lights (x, z, y = height of cone tip) */
+/* spirits bar structural pieces (built in the model component) */
+export const SPIRITS = {
+  front: { x1: 58.5, x2: 88.4, z: 58.6, depth: 2.2 },
+  back: { x1: 58.5, x2: 88.4, z: 63.6, depth: 2.0 },
+  flapW: { x1: 57.2, x2: 58.5 },
+  returnE: { z1: 58.6, z2: 66.0, x: 88.4, depth: 2.0 },
+};
+
+/* sushi bar C-shape: north arm, east arm, inner prep counter */
+export const SUSHI = {
+  north: { x1: 25.2, x2: 44.8, z1: 43.6, z2: 45.6 },
+  east: { x1: 42.8, x2: 44.8, z1: 45.6, z2: 61.5 },
+  inner: { x1: 25.4, x2: 42.1, z1: 52.9, z2: 54.3 },
+};
+
+/* pendant cone lights over seating (x, z) */
 export const PENDANTS: Array<[number, number]> = [
-  // over the spirits bar
-  [56, 67.5],
-  [61, 67.5],
-  [66, 67.5],
-  [71, 67.5],
-  [76, 67.5],
-  // along the booth wall
-  [80.5, 23],
-  [80.5, 28.2],
-  [80.5, 33.4],
-  [80.5, 38.6],
-  [80.5, 43.8],
+  // spirits bar
+  [61, 59.6], [66.5, 59.6], [72, 59.6], [77.5, 59.6], [83, 59.6],
+  // sushi bar north arm
+  [33, 44.6], [39, 44.6],
+  // core rails
+  [53, 37.3], [61, 37.3], [69, 37.3], [76, 37.3],
+  // east dining column
+  [93.8, 19.6], [93.8, 29.4], [93.8, 39.3],
 ];
 
 /* bamboo planter clusters */
 export const PLANTERS: Array<[number, number]> = [
-  [97.2, 45.5],
-  [97.2, 57],
-  [69.5, 2.5],
-  [9.5, 2.5],
+  [99.6, 16.0], [99.7, 35.6], [103.8, 53.5], [8, 6.8], [47.5, 6.8],
 ];
+
+/* structural columns (core corners, demise line) */
+export const COLUMNS: Array<[number, number]> = [
+  [49.4, 15.0], [76.6, 15.0], [49.4, 35.6], [76.6, 35.6],
+  [51.0, 65.9], [75.3, 65.9],
+];
+
+export const HOST_STAND = { x: 82.5, z: 48.7 };
+export const WH_POS: [number, number] = [2.0, 68.6];
+export const CORE = { x: 49, z: 0, w: 28, d: 36 };
+export const POS_DESK = { x: 30, z: 33.2, w: 6.2, d: 4.4 };
 
 /* ----------------------------------------------------------------- labels */
 
 export type Label = { x: number; z: number; text: string; minor?: boolean };
 
 export const LABELS: Label[] = [
-  { x: 30, z: 4.5, text: "DINING PATIO" },
-  { x: 26, z: 23, text: "DINING" },
-  { x: 11, z: 57, text: "KITCHEN" },
-  { x: 38, z: 51.5, text: "SUSHI BAR" },
-  { x: 56, z: 54, text: "DINING" },
-  { x: 65, z: 69.5, text: "SPIRITS BAR" },
-  { x: 86, z: 9, text: "DINING PATIO" },
-  { x: 91, z: 41, text: "DINING PATIO" },
-  { x: 92, z: 66.5, text: "WAITING PATIO", minor: true },
-  { x: 56.5, z: 31, text: "STAIR · N.I.C.", minor: true },
-  { x: 7, z: 13, text: "DRY STORAGE", minor: true },
-  { x: 6.5, z: 25, text: "OFFICE", minor: true },
-  { x: 10, z: 36, text: "W.C.", minor: true },
-  { x: 76.5, z: 56.5, text: "HOST", minor: true },
+  { x: 27, z: 2.7, text: "DINING PATIO" },
+  { x: 28, z: 16, text: "DINING" },
+  { x: 62, z: 52, text: "DINING" },
+  { x: 90, z: 24, text: "DINING" },
+  { x: 90, z: 6, text: "DINING PATIO" },
+  { x: 101.5, z: 25.5, text: "DINING PATIO", minor: true },
+  { x: 101.5, z: 58.5, text: "WAITING PATIO", minor: true },
+  { x: 35, z: 49, text: "SUSHI BAR" },
+  { x: 73, z: 61.5, text: "SPIRITS BAR" },
+  { x: 9, z: 56, text: "KITCHEN" },
+  { x: 63, z: 24, text: "STAIR · N.I.C.", minor: true },
+  { x: 6.5, z: 10.5, text: "DRY STORAGE", minor: true },
+  { x: 5, z: 21.5, text: "OFFICE", minor: true },
+  { x: 10, z: 33.5, text: "W.C.", minor: true },
+  { x: 82.5, z: 46.8, text: "HOST", minor: true },
+  { x: 33.2, z: 35.3, text: "P.O.S.", minor: true },
+  { x: 53.5, z: 61.5, text: "SERVER", minor: true },
 ];
