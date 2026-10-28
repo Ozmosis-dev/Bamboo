@@ -4,6 +4,7 @@ import Link from "next/link";
 import { getCopy } from "@content/index";
 import { MarketPageHeader } from "@/components/market/MarketPage";
 import { telHref } from "@/lib/format";
+import { MENU_HIDDEN } from "@/lib/flags";
 import { getCurrentLocation, getSisterLocation, currentLocationSlug } from "@/lib/location";
 import { pageMetadata } from "@/lib/seo";
 import { getSiteContent } from "@/lib/content";
@@ -141,12 +142,14 @@ export default async function AboutPage() {
               Dinner, Monday through Saturday. Walk-ins welcome.
             </p>
             <div data-fx="rise" className="flex flex-wrap gap-5">
-              <Link
-                href="/menu"
-                className="m-caps bg-char px-8 py-4 text-[13px] text-washi transition-colors hover:bg-char-deep"
-              >
-                See the menu
-              </Link>
+              {!MENU_HIDDEN && (
+                <Link
+                  href="/menu"
+                  className="m-caps bg-char px-8 py-4 text-[13px] text-washi transition-colors hover:bg-char-deep"
+                >
+                  See the menu
+                </Link>
+              )}
               <a
                 href={telHref(location.phone)}
                 className="m-caps border border-washi/60 px-8 py-4 text-[13px] text-washi transition-colors hover:border-washi"

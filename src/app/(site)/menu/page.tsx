@@ -5,11 +5,13 @@ import { MarketMenu } from "@/components/market/MarketMenu";
 import { getCurrentLocation, currentLocationSlug } from "@/lib/location";
 import { getMenuForLocation } from "@/lib/menu";
 import { menuJsonLd, pageMetadata } from "@/lib/seo";
-import { getSiteContent } from "@/lib/content";
+import { MENU_HIDDEN } from "@/lib/flags";
+import { redirect } from "next/navigation";
 
 export const revalidate = 300;
 
 export async function generateMetadata(): Promise<Metadata> {
+  if (MENU_HIDDEN) return {};
   const location = await getCurrentLocation();
   return pageMetadata(location, {
     title: "Menu",
@@ -19,6 +21,8 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function MenuPage() {
+  // Temporary 307 home while hidden, so indexed /menu links don't 404.
+  if (MENU_HIDDEN) redirect("/");
   const slug = currentLocationSlug();
   const [location, menu] = await Promise.all([
     getCurrentLocation(),
@@ -26,7 +30,6 @@ export default async function MenuPage() {
   ]);
 
   if (slug === "chattanooga") {
-    const content = await getSiteContent(slug);
     return (
       <>
         <JsonLd data={menuJsonLd(location, menu)} />

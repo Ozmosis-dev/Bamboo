@@ -5,6 +5,7 @@ import { MarketHome } from "@/components/market/MarketHome";
 import { getSiteContent } from "@/lib/content";
 import { getSiteImages } from "@/lib/images";
 import { formatHoursEntry, formatPrice, telHref } from "@/lib/format";
+import { MENU_HIDDEN } from "@/lib/flags";
 import { getCurrentLocation, getSisterLocation, currentLocationSlug } from "@/lib/location";
 import { getMenuForLocation } from "@/lib/menu";
 import { pageMetadata } from "@/lib/seo";
@@ -56,12 +57,14 @@ export default async function HomePage() {
         </h1>
         <p className="mt-4 max-w-xl text-lg text-ink-soft">{copy.hero.subheading}</p>
         <div className="mt-8 flex flex-wrap gap-3">
-          <Link
-            href="/menu"
-            className="rounded-full bg-bamboo-700 px-5 py-2.5 font-medium text-white hover:bg-bamboo-800"
-          >
-            See the menu
-          </Link>
+          {!MENU_HIDDEN && (
+            <Link
+              href="/menu"
+              className="rounded-full bg-bamboo-700 px-5 py-2.5 font-medium text-white hover:bg-bamboo-800"
+            >
+              See the menu
+            </Link>
+          )}
           <a
             href={telHref(location.phone)}
             className="rounded-full border border-line px-5 py-2.5 font-medium text-ink hover:border-bamboo-600"
@@ -75,6 +78,7 @@ export default async function HomePage() {
         <p className="max-w-2xl text-ink-soft">{copy.intro}</p>
       </section>
 
+      {!MENU_HIDDEN && (
       <section className="border-t border-line py-12">
         <h2 className="text-xl font-semibold text-bamboo-800">From the menu</h2>
         <ul className="mt-4 grid gap-4 sm:grid-cols-2">
@@ -96,6 +100,7 @@ export default async function HomePage() {
           Full menu →
         </Link>
       </section>
+      )}
 
       <section className="grid gap-8 border-t border-line py-12 sm:grid-cols-2">
         <div>

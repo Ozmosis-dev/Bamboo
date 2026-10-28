@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { formatHoursEntry, telHref } from "@/lib/format";
+import { MENU_HIDDEN } from "@/lib/flags";
 import type { Location, ResolvedMenuSection } from "@/lib/types";
 import type { SiteContent } from "@/lib/content";
 import type { GalleryImage } from "@/lib/images";
@@ -100,12 +101,21 @@ export function MarketHome({
           </p>
 
           <div data-hero className="mt-11 flex flex-wrap items-center gap-6">
-            <Link
-              href="/menu"
-              className="m-caps bg-verm px-8 py-4 text-[13px] text-washi transition-colors hover:bg-price"
-            >
-              See the menu
-            </Link>
+            {MENU_HIDDEN ? (
+              <Link
+                href="/visit"
+                className="m-caps bg-verm px-8 py-4 text-[13px] text-washi transition-colors hover:bg-price"
+              >
+                Plan your visit
+              </Link>
+            ) : (
+              <Link
+                href="/menu"
+                className="m-caps bg-verm px-8 py-4 text-[13px] text-washi transition-colors hover:bg-price"
+              >
+                See the menu
+              </Link>
+            )}
             <a
               href={telHref(location.phone)}
               className="m-caps group inline-flex items-center gap-3 text-[13px] text-washi/90 hover:text-washi"
@@ -152,6 +162,7 @@ export function MarketHome({
       <MarketMarquee items={gallery} />
 
       {/* ------------------------------------------------- The menu, by course */}
+      {!MENU_HIDDEN && (
       <section className="relative overflow-hidden">
         <div aria-hidden className="m-paper-dark" />
         <Image
@@ -307,6 +318,7 @@ export function MarketHome({
           </div>
         </div>
       </section>
+      )}
 
       {/* ------------------------------------------------ Behind the counter */}
       <section className="relative overflow-hidden border-y border-seam">

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { MENU_HIDDEN } from "@/lib/flags";
 import { siteUrl } from "@/lib/location";
 import { isClosedEntry } from "@/lib/format";
 import type { Location, LocationSlug, ResolvedMenuSection } from "@/lib/types";
@@ -104,7 +105,7 @@ export function restaurantJsonLd(location: Location) {
     },
     openingHoursSpecification: openingHours(location),
     sameAs: [location.social.instagram, location.social.facebook].filter(Boolean),
-    hasMenu: `${siteUrl(location)}/menu`,
+    ...(MENU_HIDDEN ? {} : { hasMenu: `${siteUrl(location)}/menu` }),
   };
 }
 

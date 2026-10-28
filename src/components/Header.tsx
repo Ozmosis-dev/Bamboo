@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { telHref } from "@/lib/format";
+import { MENU_HIDDEN } from "@/lib/flags";
 import type { Location } from "@/lib/types";
 
 const nav = [
@@ -7,7 +8,7 @@ const nav = [
   { href: "/about", label: "About" },
   { href: "/visit", label: "Visit" },
   { href: "/contact", label: "Contact" },
-] as const;
+].filter((item) => !(MENU_HIDDEN && item.href === "/menu"));
 
 export function Header({ location }: { location: Location }) {
   return (
