@@ -89,17 +89,21 @@ export const WALLS: WallSeg[] = [
   /* ---- envelope ---- */
   // west + south faces cut low (dollhouse cutaway) so the room stays visible
   W(0, 5.4, 0, 70, "brick", 1.5),
-  // north: storefront behind the sidewalk patio (x 6–49)
-  W(6, 5.4, 49, 5.4, "glass"),
+  // north: storefront behind the sidewalk patio, door openings at both ends
+  W(9, 5.4, 45, 5.4, "glass"),
   W(0, 5.4, 6, 5.4, "brick"),
+  W(6, 5.4, 9, 5.4, "glass", 6.5, 0.2), // door bay (103/104 corridor)
+  W(45, 5.4, 49, 5.4, "glass", 6.5, 0.2),
   // north face of the stair-core band (existing building, N.I.C.)
   W(49, 0, 77, 0, "brick"),
   // east dining storefront onto the NE patio, with gaps for its doors
   W(77, 13.4, 87.5, 13.4, "glass"),
   W(90.5, 13.4, 97.4, 13.4, "glass"),
-  // east face: solid brick beside the booths' patio divider, door at z 36.5
+  // east face (Market St — the front): brick flanks, patio door at z 36.5,
+  // and the main entrance opening at z 44.8–48.6
   W(105.5, 13.4, 105.5, 35, "brick"),
-  W(105.5, 38, 105.5, 51.6, "brick"),
+  W(105.5, 38, 105.5, 44.8, "brick"),
+  W(105.5, 48.6, 105.5, 51.6, "brick"),
   // south party wall: z=70 west of the demise step, z=66.3 east of it
   W(0, 70, 30, 70, "brick", 1.5),
   W(30, 66.3, 30, 70, "brick", 1.5),
@@ -120,27 +124,29 @@ export const WALLS: WallSeg[] = [
   W(105.5, 51.6, 105.5, 66.3, "low"),
 
   /* ---- interior ---- */
-  // dry storage (door on its east side)
-  inner(0, 15.6, 13, 15.6),
-  inner(13, 5.4, 13, 10),
-  inner(13, 12.5, 13, 15.6),
-  // manager's office (9'-9" wide)
+  // dry storage: solid east wall, door opening in its south wall
+  inner(0, 15.6, 6, 15.6),
+  inner(9, 15.6, 13, 15.6),
+  inner(13, 5.4, 13, 15.6),
+  // manager's office (9'-9" wide), door on its east wall
   inner(0, 17, 9.75, 17),
-  inner(9.75, 17, 9.75, 22),
+  inner(9.75, 17, 9.75, 20),
+  inner(9.75, 23, 9.75, 26),
   inner(0, 26, 9.75, 26),
-  // restroom block
+  // restroom block: two WCs west, lav alcove, corridor opening on the east
   inner(0, 26, 20, 26, 5.4),
-  inner(20, 26, 20, 33, 5.4),
-  inner(20, 35.5, 20, 40.6, 5.4),
+  inner(20, 26, 20, 32.5, 5.4),
+  inner(20, 36, 20, 40.6, 5.4),
   inner(0, 40.6, 20, 40.6, 5.4),
-  inner(10, 26, 10, 40.6, 5.4),
-  // kitchen north wall + grease zone
-  inner(0, 42.7, 14, 42.7),
-  // P.O.S. room
+  inner(0, 33.4, 10, 33.4, 5.4),
+  inner(10, 26, 10, 30, 5.4),
+  inner(10, 36.5, 10, 40.6, 5.4),
+  // kitchen north wall, wide pass to the dining room at x 13–17.8
+  inner(0, 42.7, 13, 42.7),
+  // P.O.S. station: walled north/west/east, open to the dining side
   inner(29.3, 32.6, 37, 32.6),
-  inner(29.3, 32.6, 29.3, 38),
-  inner(37, 32.6, 37, 38),
-  inner(29.3, 38, 32, 38),
+  inner(29.3, 32.6, 29.3, 36),
+  inner(37, 32.6, 37, 36),
   // existing demising stubs between the two dining rooms
   { x1: 14.2, z1: 13.8, x2: 26.2, z2: 13.8, h: 5.5, t: 1.1, kind: "solid" },
   { x1: 42.0, z1: 13.8, x2: 49.0, z2: 13.8, h: 5.5, t: 1.1, kind: "solid" },
@@ -230,13 +236,20 @@ for (const z of [19.6, 29.4, 39.3]) fourTop(93.8, z);
 // northeast patio — three 4-tops
 for (const x of [83.3, 94.8, 102.0]) fourTop(x, 8.6);
 
-// stair-core counter rails
-export const RAIL_SOUTH = { x1: 49, x2: 77, z: 36.6, depth: 1.4 };
-for (const x of [49.9, 54.3, 58.8, 63.3, 67.8, 72.3, 76.1])
-  STOOLS.push({ x, z: 38.7, rot: R.N });
-export const RAIL_EAST = { z1: 15.4, z2: 35.9, x: 78.4, depth: 1.4 };
-for (const z of [17.5, 20.8, 24.1, 27.4, 30.7, 34.0])
-  STOOLS.push({ x: 80.3, z, rot: R.W });
+// stair-core bench seating: a long banquette against the core wall with
+// individual 2-top tables and a chair across from each (per the plan)
+export const BENCH_SOUTH = { x1: 49, x2: 77, z: 36.6, depth: 1.6 };
+export const BENCH_EAST = { z1: 15.4, z2: 35.9, x: 77.6, depth: 1.6 };
+export const BENCH_TABLES_S: Array<[number, number]> = [];
+export const BENCH_TABLES_E: Array<[number, number]> = [];
+for (const x of [49.9, 54.3, 58.8, 63.3, 67.8, 72.3, 76.1]) {
+  BENCH_TABLES_S.push([x, 39.2]);
+  CHAIRS.push({ x, z: 41.0, rot: R.N });
+}
+for (const z of [17.5, 20.8, 24.1, 27.4, 30.7, 34.0]) {
+  BENCH_TABLES_E.push([80.2, z]);
+  CHAIRS.push({ x: 82.0, z, rot: R.W });
+}
 
 // sushi bar stools: 5 on the north arm, 10 down the east arm
 for (const x of [35.1, 37.3, 39.5, 41.7, 43.9]) STOOLS.push({ x, z: 42.6, rot: R.N });
@@ -301,7 +314,16 @@ export const PENDANTS: Array<[number, number]> = [
 
 /* bamboo planter clusters */
 export const PLANTERS: Array<[number, number]> = [
-  [99.6, 16.0], [99.7, 35.6], [103.8, 53.5], [8, 6.8], [47.5, 6.8],
+  // east patio + waiting patio (per plan's grey planter boxes)
+  [99.6, 16.0], [99.7, 35.6], [103.8, 53.5],
+  // sidewalk patio, between the tables (per the facade photo)
+  [14.5, 1.1], [29.5, 1.1], [43.0, 1.1],
+  // NE patio corners
+  [79.0, 1.1], [103.5, 1.1],
+  // flanking the front entrance
+  [104.4, 43.6], [104.4, 49.8],
+  // inside, at the patio corridor doors
+  [8, 6.8], [47.5, 6.8],
 ];
 
 /* structural columns (core corners, demise line) */

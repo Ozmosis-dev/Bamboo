@@ -46,7 +46,7 @@ export default function FloorPlanCanvas() {
       shadows
       dpr={[1, 2]}
       gl={{ antialias: true, alpha: true }}
-      camera={{ position: [100, 82, 125], fov: 30, near: 1, far: 800 }}
+      camera={{ position: [142, 58, 68], fov: 30, near: 1, far: 800 }}
       onCreated={({ gl }) => {
         gl.toneMapping = THREE.ACESFilmicToneMapping;
         gl.toneMappingExposure = 1.35;

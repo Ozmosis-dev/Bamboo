@@ -4,6 +4,10 @@ import { useEffect, useMemo, useState } from "react";
 import { Instance, Instances } from "@react-three/drei";
 import * as THREE from "three";
 import {
+  BENCH_EAST,
+  BENCH_SOUTH,
+  BENCH_TABLES_E,
+  BENCH_TABLES_S,
   BLOCKS,
   BOOTHS,
   CHAIRS,
@@ -16,8 +20,6 @@ import {
   PLAN,
   PLANTERS,
   POS_DESK,
-  RAIL_EAST,
-  RAIL_SOUTH,
   ROOMS,
   SPIRITS,
   STOOLS,
@@ -48,6 +50,34 @@ function grainTexture(base: string, variation = 14, size = 256) {
   ctx.putImageData(img, 0, 0);
   const tex = new THREE.CanvasTexture(c);
   tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
+  tex.colorSpace = THREE.SRGBColorSpace;
+  return tex;
+}
+
+/** Warm concrete paver texture for the outdoor patios (per the photo). */
+function paverTexture() {
+  const c = document.createElement("canvas");
+  c.width = c.height = 512;
+  const ctx = c.getContext("2d")!;
+  ctx.fillStyle = "#7a7268";
+  ctx.fillRect(0, 0, 512, 512);
+  const img = ctx.getImageData(0, 0, 512, 512);
+  for (let i = 0; i < img.data.length; i += 4) {
+    const n = (Math.random() - 0.5) * 16;
+    img.data[i] += n;
+    img.data[i + 1] += n;
+    img.data[i + 2] += n;
+  }
+  ctx.putImageData(img, 0, 0);
+  ctx.strokeStyle = "rgba(30,27,24,0.5)";
+  ctx.lineWidth = 3;
+  for (let i = 0; i <= 512; i += 128) {
+    ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, 512); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(512, i); ctx.stroke();
+  }
+  const tex = new THREE.CanvasTexture(c);
+  tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
+  tex.repeat.set(0.12, 0.12);
   tex.colorSpace = THREE.SRGBColorSpace;
   return tex;
 }
@@ -88,8 +118,7 @@ function useMaterials() {
     woodGrain.repeat.set(0.4, 0.4);
     const floorGrain = grainTexture("#2e2b28", 10);
     floorGrain.repeat.set(2.4, 2.4);
-    const deckGrain = grainTexture("#a3855e", 18);
-    deckGrain.repeat.set(0.8, 0.8);
+    const deckTex = paverTexture();
     return {
       wall: new THREE.MeshStandardMaterial({ color: COLORS.washi, roughness: 0.85 }),
       innerWall: new THREE.MeshStandardMaterial({ color: COLORS.tatami, roughness: 0.9 }),
@@ -107,7 +136,7 @@ function useMaterials() {
         roughness: 0.35,
         metalness: 0.08,
       }),
-      deck: new THREE.MeshStandardMaterial({ map: deckGrain, roughness: 0.85 }),
+      deck: new THREE.MeshStandardMaterial({ map: deckTex, roughness: 0.9 }),
       plinth: new THREE.MeshStandardMaterial({ color: COLORS.charDeep, roughness: 0.85, metalness: 0 }),
       gold: new THREE.MeshStandardMaterial({ color: COLORS.gold, roughness: 0.3, metalness: 0.85 }),
       wood: new THREE.MeshStandardMaterial({ map: woodGrain, roughness: 0.55 }),
@@ -167,11 +196,34 @@ function Wall({ seg, mats }: { seg: WallSeg; mats: Mats }) {
           </mesh>
         </>
       )}
-      {kind === "low" && (
-        <mesh material={mats.gold} position={[0, h, 0]}>
-          <boxGeometry args={[len, 0.1, t + 0.1]} />
+    </group>
+  );
+}
+
+/** Black metal patio fence: top/mid rails on posts, like the street photo. */
+function Fence({ seg, mats }: { seg: WallSeg; mats: Mats }) {
+  const { x1, z1, x2, z2, h } = seg;
+  const len = Math.hypot(x2 - x1, z2 - z1);
+  const cx = (x1 + x2) / 2;
+  const cz = (z1 + z2) / 2;
+  const rotY = Math.abs(x2 - x1) >= Math.abs(z2 - z1) ? 0 : Math.PI / 2;
+  const posts = Math.max(2, Math.round(len / 4) + 1);
+  return (
+    <group position={[cx, 0, cz]} rotation={[0, rotY, 0]}>
+      <mesh material={mats.black} position={[0, h, 0]} castShadow>
+        <boxGeometry args={[len, 0.14, 0.14]} />
+      </mesh>
+      <mesh material={mats.black} position={[0, h * 0.55, 0]}>
+        <boxGeometry args={[len, 0.08, 0.08]} />
+      </mesh>
+      <mesh material={mats.black} position={[0, 0.12, 0]}>
+        <boxGeometry args={[len, 0.24, 0.1]} />
+      </mesh>
+      {Array.from({ length: posts }, (_, i) => (
+        <mesh key={i} material={mats.black} position={[-len / 2 + (len * i) / (posts - 1), h / 2, 0]}>
+          <boxGeometry args={[0.14, h, 0.14]} />
         </mesh>
-      )}
+      ))}
     </group>
   );
 }
@@ -433,23 +485,49 @@ function SpiritsBar({ mats }: { mats: Mats }) {
   );
 }
 
-function Rails({ mats }: { mats: Mats }) {
+function Benches({ mats }: { mats: Mats }) {
+  const sLen = BENCH_SOUTH.x2 - BENCH_SOUTH.x1;
+  const eLen = BENCH_EAST.z2 - BENCH_EAST.z1;
   return (
     <group>
-      {/* core south drink rail */}
-      <mesh material={mats.wood} position={[(RAIL_SOUTH.x1 + RAIL_SOUTH.x2) / 2, 3.3, RAIL_SOUTH.z + RAIL_SOUTH.depth / 2]} castShadow>
-        <boxGeometry args={[RAIL_SOUTH.x2 - RAIL_SOUTH.x1, 0.22, RAIL_SOUTH.depth]} />
-      </mesh>
-      <mesh material={mats.black} position={[(RAIL_SOUTH.x1 + RAIL_SOUTH.x2) / 2, 1.65, RAIL_SOUTH.z + RAIL_SOUTH.depth / 2]}>
-        <boxGeometry args={[RAIL_SOUTH.x2 - RAIL_SOUTH.x1 - 0.5, 3.2, 0.4]} />
-      </mesh>
-      {/* core east drink rail */}
-      <mesh material={mats.wood} position={[RAIL_EAST.x + RAIL_EAST.depth / 2, 3.3, (RAIL_EAST.z1 + RAIL_EAST.z2) / 2]} castShadow>
-        <boxGeometry args={[RAIL_EAST.depth, 0.22, RAIL_EAST.z2 - RAIL_EAST.z1]} />
-      </mesh>
-      <mesh material={mats.black} position={[RAIL_EAST.x + RAIL_EAST.depth / 2, 1.65, (RAIL_EAST.z1 + RAIL_EAST.z2) / 2]}>
-        <boxGeometry args={[0.4, 3.2, RAIL_EAST.z2 - RAIL_EAST.z1 - 0.5]} />
-      </mesh>
+      {/* long banquette along the core's south face: base, red cushion, back */}
+      <group position={[BENCH_SOUTH.x1 + sLen / 2, 0, BENCH_SOUTH.z + BENCH_SOUTH.depth / 2]}>
+        <mesh material={mats.black} position={[0, 0.65, 0]} castShadow>
+          <boxGeometry args={[sLen, 1.3, BENCH_SOUTH.depth]} />
+        </mesh>
+        <mesh material={mats.leather} position={[0, 1.42, 0]} castShadow>
+          <boxGeometry args={[sLen - 0.2, 0.28, BENCH_SOUTH.depth + 0.15]} />
+        </mesh>
+        <mesh material={mats.leather} position={[0, 2.3, -BENCH_SOUTH.depth / 2 + 0.17]}>
+          <boxGeometry args={[sLen - 0.2, 1.9, 0.34]} />
+        </mesh>
+      </group>
+      {/* banquette along the core's east face */}
+      <group position={[BENCH_EAST.x + BENCH_EAST.depth / 2, 0, BENCH_EAST.z1 + eLen / 2]}>
+        <mesh material={mats.black} position={[0, 0.65, 0]} castShadow>
+          <boxGeometry args={[BENCH_EAST.depth, 1.3, eLen]} />
+        </mesh>
+        <mesh material={mats.leather} position={[0, 1.42, 0]} castShadow>
+          <boxGeometry args={[BENCH_EAST.depth + 0.15, 0.28, eLen - 0.2]} />
+        </mesh>
+        <mesh material={mats.leather} position={[-BENCH_EAST.depth / 2 + 0.17, 2.3, 0]}>
+          <boxGeometry args={[0.34, 1.9, eLen - 0.2]} />
+        </mesh>
+      </group>
+      {/* individual 2-top tables in front of each bench bay */}
+      {[...BENCH_TABLES_S, ...BENCH_TABLES_E].map(([x, z], i) => (
+        <group key={i} position={[x, 0, z]}>
+          <mesh material={mats.wood} position={[0, 2.5, 0]} castShadow>
+            <boxGeometry args={[2.3, 0.16, 2.3]} />
+          </mesh>
+          <mesh material={mats.black} position={[0, 1.2, 0]}>
+            <cylinderGeometry args={[0.12, 0.34, 2.4, 10]} />
+          </mesh>
+          <mesh material={mats.flame} position={[0.45, 2.66, 0.25]}>
+            <sphereGeometry args={[0.09, 8, 8]} />
+          </mesh>
+        </group>
+      ))}
     </group>
   );
 }
@@ -457,12 +535,27 @@ function Rails({ mats }: { mats: Mats }) {
 function Entry({ mats }: { mats: Mats }) {
   return (
     <group>
-      {/* vermilion entry doors in the vestibule wall */}
-      <mesh material={mats.verm} position={[101, 3.3, 51.6]} castShadow>
-        <boxGeometry args={[3.8, 6.6, 0.45]} />
+      {/* THE front door: recessed vermilion double door on Market St,
+          flanked by vertical slat screens, per the facade photo */}
+      <mesh material={mats.verm} position={[105.3, 3.3, 46.7]} castShadow>
+        <boxGeometry args={[0.5, 6.6, 3.8]} />
       </mesh>
-      <mesh material={mats.gold} position={[101, 3.3, 51.3]}>
-        <boxGeometry args={[3.4, 0.1, 0.1]} />
+      <mesh material={mats.gold} position={[105.0, 3.3, 46.7]}>
+        <boxGeometry args={[0.1, 0.1, 3.3]} />
+      </mesh>
+      {[44.1, 49.3].map((z) => (
+        <group key={z}>
+          {Array.from({ length: 4 }, (_, i) => (
+            <mesh key={i} material={mats.black} position={[105.4, 3.3, z - 0.55 + i * 0.37]}>
+              <boxGeometry args={[0.3, 6.6, 0.14]} />
+            </mesh>
+          ))}
+        </group>
+      ))}
+      {/* warm lintel glow over the door */}
+      <mesh position={[105.45, 6.9, 46.7]}>
+        <boxGeometry args={[0.5, 0.18, 4.2]} />
+        <meshStandardMaterial color="#c8a858" emissive="#e8b96a" emissiveIntensity={1.3} />
       </mesh>
       {/* east patio door */}
       <mesh material={mats.verm} position={[105.5, 3.3, 36.5]} castShadow>
@@ -573,26 +666,39 @@ function Exterior({ mats }: { mats: Mats }) {
   useEffect(() => () => sign.dispose(), [sign]);
   return (
     <group>
-      {/* sidewalk apron along the street faces */}
-      <mesh material={mats.plinth} position={[PLAN.width / 2, -0.04, -3.4]} receiveShadow>
+      {/* sidewalk aprons (paver) and street asphalt beyond, both street faces */}
+      <mesh material={mats.deck} position={[PLAN.width / 2, -0.04, -3.4]} receiveShadow>
         <boxGeometry args={[PLAN.width + 14, 0.22, 7]} />
       </mesh>
-      <mesh material={mats.plinth} position={[PLAN.width + 3.5, -0.04, PLAN.depth / 2]} receiveShadow>
+      <mesh material={mats.deck} position={[PLAN.width + 3.5, -0.04, PLAN.depth / 2]} receiveShadow>
         <boxGeometry args={[7, 0.22, PLAN.depth + 14]} />
       </mesh>
-      {/* blade sign on the storefront face, per the exterior photo */}
+      <mesh material={mats.plinth} position={[PLAN.width / 2, -0.1, -9]} receiveShadow>
+        <boxGeometry args={[PLAN.width + 22, 0.12, 5]} />
+      </mesh>
+      <mesh material={mats.plinth} position={[PLAN.width + 9, -0.1, PLAN.depth / 2]} receiveShadow>
+        <boxGeometry args={[5, 0.12, PLAN.depth + 22]} />
+      </mesh>
+      {/* main sign over the FRONT entrance on the Market St (east) face */}
+      <group position={[105.9, 8.9, 46.7]} rotation={[0, Math.PI / 2, 0]}>
+        <mesh>
+          <boxGeometry args={[15, 2.8, 0.5]} />
+          <meshStandardMaterial map={sign} emissive="#5a4a30" emissiveIntensity={0.5} />
+        </mesh>
+        <mesh material={mats.verm} position={[0, 0, -0.33]}>
+          <boxGeometry args={[15.4, 3.2, 0.12]} />
+        </mesh>
+      </group>
+      {/* secondary sign over the north storefront */}
       <mesh position={[27.5, 8.4, 4.85]}>
-        <boxGeometry args={[14, 2.6, 0.5]} />
-        <meshStandardMaterial map={sign} emissive="#5a4a30" emissiveIntensity={0.45} />
+        <boxGeometry args={[11, 2.2, 0.4]} />
+        <meshStandardMaterial map={sign} emissive="#5a4a30" emissiveIntensity={0.4} />
       </mesh>
-      <mesh material={mats.verm} position={[27.5, 8.4, 5.2]}>
-        <boxGeometry args={[14.4, 3.0, 0.12]} />
-      </mesh>
-      {/* black storefront awnings on the glazed faces */}
+      {/* black storefront awnings: north glazing + east facade bays */}
       {[
-        { x: 12.5, w: 12, z: 6.1 },
-        { x: 40, w: 16, z: 6.1 },
-        { x: 87, w: 19, z: 14.1 },
+        { x: 12.5, w: 12, z: 6.1, ry: 0 },
+        { x: 40, w: 16, z: 6.1, ry: 0 },
+        { x: 87, w: 19, z: 14.1, ry: 0 },
       ].map((a, i) => (
         <mesh
           key={i}
@@ -603,6 +709,13 @@ function Exterior({ mats }: { mats: Mats }) {
         >
           <boxGeometry args={[a.w, 0.12, 3.2]} />
         </mesh>
+      ))}
+      {[{ z: 24, w: 18 }].map((a, i) => (
+        <group key={`e${i}`} position={[104.9, 7.0, a.z]} rotation={[0, Math.PI / 2, 0]}>
+          <mesh material={mats.awning} rotation={[Math.PI / 7, 0, 0]} castShadow>
+            <boxGeometry args={[a.w, 0.12, 3.2]} />
+          </mesh>
+        </group>
       ))}
     </group>
   );
@@ -676,9 +789,9 @@ export default function FloorPlanModel() {
       <Plinth mats={mats} />
       <Exterior mats={mats} />
       <Floors mats={mats} />
-      {WALLS.map((w, i) => (
-        <Wall key={i} seg={w} mats={mats} />
-      ))}
+      {WALLS.map((w, i) =>
+        w.kind === "low" ? <Fence key={i} seg={w} mats={mats} /> : <Wall key={i} seg={w} mats={mats} />,
+      )}
       <Core mats={mats} />
       <Rooms mats={mats} />
       <Blocks mats={mats} />
@@ -686,7 +799,7 @@ export default function FloorPlanModel() {
       <Booths mats={mats} />
       <SushiBar mats={mats} />
       <SpiritsBar mats={mats} />
-      <Rails mats={mats} />
+      <Benches mats={mats} />
       <Entry mats={mats} />
       <Planters mats={mats} />
       <Pendants mats={mats} />
