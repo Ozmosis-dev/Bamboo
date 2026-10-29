@@ -12,9 +12,9 @@ export const IMAGE_SLOTS: { key: string; label: string; hint: string; fallback: 
   },
   {
     key: "coming_model_poster",
-    label: "Coming-soon model preview",
-    hint: "The small 3D-room image on the pre-opening panel.",
-    fallback: "/brand/floor-model-poster.jpg",
+    label: "Coming-soon storefront",
+    hint: "The storefront image on the pre-opening panel (opens the 3D room).",
+    fallback: "/brand/visit-storefront.png",
   },
   {
     key: "visit_storefront",

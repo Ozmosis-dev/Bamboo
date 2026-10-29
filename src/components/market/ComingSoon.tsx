@@ -8,6 +8,7 @@ import { useGSAP } from "@gsap/react";
 import type { Location } from "@/lib/types";
 import type { SiteContent } from "@/lib/content";
 import FloorPlanViewer from "./floorplan/FloorPlanViewer";
+import { MarketMap } from "./MarketMap";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
@@ -102,6 +103,7 @@ export function ComingSoon({
   }, [open]);
 
   return (
+    <>
     <div ref={wrapRef} className="relative h-[200dvh] motion-reduce:h-auto">
       <section
         data-cs-panel
@@ -167,10 +169,10 @@ export function ComingSoon({
               className="group relative block w-full overflow-hidden border border-seam transition-colors hover:border-gold"
               aria-haspopup="dialog"
             >
-              <span className="relative block aspect-[21/9] w-full">
+              <span className="relative block aspect-[2/1] w-full">
                 <Image
                   src={poster}
-                  alt="3D rendering of the Bamboo on Market dining room and bars"
+                  alt="Rendering of the Bamboo on Market storefront on Market Street"
                   fill
                   priority
                   sizes="(min-width: 640px) 42rem, 100vw"
@@ -200,7 +202,15 @@ export function ComingSoon({
                 <span className="m-eyebrow !text-[0.6rem]">
                   The room <span className="m-kanji font-normal">· 間取り</span>
                 </span>
-                <span className="m-caps inline-flex items-center gap-3 bg-verm px-6 py-3 text-[12px] text-washi transition-colors group-hover:bg-price">
+                <span className="m-caps inline-flex items-center gap-3.5 bg-verm px-6 py-3 text-[12px] text-washi transition-colors group-hover:bg-price">
+                  <span aria-hidden className="m-cube shrink-0">
+                    <span />
+                    <span />
+                    <span />
+                    <span />
+                    <span />
+                    <span />
+                  </span>
                   Step inside the 3D render
                   <span
                     aria-hidden
@@ -300,5 +310,30 @@ export function ComingSoon({
         </div>
       )}
     </div>
+
+    {/* -------------------------------------------- neighborhood map */}
+    <section
+      aria-label="Map to the restaurant"
+      className="relative overflow-hidden bg-char-deep px-5 pb-24 pt-14 sm:px-8"
+    >
+      <div className="mx-auto max-w-4xl">
+        <div className="flex flex-col items-center text-center">
+          <span aria-hidden className="h-10 w-px bg-gradient-to-b from-transparent to-gold" />
+          <p className="m-eyebrow mt-4">
+            Where we are <span className="m-kanji font-normal">· 所在地</span>
+          </p>
+          <h2 className="m-serif mt-5 text-balance text-3xl sm:text-4xl">
+            {content.coming_map_heading}
+          </h2>
+          <p className="m-caps mt-3 text-[11px] text-tatami">
+            {location.address_line1} · {location.city}
+          </p>
+        </div>
+        <div className="mt-10">
+          <MarketMap variant="dark" />
+        </div>
+      </div>
+    </section>
+    </>
   );
 }

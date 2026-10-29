@@ -8,6 +8,7 @@ export type SiteContent = {
   coming_heading: string;
   coming_subheading: string;
   coming_open_date: string;
+  coming_map_heading: string;
   hero_heading: string;
   hero_subheading: string;
   intro: string;
@@ -39,6 +40,11 @@ export const CONTENT_FIELDS: {
     key: "coming_open_date",
     label: "Target opening",
     hint: "Shown on the coming-soon panel, e.g. “February 1, 2027”.",
+  },
+  {
+    key: "coming_map_heading",
+    label: "Coming-soon map heading",
+    hint: "Above the neighborhood map on the pre-opening panel.",
   },
   { key: "hero_heading", label: "Homepage headline", hint: "The big line visitors see first." },
   {
@@ -91,6 +97,7 @@ export function defaultContent(slug: LocationSlug): SiteContent {
     coming_subheading:
       "We're building Chattanooga's home for high-end Asian fusion — wok-fired plates, sushi, spirits, and the long bamboo counter. The room is under construction — step inside the 3D render while we finish it.",
     coming_open_date: "February 1, 2027",
+    coming_map_heading: "Find us on Market Street.",
     hero_heading: copy.hero.heading,
     hero_subheading: copy.hero.subheading,
     intro: copy.intro,

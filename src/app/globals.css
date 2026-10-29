@@ -325,6 +325,41 @@ body {
   }
 }
 
+/* tiny spinning wireframe cube — the "live 3D" marker on the coming-soon CTA */
+.m-cube {
+  position: relative;
+  width: 14px;
+  height: 14px;
+  transform-style: preserve-3d;
+  animation: m-cube-spin 7s linear infinite;
+}
+.m-cube span {
+  position: absolute;
+  inset: 0;
+  border: 1px solid currentColor;
+  opacity: 0.85;
+}
+.m-cube span:nth-child(1) { transform: translateZ(7px); }
+.m-cube span:nth-child(2) { transform: rotateY(90deg) translateZ(7px); }
+.m-cube span:nth-child(3) { transform: rotateY(180deg) translateZ(7px); }
+.m-cube span:nth-child(4) { transform: rotateY(270deg) translateZ(7px); }
+.m-cube span:nth-child(5) { transform: rotateX(90deg) translateZ(7px); }
+.m-cube span:nth-child(6) { transform: rotateX(-90deg) translateZ(7px); }
+@keyframes m-cube-spin {
+  from {
+    transform: rotateX(-22deg) rotateY(0deg);
+  }
+  to {
+    transform: rotateX(-22deg) rotateY(360deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .m-cube {
+    animation: none;
+    transform: rotateX(-22deg) rotateY(35deg);
+  }
+}
+
 /* ---------------------------------------------------------------------------
    Contrast sections: washi paper and lacquer vermilion, both with their own
    grain so the surfaces feel like material, not flat fills */
