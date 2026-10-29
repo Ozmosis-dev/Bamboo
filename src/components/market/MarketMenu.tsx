@@ -308,20 +308,6 @@ export function MarketMenu({ menu }: { menu: ResolvedMenuSection[] }) {
                           key={item.id}
                           className="relative mb-4 mt-2 border border-gold/35 bg-char-deep/70 px-5 py-4 sm:col-span-2"
                         >
-                          {(
-                            [
-                              "left-1.5 top-1.5 border-l border-t",
-                              "right-1.5 top-1.5 border-r border-t",
-                              "bottom-1.5 left-1.5 border-b border-l",
-                              "bottom-1.5 right-1.5 border-b border-r",
-                            ] as const
-                          ).map((pos) => (
-                            <span
-                              key={pos}
-                              aria-hidden
-                              className={`absolute h-3 w-3 border-gold/60 ${pos}`}
-                            />
-                          ))}
                           <p className="m-eyebrow !text-[0.58rem] text-gold-soft">
                             Chef&apos;s signature{" "}
                             <span className="m-kanji font-normal">· 板長</span>
