@@ -765,6 +765,18 @@ function Restrooms({ mats }: { mats: Mats }) {
           </mesh>
         </group>
       ))}
+      {/* door leaves standing open into each bathroom, hinged at the
+          center wall like the plan's swing arcs */}
+      {[
+        { hinge: 12.5, dir: -1 }, // west bathroom door
+        { hinge: 13.1, dir: 1 }, // east bathroom door
+      ].map(({ hinge, dir }) => (
+        <group key={hinge} position={[hinge, 0, 26]} rotation={[0, dir * 1.15, 0]}>
+          <mesh material={mats.wood} position={[dir * 1.02, 3.0, 0]} castShadow>
+            <boxGeometry args={[2.04, 6.0, 0.12]} />
+          </mesh>
+        </group>
+      ))}
       {/* lav counters on both faces of the spine wall */}
       {[-1, 1].map((side) => (
         <group key={side} position={[LAV.x + side * 0.72, 0, lavCz]}>
@@ -849,9 +861,9 @@ function KitchenDetail({ mats }: { mats: Mats }) {
         ))}
       </group>
       {/* existing grease interceptor: flush steel plate in the corridor
-          between the restrooms and the kitchen, per the plan note */}
-      <mesh material={mats.chrome} position={[24.0, 0.14, 38.8]}>
-        <boxGeometry args={[8.0, 0.26, 2.8]} />
+          between the bathrooms and the kitchen, per the plan note */}
+      <mesh material={mats.chrome} position={[21.5, 0.14, 38.2]}>
+        <boxGeometry args={[6.0, 0.26, 2.4]} />
       </mesh>
     </group>
   );

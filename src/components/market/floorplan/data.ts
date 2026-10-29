@@ -138,27 +138,23 @@ export const WALLS: WallSeg[] = [
   inner(9.75, 17, 9.75, 20),
   inner(9.75, 23, 9.75, 26),
   inner(0, 26, 9.75, 26),
-  // restrooms (per plan): a block from the west wall to x 27.5 ending at
-  // z 36.3, with an open corridor (z 36.3–42.7, grease interceptor in the
-  // floor) between it and the kitchen. Double doors at the center-north
-  // lead into a lobby; two WCs stack on the west wall, the ADA WC sits
-  // east, and the lav counter doubles up on the center spine.
-  inner(0, 26, 14.3, 26, 5.4),
-  inner(18.4, 26, 27.5, 26, 5.4),
-  inner(27.5, 26, 27.5, 36.3, 5.4),
-  inner(0, 36.3, 27.5, 36.3, 5.4),
-  inner(0, 31.2, 11, 31.2, 5.4), // divider between the two west WCs
-  inner(11, 26, 11, 27.6, 5.4), // west WC fronts, with door gaps
-  inner(11, 29.8, 11, 32.8, 5.4),
-  inner(11, 35.0, 11, 36.3, 5.4),
-  inner(15.2, 28.8, 15.2, 33.2, 5.4), // lav spine
-  inner(18.5, 29.2, 18.5, 36.3, 5.4), // ADA west wall, door gap at z 26–29.2
+  // bathrooms (per plan): two mirrored rooms sharing the center plumbing
+  // wall at x 12.75 (lav counters back to back on it), entered through
+  // side-by-side doors off the dining side flanking that wall. The east
+  // bathroom wall is shared with the P.O.S. station, and the open corridor
+  // south of the block (grease interceptor in the floor) leads to the
+  // kitchen.
+  inner(0, 26, 10.4, 26, 5.4), // b1 north wall; its door at x 10.4–12.5
+  inner(12.5, 26, 13.1, 26, 5.4), // jamb over the center wall
+  inner(15.4, 26, 25.6, 26, 5.4), // b2 north wall; its door at x 13.1–15.4
+  inner(12.75, 26, 12.75, 36.3, 5.4), // center plumbing wall
+  inner(25.6, 26, 25.6, 36.3, 5.4), // east wall, shared with the P.O.S.
+  inner(0, 36.3, 33.5, 36.3, 5.4), // south wall, continuing under the P.O.S.
   // kitchen north wall, wide pass to the dining room at x 13–17.8
   inner(0, 42.7, 13, 42.7),
-  // P.O.S. station: walled north/west/east, open to the dining side
-  inner(29.3, 32.6, 37, 32.6),
-  inner(29.3, 32.6, 29.3, 36),
-  inner(37, 32.6, 37, 36),
+  // P.O.S. station: against the east bathroom wall, open to the dining
+  // side on its east (south wall is the bathroom block's, above)
+  inner(25.6, 30, 33.5, 30, 5.4),
   // existing demising stubs between the two dining rooms
   { x1: 14.2, z1: 13.8, x2: 26.2, z2: 13.8, h: 5.5, t: 1.1, kind: "solid" },
   { x1: 42.0, z1: 13.8, x2: 49.0, z2: 13.8, h: 5.5, t: 1.1, kind: "solid" },
@@ -240,7 +236,7 @@ for (const x of [7.5, 22.0, 27.9, 33.5, 39.6, 45.8]) twoTopEW(x, 2.6);
 for (const [x, z] of [
   [17.6, 9.5], [24.5, 9.5], [31.7, 9.5], [44.3, 9.5],
   [27.0, 19.3], [34.1, 19.3], [44.8, 20.2],
-  [30.6, 28.2], [45.0, 26.1], [45.0, 34.1],
+  [30.6, 27.0], [45.0, 26.1], [45.0, 34.1],
 ] as const) fourTop(x, z);
 twoTopEW(20.3, 17.2);
 
@@ -377,16 +373,16 @@ export const COLUMNS: Array<[number, number]> = [
 /* restroom fixtures: toilets (rot = facing, same convention as chairs)
    and the back-to-back lav counter on the spine wall */
 export const TOILETS: Array<{ x: number; z: number; rot: number }> = [
-  { x: 1.15, z: 28.6, rot: Math.PI / 2 }, // west WC 1, on the west wall
-  { x: 1.15, z: 33.8, rot: Math.PI / 2 }, // west WC 2
-  { x: 26.35, z: 31.2, rot: -Math.PI / 2 }, // ADA WC, on its east wall
+  { x: 1.15, z: 28.8, rot: Math.PI / 2 }, // west bathroom, on the west wall
+  { x: 1.15, z: 34.2, rot: Math.PI / 2 },
+  { x: 24.45, z: 33.6, rot: -Math.PI / 2 }, // east bathroom, on its east wall
 ];
-export const LAV = { x: 15.2, z1: 29.0, z2: 33.0 };
+export const LAV = { x: 12.75, z1: 29.2, z2: 32.8 };
 
 export const HOST_STAND = { x: 82.5, z: 48.7 };
 export const WH_POS: [number, number] = [2.0, 68.6];
 export const CORE = { x: 49, z: 0, w: 28, d: 36 };
-export const POS_DESK = { x: 30, z: 33.2, w: 6.2, d: 4.4 };
+export const POS_DESK = { x: 26.4, z: 31.2, w: 5.4, d: 4.2 };
 
 /* ----------------------------------------------------------------- labels */
 
@@ -406,8 +402,9 @@ export const LABELS: Label[] = [
   { x: 63, z: 24, text: "STAIR · N.I.C.", minor: true },
   { x: 6.5, z: 10.5, text: "DRY STORAGE", minor: true },
   { x: 5, z: 21.5, text: "OFFICE", minor: true },
-  { x: 14.3, z: 34.6, text: "W.C.", minor: true },
+  { x: 6.2, z: 31.5, text: "W.C.", minor: true },
+  { x: 19.5, z: 31.5, text: "W.C.", minor: true },
   { x: 82.5, z: 46.8, text: "HOST", minor: true },
-  { x: 33.2, z: 35.3, text: "P.O.S.", minor: true },
+  { x: 29.5, z: 33.2, text: "P.O.S.", minor: true },
   { x: 53.5, z: 61.5, text: "SERVER", minor: true },
 ];
