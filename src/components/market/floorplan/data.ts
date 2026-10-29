@@ -129,10 +129,10 @@ export const WALLS: WallSeg[] = [
   W(105.5, 51.6, 105.5, 66.3, "low"),
 
   /* ---- interior ---- */
-  // dry storage: solid east wall, door opening in its south wall
-  inner(0, 15.6, 6, 15.6),
-  inner(9, 15.6, 13, 15.6),
-  inner(13, 5.4, 13, 15.6),
+  // dry storage: east wall aligned with the office line (door 104 at its
+  // north end), door 103 near the east end of its south wall
+  inner(0, 15.6, 7, 15.6),
+  inner(9.75, 8.6, 9.75, 15.6),
   // manager's office (9'-9" wide), door on its east wall
   inner(0, 17, 9.75, 17),
   inner(9.75, 17, 9.75, 20),
@@ -144,17 +144,18 @@ export const WALLS: WallSeg[] = [
   // bathroom wall is shared with the P.O.S. station, and the open corridor
   // south of the block (grease interceptor in the floor) leads to the
   // kitchen.
-  inner(0, 26, 10.4, 26, 5.4), // b1 north wall; its door at x 10.4–12.5
-  inner(12.5, 26, 13.1, 26, 5.4), // jamb over the center wall
-  inner(15.4, 26, 25.6, 26, 5.4), // b2 north wall; its door at x 13.1–15.4
-  inner(12.75, 26, 12.75, 36.3, 5.4), // center plumbing wall
+  inner(0, 26, 9.9, 26, 5.4), // b1 north wall; its door at x 9.9–12.5
+  inner(15.4, 26, 25.6, 26, 5.4), // b2 north wall; its door at x 13.0–15.4
+  inner(12.75, 26, 12.75, 36.3, 5.4), // center plumbing wall (middle jamb)
   inner(25.6, 26, 25.6, 36.3, 5.4), // east wall, shared with the P.O.S.
-  inner(0, 36.3, 33.5, 36.3, 5.4), // south wall, continuing under the P.O.S.
+  inner(0, 36.3, 25.6, 36.3, 5.4), // south wall
   // kitchen north wall, wide pass to the dining room at x 13–17.8
   inner(0, 42.7, 13, 42.7),
-  // P.O.S. station: against the east bathroom wall, open to the dining
-  // side on its east (south wall is the bathroom block's, above)
+  // P.O.S. station: enclosed against the east bathroom wall, entered from
+  // the kitchen corridor through the gap at its southwest corner
   inner(25.6, 30, 33.5, 30, 5.4),
+  inner(33.5, 30, 33.5, 36.3, 5.4),
+  inner(27.2, 36.3, 33.5, 36.3, 5.4), // entry gap at x 25.6–27.2
   // existing demising stubs between the two dining rooms
   { x1: 14.2, z1: 13.8, x2: 26.2, z2: 13.8, h: 5.5, t: 1.1, kind: "solid" },
   { x1: 42.0, z1: 13.8, x2: 49.0, z2: 13.8, h: 5.5, t: 1.1, kind: "solid" },
@@ -382,7 +383,7 @@ export const LAV = { x: 12.75, z1: 29.2, z2: 32.8 };
 export const HOST_STAND = { x: 82.5, z: 48.7 };
 export const WH_POS: [number, number] = [2.0, 68.6];
 export const CORE = { x: 49, z: 0, w: 28, d: 36 };
-export const POS_DESK = { x: 26.4, z: 31.2, w: 5.4, d: 4.2 };
+export const POS_DESK = { x: 27.6, z: 30.8, w: 5.4, d: 3.6 };
 
 /* ----------------------------------------------------------------- labels */
 
