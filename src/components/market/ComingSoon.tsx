@@ -14,20 +14,23 @@ gsap.registerPlugin(ScrollTrigger, useGSAP);
 
 /** Pre-opening panel above the homepage hero (COMING_SOON flag).
  *
- * A full-viewport announcement — construction note, address, target open
- * date — with a small still of the 3D floor model that opens the live,
- * orbitable room in a full-screen lightbox. The panel is pinned for one
- * extra viewport of scroll and dissolves out as the real hero arrives, so
- * the page reads as announcement → restaurant. Delete by flipping the flag.
+ * A full-viewport announcement — construction note, target open date — over
+ * the real Market St block (aerial photo, filtered into the site palette and
+ * feathered into the background), with the storefront render opening the
+ * live, orbitable 3D room in a lightbox. The neighborhood map continues in
+ * the same dark room directly beneath, rising in on scroll, so announcement
+ * and map read as one piece. Delete by flipping the flag.
  */
 export function ComingSoon({
   content,
   location,
   poster,
+  backdrop,
 }: {
   content: SiteContent;
   location: Location;
   poster: string;
+  backdrop: string;
 }) {
   const wrapRef = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState(false);
@@ -68,17 +71,39 @@ export function ComingSoon({
           reveal.play();
         }
 
-        // Scrubbed exit: hold while pinned, then dissolve up into the hero.
-        const tl = gsap.timeline({
+        // Gentle parallax on the aerial backdrop as the panel scrolls away.
+        gsap.to("[data-cs-bg]", {
+          yPercent: 14,
+          ease: "none",
           scrollTrigger: {
-            trigger: wrap,
+            trigger: panel,
             start: "top top",
             end: "bottom top",
             scrub: true,
           },
         });
-        tl.to({}, { duration: 0.35 }); // hold
-        tl.to(panel, { autoAlpha: 0, y: -70, scale: 0.97, duration: 0.65, ease: "none" });
+
+        // Map section rises in as it enters, continuing the same room.
+        const mapEls = gsap.utils.toArray<HTMLElement>("[data-cs-m]", wrap);
+        if (mapEls.length) {
+          gsap.fromTo(
+            mapEls,
+            { y: 44, autoAlpha: 0 },
+            {
+              y: 0,
+              autoAlpha: 1,
+              duration: 0.9,
+              stagger: 0.14,
+              ease: "power3.out",
+              clearProps: "all",
+              scrollTrigger: {
+                trigger: "[data-cs-map]",
+                start: "top 78%",
+                once: true,
+              },
+            }
+          );
+        }
 
         return () => introCleanup?.();
       });
@@ -103,20 +128,46 @@ export function ComingSoon({
   }, [open]);
 
   return (
-    <>
-    <div ref={wrapRef} className="relative h-[200dvh] motion-reduce:h-auto">
+    <div ref={wrapRef} className="relative bg-char-deep">
       <section
         data-cs-panel
-        className="sticky top-0 flex min-h-dvh flex-col overflow-hidden bg-char-deep motion-reduce:relative"
+        className="relative flex min-h-dvh flex-col overflow-hidden"
         aria-label="Opening soon"
       >
-        {/* candlelit backdrop, echoing the model viewer's stage */}
+        {/* the real block on Market St, filtered into the site's lacquer-and-
+            candlelight palette and feathered out before the next section */}
+        <div
+          aria-hidden
+          data-cs-bg
+          className="pointer-events-none absolute inset-x-0 -top-[6%] h-[106%]"
+          style={{
+            maskImage:
+              "linear-gradient(to bottom, black 30%, rgba(0,0,0,0.5) 68%, transparent 96%)",
+            WebkitMaskImage:
+              "linear-gradient(to bottom, black 30%, rgba(0,0,0,0.5) 68%, transparent 96%)",
+          }}
+        >
+          <Image
+            src={backdrop}
+            alt=""
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover opacity-30"
+            style={{
+              filter:
+                "grayscale(0.55) sepia(0.38) brightness(0.52) contrast(1.08) saturate(1.15)",
+            }}
+          />
+          <div aria-hidden className="m-paper-dark" />
+        </div>
+        {/* candlelit vignette over the photo, echoing the model viewer's stage */}
         <div
           aria-hidden
           className="pointer-events-none absolute inset-0"
           style={{
             background:
-              "radial-gradient(85% 70% at 62% 38%, rgba(43,37,32,0.92) 0%, var(--color-char-deep) 78%)",
+              "radial-gradient(85% 70% at 62% 38%, rgba(21,18,16,0.55) 0%, rgba(15,14,13,0.86) 78%)",
           }}
         />
         {/* ghost crest behind the composition */}
@@ -224,21 +275,12 @@ export function ComingSoon({
           {/* opening-date line, set like a theatre bill */}
           <div
             data-cs
-            className="mt-8 flex flex-col items-center gap-x-10 gap-y-4 sm:flex-row sm:items-baseline"
+            className="mt-8 flex flex-col items-center gap-1.5 sm:flex-row sm:items-baseline sm:gap-4"
           >
-            <div className="flex flex-col items-center gap-1.5 sm:flex-row sm:items-baseline sm:gap-4">
-              <span className="m-eyebrow !text-[0.6rem]">Opening</span>
-              <span className="m-serif text-2xl text-gold-soft">
-                {content.coming_open_date}
-              </span>
-            </div>
-            <span aria-hidden className="hidden h-4 w-px bg-seam sm:block" />
-            <div className="flex flex-col items-center gap-1.5 sm:flex-row sm:items-baseline sm:gap-4">
-              <span className="m-eyebrow !text-[0.6rem]">At</span>
-              <span className="m-serif text-2xl">
-                {location.address_line1}, {location.city}
-              </span>
-            </div>
+            <span className="m-eyebrow !text-[0.6rem]">Opening</span>
+            <span className="m-serif text-2xl text-gold-soft">
+              {content.coming_open_date}
+            </span>
           </div>
         </div>
 
@@ -309,31 +351,31 @@ export function ComingSoon({
           </footer>
         </div>
       )}
-    </div>
 
-    {/* -------------------------------------------- neighborhood map */}
-    <section
-      aria-label="Map to the restaurant"
-      className="relative overflow-hidden bg-char-deep px-5 pb-24 pt-14 sm:px-8"
-    >
-      <div className="mx-auto max-w-4xl">
-        <div className="flex flex-col items-center text-center">
-          <span aria-hidden className="h-10 w-px bg-gradient-to-b from-transparent to-gold" />
-          <p className="m-eyebrow mt-4">
-            Where we are <span className="m-kanji font-normal">· 所在地</span>
-          </p>
-          <h2 className="m-serif mt-5 text-balance text-3xl sm:text-4xl">
-            {content.coming_map_heading}
-          </h2>
-          <p className="m-caps mt-3 text-[11px] text-tatami">
-            {location.address_line1} · {location.city}
-          </p>
+      {/* ------------------------------------------ neighborhood map */}
+      <section
+        data-cs-map
+        aria-label="Map to the restaurant"
+        className="relative px-5 pb-24 pt-2 sm:px-8"
+      >
+        <div className="mx-auto max-w-4xl">
+          <div data-cs-m className="flex flex-col items-center text-center">
+            <span aria-hidden className="h-10 w-px bg-gradient-to-b from-transparent to-gold" />
+            <p className="m-eyebrow mt-4">
+              Where we are <span className="m-kanji font-normal">· 所在地</span>
+            </p>
+            <h2 className="m-serif mt-5 text-balance text-3xl sm:text-4xl">
+              {content.coming_map_heading}
+            </h2>
+            <p className="m-caps mt-3 text-[11px] text-tatami">
+              {location.address_line1} · {location.city}
+            </p>
+          </div>
+          <div data-cs-m className="mt-10">
+            <MarketMap variant="dark" />
+          </div>
         </div>
-        <div className="mt-10">
-          <MarketMap variant="dark" />
-        </div>
-      </div>
-    </section>
-    </>
+      </section>
+    </div>
   );
 }

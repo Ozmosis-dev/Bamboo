@@ -17,6 +17,12 @@ export const IMAGE_SLOTS: { key: string; label: string; hint: string; fallback: 
     fallback: "/brand/visit-storefront.png",
   },
   {
+    key: "coming_backdrop",
+    label: "Coming-soon backdrop",
+    hint: "The aerial neighborhood photo behind the pre-opening panel.",
+    fallback: "/brand/location-aerial.webp",
+  },
+  {
     key: "visit_storefront",
     label: "Visit page photo",
     hint: "The storefront photo beside hours on the Visit page.",

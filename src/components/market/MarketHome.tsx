@@ -55,6 +55,7 @@ export function MarketHome({
           content={content}
           location={location}
           poster={images.coming_model_poster}
+          backdrop={images.coming_backdrop}
         />
       )}
 
