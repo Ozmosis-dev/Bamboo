@@ -300,7 +300,51 @@ export function MarketMenu({ menu }: { menu: ResolvedMenuSection[] }) {
                         : "mt-2 px-1"
                     }
                   >
-                    {visible.map((item) => (
+                    {visible.map((item) =>
+                      compact && item.description ? (
+                        /* a described item in a compact section (The Flight)
+                           spans both columns as a signature card */
+                        <li
+                          key={item.id}
+                          className="relative mb-4 mt-2 border border-gold/35 bg-char-deep/70 px-5 py-4 sm:col-span-2"
+                        >
+                          {(
+                            [
+                              "left-1.5 top-1.5 border-l border-t",
+                              "right-1.5 top-1.5 border-r border-t",
+                              "bottom-1.5 left-1.5 border-b border-l",
+                              "bottom-1.5 right-1.5 border-b border-r",
+                            ] as const
+                          ).map((pos) => (
+                            <span
+                              key={pos}
+                              aria-hidden
+                              className={`absolute h-3 w-3 border-gold/60 ${pos}`}
+                            />
+                          ))}
+                          <p className="m-eyebrow !text-[0.58rem] text-gold-soft">
+                            Chef&apos;s signature{" "}
+                            <span className="m-kanji font-normal">· 板長</span>
+                          </p>
+                          <div className="mt-2 flex items-baseline justify-between gap-6">
+                            <h3 className="m-item-name text-[14px]">{item.name}</h3>
+                            <p className="shrink-0 text-[15px]">
+                              {item.price !== null && (
+                                <span className="m-price">{dollars(item.price)}</span>
+                              )}
+                              {item.price_note && (
+                                <span className="ml-2 text-[12px] text-tatami">
+                                  {item.price !== null ? "· " : ""}
+                                  {item.price_note}
+                                </span>
+                              )}
+                            </p>
+                          </div>
+                          <p className="mt-1.5 max-w-2xl text-sm leading-relaxed text-tatami">
+                            {item.description}
+                          </p>
+                        </li>
+                      ) : (
                       <li
                         key={item.id}
                         className={`border-b border-seam ${compact ? "py-2.5" : "py-4.5"}`}
@@ -340,7 +384,8 @@ export function MarketMenu({ menu }: { menu: ResolvedMenuSection[] }) {
                           </p>
                         )}
                       </li>
-                    ))}
+                      )
+                    )}
                   </ul>
                 )}
               </section>
