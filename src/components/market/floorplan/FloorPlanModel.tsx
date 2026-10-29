@@ -328,6 +328,7 @@ function Furniture({ mats }: { mats: Mats }) {
   const pedestal = useMemo(() => new THREE.CylinderGeometry(0.13, 0.38, 2.4, 10), []);
   const seat = useMemo(() => new THREE.BoxGeometry(1.45, 0.14, 1.45), []);
   const back = useMemo(() => new THREE.BoxGeometry(1.45, 1.4, 0.12), []);
+  const chairLeg = useMemo(() => new THREE.BoxGeometry(0.12, 1.5, 0.12), []);
   const stoolTop = useMemo(() => new THREE.CylinderGeometry(0.58, 0.58, 0.16, 14), []);
   const stoolLeg = useMemo(() => new THREE.CylinderGeometry(0.08, 0.18, 2.2, 8), []);
   const candle = useMemo(() => new THREE.SphereGeometry(0.09, 8, 8), []);
@@ -359,6 +360,15 @@ function Furniture({ mats }: { mats: Mats }) {
           const dz = Math.cos(c.rot) * 0.67;
           return <Instance key={i} position={[c.x - dx, 2.2, c.z - dz]} rotation={[0, c.rot, 0]} />;
         })}
+      </Instances>
+      <Instances limit={CHAIRS.length * 4} geometry={chairLeg} material={mats.black}>
+        {CHAIRS.flatMap((c, i) =>
+          ([[-0.55, -0.55], [0.55, -0.55], [-0.55, 0.55], [0.55, 0.55]] as const).map(
+            ([lx, lz], j) => (
+              <Instance key={`${i}-${j}`} position={[c.x + lx, 0.75, c.z + lz]} />
+            ),
+          ),
+        )}
       </Instances>
       <Instances limit={STOOLS.length} geometry={stoolTop} material={mats.black} castShadow>
         {STOOLS.map((s, i) => (

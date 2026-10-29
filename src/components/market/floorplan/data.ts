@@ -201,22 +201,25 @@ export const TABLES: Table[] = [];
 export const CHAIRS: Chair[] = [];
 export const STOOLS: Stool[] = [];
 
-const R = { N: Math.PI, S: 0, E: -Math.PI / 2, W: Math.PI / 2 };
+/* Chair rotation = the direction the chair FACES: d = (sin rot, cos rot).
+   N faces -z (street side), S faces +z, E faces +x, W faces -x. The seat
+   back is rendered opposite the facing, so a chair always faces its table. */
+const R = { N: Math.PI, S: 0, E: Math.PI / 2, W: -Math.PI / 2 };
 
 function fourTop(x: number, z: number) {
   TABLES.push({ x, z, w: 2.9, d: 2.9 });
   CHAIRS.push(
-    { x, z: z - 2.3, rot: R.N },
-    { x, z: z + 2.3, rot: R.S },
-    { x: x - 2.3, z, rot: R.W },
-    { x: x + 2.3, z, rot: R.E },
+    { x, z: z - 2.3, rot: R.S }, // north of the table, facing south
+    { x, z: z + 2.3, rot: R.N },
+    { x: x - 2.3, z, rot: R.E }, // west of the table, facing east
+    { x: x + 2.3, z, rot: R.W },
   );
 }
 
 /** 2-top with chairs on the east/west ends (as drawn on the patio) */
 function twoTopEW(x: number, z: number) {
   TABLES.push({ x, z, w: 2.2, d: 2.4 });
-  CHAIRS.push({ x: x - 2, z, rot: R.W }, { x: x + 2, z, rot: R.E });
+  CHAIRS.push({ x: x - 2, z, rot: R.E }, { x: x + 2, z, rot: R.W });
 }
 
 // north sidewalk patio — six 2-tops tight to the facade
@@ -251,15 +254,15 @@ for (const x of [49.9, 54.3, 58.8, 63.3, 67.8, 72.3, 76.1]) {
 }
 for (const z of [17.5, 20.8, 24.1, 27.4, 30.7, 34.0]) {
   BENCH_TABLES_E.push([80.2, z]);
-  CHAIRS.push({ x: 82.0, z, rot: R.E }); // east of the table, facing west
+  CHAIRS.push({ x: 82.0, z, rot: R.W }); // east of the table, facing west
 }
 
 // sushi bar stools: 5 on the north arm, 10 down the east arm
-for (const x of [35.1, 37.3, 39.5, 41.7, 43.9]) STOOLS.push({ x, z: 42.6, rot: R.N });
+for (const x of [35.1, 37.3, 39.5, 41.7, 43.9]) STOOLS.push({ x, z: 42.6, rot: R.S });
 for (let i = 0; i < 10; i++) STOOLS.push({ x: 46.0, z: 44.5 + i * 1.85, rot: R.W });
 
 // spirits bar stools: 13 along the front, 4 on the east return
-for (let i = 0; i < 13; i++) STOOLS.push({ x: 59.6 + i * 2.35, z: 57.3, rot: R.N });
+for (let i = 0; i < 13; i++) STOOLS.push({ x: 59.6 + i * 2.35, z: 57.3, rot: R.S });
 for (const z of [59.4, 61.1, 62.9, 64.8]) STOOLS.push({ x: 89.2, z, rot: R.W });
 
 /* east dining patio: wall banquette against the storefront divider with
@@ -272,7 +275,7 @@ export const PATIO_BENCH_X = 98.1; // bench centerline against the divider
 export const PATIO_BENCH_TABLES: Array<[number, number]> = [];
 for (const z of [19.6, 22.2, 27.5, 30.1, 32.7]) {
   PATIO_BENCH_TABLES.push([100.2, z]);
-  CHAIRS.push({ x: 102.3, z, rot: R.E });
+  CHAIRS.push({ x: 102.3, z, rot: R.W }); // east of the table, facing west
 }
 
 /* brick-pier + glass storefront between the east dining room and its patio
