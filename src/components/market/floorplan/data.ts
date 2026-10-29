@@ -138,14 +138,21 @@ export const WALLS: WallSeg[] = [
   inner(9.75, 17, 9.75, 20),
   inner(9.75, 23, 9.75, 26),
   inner(0, 26, 9.75, 26),
-  // restroom block: two WCs west, lav alcove, corridor opening on the east
-  inner(0, 26, 20, 26, 5.4),
-  inner(20, 26, 20, 32.5, 5.4),
-  inner(20, 36, 20, 40.6, 5.4),
-  inner(0, 40.6, 20, 40.6, 5.4),
-  inner(0, 33.4, 10, 33.4, 5.4),
-  inner(10, 26, 10, 30, 5.4),
-  inner(10, 36.5, 10, 40.6, 5.4),
+  // restrooms (per plan): a block from the west wall to x 27.5 ending at
+  // z 36.3, with an open corridor (z 36.3–42.7, grease interceptor in the
+  // floor) between it and the kitchen. Double doors at the center-north
+  // lead into a lobby; two WCs stack on the west wall, the ADA WC sits
+  // east, and the lav counter doubles up on the center spine.
+  inner(0, 26, 14.3, 26, 5.4),
+  inner(18.4, 26, 27.5, 26, 5.4),
+  inner(27.5, 26, 27.5, 36.3, 5.4),
+  inner(0, 36.3, 27.5, 36.3, 5.4),
+  inner(0, 31.2, 11, 31.2, 5.4), // divider between the two west WCs
+  inner(11, 26, 11, 27.6, 5.4), // west WC fronts, with door gaps
+  inner(11, 29.8, 11, 32.8, 5.4),
+  inner(11, 35.0, 11, 36.3, 5.4),
+  inner(15.2, 28.8, 15.2, 33.2, 5.4), // lav spine
+  inner(18.5, 29.2, 18.5, 36.3, 5.4), // ADA west wall, door gap at z 26–29.2
   // kitchen north wall, wide pass to the dining room at x 13–17.8
   inner(0, 42.7, 13, 42.7),
   // P.O.S. station: walled north/west/east, open to the dining side
@@ -312,8 +319,8 @@ export type Block = {
 };
 
 export const BLOCKS: Block[] = [
-  // kitchen line: hood run along the west wall, center island, north sinks
-  { x: 0.6, z: 46, w: 2.8, d: 19, h: 4.6, color: COLORS.chrome },
+  // kitchen: center island + north sinks (the hood line is built in detail
+  // by the KitchenDetail component)
   { x: 8.3, z: 44.5, w: 3.4, d: 19, h: 3, color: COLORS.chrome },
   { x: 4.2, z: 43.1, w: 9, d: 2.2, h: 3, color: COLORS.chrome },
   // server station west of the spirits bar
@@ -367,6 +374,15 @@ export const COLUMNS: Array<[number, number]> = [
   [51.0, 65.9], [75.3, 65.9],
 ];
 
+/* restroom fixtures: toilets (rot = facing, same convention as chairs)
+   and the back-to-back lav counter on the spine wall */
+export const TOILETS: Array<{ x: number; z: number; rot: number }> = [
+  { x: 1.15, z: 28.6, rot: Math.PI / 2 }, // west WC 1, on the west wall
+  { x: 1.15, z: 33.8, rot: Math.PI / 2 }, // west WC 2
+  { x: 26.35, z: 31.2, rot: -Math.PI / 2 }, // ADA WC, on its east wall
+];
+export const LAV = { x: 15.2, z1: 29.0, z2: 33.0 };
+
 export const HOST_STAND = { x: 82.5, z: 48.7 };
 export const WH_POS: [number, number] = [2.0, 68.6];
 export const CORE = { x: 49, z: 0, w: 28, d: 36 };
@@ -390,7 +406,7 @@ export const LABELS: Label[] = [
   { x: 63, z: 24, text: "STAIR · N.I.C.", minor: true },
   { x: 6.5, z: 10.5, text: "DRY STORAGE", minor: true },
   { x: 5, z: 21.5, text: "OFFICE", minor: true },
-  { x: 10, z: 33.5, text: "W.C.", minor: true },
+  { x: 14.3, z: 34.6, text: "W.C.", minor: true },
   { x: 82.5, z: 46.8, text: "HOST", minor: true },
   { x: 33.2, z: 35.3, text: "P.O.S.", minor: true },
   { x: 53.5, z: 61.5, text: "SERVER", minor: true },

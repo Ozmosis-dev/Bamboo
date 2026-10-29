@@ -15,6 +15,7 @@ import {
   CORE,
   HOST_STAND,
   LABELS,
+  LAV,
   PATIO_BENCHES,
   PATIO_BENCH_TABLES,
   PATIO_BENCH_X,
@@ -29,6 +30,7 @@ import {
   STOOLS,
   SUSHI,
   TABLES,
+  TOILETS,
   WALLS,
   WH_POS,
   ZONES,
@@ -494,6 +496,72 @@ function SushiBar({ mats }: { mats: Mats }) {
           <Instance key={i} position={[26.6 + i * 1.0, 2.7, 52.4]} />
         ))}
       </Instances>
+      <SushiChefArea mats={mats} />
+    </group>
+  );
+}
+
+/** Working side of the sushi bar: boards, fish case trays, gear, two chefs. */
+function SushiChefArea({ mats }: { mats: Mats }) {
+  const fishMats = useMemo(
+    () =>
+      ["#dd7a50", "#9e2f36", "#e8dcc6"].map(
+        (color) => new THREE.MeshStandardMaterial({ color, roughness: 0.55 }),
+      ),
+    [],
+  );
+  const skin = useMemo(
+    () => new THREE.MeshStandardMaterial({ color: "#d8ab7e", roughness: 0.7 }),
+    [],
+  );
+  useEffect(
+    () => () => {
+      fishMats.forEach((m) => m.dispose());
+      skin.dispose();
+    },
+    [fishMats, skin],
+  );
+  return (
+    <group>
+      {/* cutting boards on the inner prep counter */}
+      {[27.5, 31.5, 35.5].map((x) => (
+        <mesh key={x} material={mats.wood} position={[x, 3.48, 53.6]}>
+          <boxGeometry args={[1.7, 0.1, 1.0]} />
+        </mesh>
+      ))}
+      {/* rice cooker + plate stacks */}
+      <mesh material={mats.chrome} position={[40.6, 3.88, 53.6]} castShadow>
+        <cylinderGeometry args={[0.55, 0.55, 0.95, 12]} />
+      </mesh>
+      {[26.5, 27.7].map((x) => (
+        <mesh key={x} material={mats.counterWhite} position={[x, 3.7, 44.7]}>
+          <cylinderGeometry args={[0.46, 0.46, 0.55, 10]} />
+        </mesh>
+      ))}
+      {/* fish trays inside the refrigerated case */}
+      {[31.8, 33.7, 35.6, 37.5, 39.4].map((x, i) => (
+        <mesh key={x} material={fishMats[i % 3]} position={[x, 3.7, 44.6]}>
+          <boxGeometry args={[1.5, 0.28, 0.85]} />
+        </mesh>
+      ))}
+      {/* two chefs working the line, facing the counter guests */}
+      {[30.5, 36.5].map((x) => (
+        <group key={x} position={[x, 0, 49.8]} rotation={[0, Math.PI, 0]}>
+          <mesh material={mats.counterWhite} position={[0, 2.1, 0]} castShadow>
+            <cylinderGeometry args={[0.5, 0.62, 4.2, 10]} />
+          </mesh>
+          {/* local +z faces the guests; apron panel on the front */}
+          <mesh material={mats.verm} position={[0, 2.0, 0.52]}>
+            <boxGeometry args={[0.85, 1.6, 0.12]} />
+          </mesh>
+          <mesh material={skin} position={[0, 4.62, 0]} castShadow>
+            <sphereGeometry args={[0.42, 12, 12]} />
+          </mesh>
+          <mesh material={mats.verm} position={[0, 4.84, 0]}>
+            <cylinderGeometry args={[0.43, 0.43, 0.14, 10]} />
+          </mesh>
+        </group>
+      ))}
     </group>
   );
 }
@@ -534,15 +602,60 @@ function SpiritsBar({ mats }: { mats: Mats }) {
         <boxGeometry args={[b.x2 - b.x1 - 0.5, 0.1, b.depth - 0.4]} />
         <meshStandardMaterial color={COLORS.goldSoft} emissive="#d9a84e" emissiveIntensity={0.65} />
       </mesh>
-      <Instances
-        limit={26}
-        geometry={new THREE.CylinderGeometry(0.11, 0.13, 0.95, 8)}
-        material={mats.glass}
-      >
-        {Array.from({ length: 26 }, (_, i) => (
-          <Instance key={i} position={[59.6 + i * 1.1, 4.5, b.z + b.depth / 2]} />
-        ))}
-      </Instances>
+      {/* bottle display: counter row + two floating shelves on brass posts */}
+      <BottleDisplay mats={mats} />
+    </group>
+  );
+}
+
+const BOTTLE_COLORS = ["#8a5a1f", "#3a5531", "#27201b", "#9aa88f"];
+
+function BottleDisplay({ mats }: { mats: Mats }) {
+  const b = SPIRITS.back;
+  const bottleMats = useMemo(
+    () =>
+      BOTTLE_COLORS.map(
+        (color) => new THREE.MeshStandardMaterial({ color, roughness: 0.3, metalness: 0.15 }),
+      ),
+    [],
+  );
+  useEffect(() => () => bottleMats.forEach((m) => m.dispose()), [bottleMats]);
+  const bottleGeo = useMemo(() => new THREE.CylinderGeometry(0.13, 0.15, 1, 8), []);
+  // three rows: on the back counter, then the two shelves
+  const rows = [
+    { y: 4.02, z: b.z + 1.1 },
+    { y: 5.0, z: b.z + 1.35 },
+    { y: 6.08, z: b.z + 1.35 },
+  ];
+  const bottles: Array<{ x: number; y: number; z: number; h: number; c: number }> = [];
+  rows.forEach((row, r) => {
+    for (let i = 0; i < 22; i++) {
+      const h = 0.78 + (((i * 53 + r * 17) % 10) / 10) * 0.45;
+      bottles.push({ x: 59.9 + i * 1.26, y: row.y, z: row.z, h, c: (i + r) % 4 });
+    }
+  });
+  return (
+    <group>
+      {/* glass shelves + brass posts rising off the back counter */}
+      {[4.92, 6.0].map((y) => (
+        <mesh key={y} material={mats.glass} position={[(b.x1 + b.x2) / 2, y, b.z + 1.35]}>
+          <boxGeometry args={[b.x2 - b.x1 - 0.6, 0.08, 1.15]} />
+        </mesh>
+      ))}
+      {[59.3, 66.4, 73.5, 80.6, 87.6].map((x) => (
+        <mesh key={x} material={mats.gold} position={[x, 5.0, b.z + 1.35]}>
+          <cylinderGeometry args={[0.055, 0.055, 2.3, 6]} />
+        </mesh>
+      ))}
+      {bottleMats.map((m, ci) => (
+        <Instances key={ci} limit={24} geometry={bottleGeo} material={m}>
+          {bottles
+            .filter((bt) => bt.c === ci)
+            .map((bt, i) => (
+              <Instance key={i} position={[bt.x, bt.y + bt.h / 2, bt.z]} scale={[1, bt.h, 1]} />
+            ))}
+        </Instances>
+      ))}
     </group>
   );
 }
@@ -626,6 +739,119 @@ function Entry({ mats }: { mats: Mats }) {
       </mesh>
       <mesh material={mats.wood} position={[HOST_STAND.x, 3.9, HOST_STAND.z]}>
         <boxGeometry args={[1.9, 0.16, 2.9]} />
+      </mesh>
+    </group>
+  );
+}
+
+/** Restroom fixtures: toilets, back-to-back lav counter, mirrors. */
+function Restrooms({ mats }: { mats: Mats }) {
+  const lavLen = LAV.z2 - LAV.z1;
+  const lavCz = (LAV.z1 + LAV.z2) / 2;
+  const basinZs = [lavCz - 1.35, lavCz + 1.35];
+  return (
+    <group>
+      {TOILETS.map((t, i) => (
+        // local +z is the direction the toilet faces; tank sits behind it
+        <group key={i} position={[t.x, 0, t.z]} rotation={[0, t.rot, 0]}>
+          <mesh material={mats.counterWhite} position={[0, 1.3, -0.72]} castShadow>
+            <boxGeometry args={[1.25, 1.5, 0.55]} />
+          </mesh>
+          <mesh material={mats.counterWhite} position={[0, 0.72, 0.22]} scale={[1, 1, 1.35]}>
+            <cylinderGeometry args={[0.5, 0.36, 1.44, 12]} />
+          </mesh>
+          <mesh material={mats.counterWhite} position={[0, 1.5, 0.22]} scale={[1, 1, 1.35]}>
+            <cylinderGeometry args={[0.56, 0.56, 0.12, 12]} />
+          </mesh>
+        </group>
+      ))}
+      {/* lav counters on both faces of the spine wall */}
+      {[-1, 1].map((side) => (
+        <group key={side} position={[LAV.x + side * 0.72, 0, lavCz]}>
+          <mesh material={mats.woodDark} position={[0, 1.25, 0]} castShadow>
+            <boxGeometry args={[0.8, 2.5, lavLen - 0.3]} />
+          </mesh>
+          <mesh material={mats.counterWhite} position={[0, 2.58, 0]} castShadow>
+            <boxGeometry args={[1.0, 0.16, lavLen]} />
+          </mesh>
+          {basinZs.map((z) => (
+            <group key={z} position={[0, 0, z - lavCz]}>
+              <mesh material={mats.counterWhite} position={[0, 2.72, 0]}>
+                <cylinderGeometry args={[0.42, 0.34, 0.26, 12]} />
+              </mesh>
+              {/* gooseneck faucet stub on the wall side */}
+              <mesh material={mats.gold} position={[-side * 0.38, 2.95, 0]}>
+                <cylinderGeometry args={[0.045, 0.045, 0.6, 6]} />
+              </mesh>
+            </group>
+          ))}
+          {/* mirror strip above the counter */}
+          <mesh material={mats.glass} position={[-side * 0.62, 4.1, 0]}>
+            <boxGeometry args={[0.06, 1.7, lavLen - 0.6]} />
+          </mesh>
+        </group>
+      ))}
+    </group>
+  );
+}
+
+/** Kitchen cook line under the existing exhaust hood, shelving, grease trap. */
+function KitchenDetail({ mats }: { mats: Mats }) {
+  return (
+    <group>
+      {/* suspended stainless exhaust hood over the west cook line */}
+      <mesh material={mats.chrome} position={[2.1, 5.95, 55.2]} castShadow>
+        <boxGeometry args={[3.8, 1.5, 19.6]} />
+      </mesh>
+      {/* cook line: range, griddle/oven, fryer bank */}
+      {[
+        { z: 48.6, d: 5.2 },
+        { z: 54.2, d: 5.2 },
+        { z: 59.8, d: 5.2 },
+      ].map((u, i) => (
+        <mesh key={i} material={mats.chrome} position={[1.9, 1.45, u.z]} castShadow>
+          <boxGeometry args={[2.9, 2.9, u.d]} />
+        </mesh>
+      ))}
+      {/* six burners + a stockpot on the range */}
+      {[47.2, 48.6, 50.0].flatMap((z) =>
+        [1.15, 2.65].map((x) => (
+          <mesh key={`${x}-${z}`} material={mats.black} position={[x, 2.95, z]}>
+            <cylinderGeometry args={[0.38, 0.38, 0.1, 10]} />
+          </mesh>
+        )),
+      )}
+      <mesh material={mats.chrome} position={[1.15, 3.4, 48.6]} castShadow>
+        <cylinderGeometry args={[0.48, 0.48, 0.85, 12]} />
+      </mesh>
+      {/* fryer baskets */}
+      {[59.2, 60.4].map((z) => (
+        <mesh key={z} material={mats.black} position={[1.6, 3.05, z]}>
+          <boxGeometry args={[1.0, 0.3, 0.9]} />
+        </mesh>
+      ))}
+      {/* dry-storage shelving along the south kitchen wall */}
+      <group position={[9.5, 0, 68.8]}>
+        {[2.2, 3.7].map((y) => (
+          <mesh key={y} material={mats.chrome} position={[0, y, 0]} castShadow>
+            <boxGeometry args={[10, 0.12, 1.6]} />
+          </mesh>
+        ))}
+        {[-4.8, 0, 4.8].map((x) => (
+          <mesh key={x} material={mats.black} position={[x, 2.2, 0]}>
+            <boxGeometry args={[0.14, 4.4, 1.5]} />
+          </mesh>
+        ))}
+        {[-3.6, -1.4, 1.1, 3.4].map((x, i) => (
+          <mesh key={i} material={i % 2 ? mats.wood : mats.innerWall} position={[x, 2.75 + (i % 2) * 1.5, 0]}>
+            <boxGeometry args={[1.7, 0.95, 1.25]} />
+          </mesh>
+        ))}
+      </group>
+      {/* existing grease interceptor: flush steel plate in the corridor
+          between the restrooms and the kitchen, per the plan note */}
+      <mesh material={mats.chrome} position={[24.0, 0.14, 38.8]}>
+        <boxGeometry args={[8.0, 0.26, 2.8]} />
       </mesh>
     </group>
   );
@@ -864,6 +1090,8 @@ export default function FloorPlanModel() {
       <Core mats={mats} />
       <Rooms mats={mats} />
       <Blocks mats={mats} />
+      <Restrooms mats={mats} />
+      <KitchenDetail mats={mats} />
       <Furniture mats={mats} />
       <Storefront mats={mats} />
       <PatioBenches mats={mats} />
