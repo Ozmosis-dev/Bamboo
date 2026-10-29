@@ -2,7 +2,7 @@ import type { SiteCopy } from "../types";
 
 export const copy: SiteCopy = {
   hero: {
-    heading: "Asian fusion, after dark.",
+    heading: "Asian fusion, after dark.",
     subheading:
       "The newest Bamboo — high-end Asian fusion on Market Street in downtown Chattanooga. Wok-fired plates, sushi cut to order, sake, and cocktails. Dinner, Monday through Saturday.",
   },

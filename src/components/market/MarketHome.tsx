@@ -98,7 +98,7 @@ export function MarketHome({
 
           <h1
             data-hero
-            className="m-serif mt-8 max-w-2xl text-5xl leading-[1.08] sm:text-[4.5rem]"
+            className="m-serif mt-8 max-w-2xl text-balance text-5xl leading-[1.08] sm:text-[4.5rem]"
           >
             {content.hero_heading}
           </h1>
