@@ -144,18 +144,20 @@ export const WALLS: WallSeg[] = [
   // bathroom wall is shared with the P.O.S. station, and the open corridor
   // south of the block (grease interceptor in the floor) leads to the
   // kitchen.
-  inner(0, 26, 9.9, 26, 5.4), // b1 north wall; its door at x 9.9–12.5
-  inner(15.4, 26, 25.6, 26, 5.4), // b2 north wall; its door at x 13.0–15.4
-  inner(12.75, 26, 12.75, 36.3, 5.4), // center plumbing wall (middle jamb)
+  inner(0, 26, 9.9, 26, 5.4), // b1 north wall
+  inner(15.4, 26, 25.6, 26, 5.4), // b2 north wall; open walkthrough between
+  // T-shaped divider: privacy cross-bar behind the walkthrough, plumbing
+  // stem running south with the lav counters on both faces
+  inner(9.6, 29.6, 16.0, 29.6, 5.4),
+  inner(12.75, 29.6, 12.75, 36.3, 5.4),
   inner(25.6, 26, 25.6, 36.3, 5.4), // east wall, shared with the P.O.S.
   inner(0, 36.3, 25.6, 36.3, 5.4), // south wall
   // kitchen north wall, wide pass to the dining room at x 13–17.8
   inner(0, 42.7, 13, 42.7),
-  // P.O.S. station: enclosed against the east bathroom wall, entered from
-  // the kitchen corridor through the gap at its southwest corner
+  // P.O.S. station: against the east bathroom wall, walled north and east,
+  // open to the kitchen corridor on the south
   inner(25.6, 30, 33.5, 30, 5.4),
   inner(33.5, 30, 33.5, 36.3, 5.4),
-  inner(27.2, 36.3, 33.5, 36.3, 5.4), // entry gap at x 25.6–27.2
   // existing demising stubs between the two dining rooms
   { x1: 14.2, z1: 13.8, x2: 26.2, z2: 13.8, h: 5.5, t: 1.1, kind: "solid" },
   { x1: 42.0, z1: 13.8, x2: 49.0, z2: 13.8, h: 5.5, t: 1.1, kind: "solid" },
@@ -378,7 +380,7 @@ export const TOILETS: Array<{ x: number; z: number; rot: number }> = [
   { x: 1.15, z: 34.2, rot: Math.PI / 2 },
   { x: 24.45, z: 33.6, rot: -Math.PI / 2 }, // east bathroom, on its east wall
 ];
-export const LAV = { x: 12.75, z1: 29.2, z2: 32.8 };
+export const LAV = { x: 12.75, z1: 30.2, z2: 33.8 };
 
 export const HOST_STAND = { x: 82.5, z: 48.7 };
 export const WH_POS: [number, number] = [2.0, 68.6];

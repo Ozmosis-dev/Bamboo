@@ -765,18 +765,6 @@ function Restrooms({ mats }: { mats: Mats }) {
           </mesh>
         </group>
       ))}
-      {/* door leaves standing open into each bathroom, hinged at the
-          outer jambs like the plan's swing arcs */}
-      {[
-        { hinge: 9.9, dir: 1, rot: -1.2 }, // west bathroom door
-        { hinge: 15.4, dir: -1, rot: 1.2 }, // east bathroom door
-      ].map(({ hinge, dir, rot }) => (
-        <group key={hinge} position={[hinge, 0, 26]} rotation={[0, rot, 0]}>
-          <mesh material={mats.wood} position={[dir * 1.15, 2.6, 0]} castShadow>
-            <boxGeometry args={[2.3, 5.2, 0.12]} />
-          </mesh>
-        </group>
-      ))}
       {/* lav counters on both faces of the spine wall */}
       {[-1, 1].map((side) => (
         <group key={side} position={[LAV.x + side * 0.72, 0, lavCz]}>
