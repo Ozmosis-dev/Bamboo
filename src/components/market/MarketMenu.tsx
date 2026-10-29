@@ -24,6 +24,9 @@ function dollars(price: number) {
   return Number.isInteger(price) ? `$${price}` : `$${price.toFixed(2)}`;
 }
 
+/** Short, description-less fish lists set tighter, in two columns. */
+const COMPACT_SLUGS = ["sashimi", "nigiri"];
+
 /** Menu browser in the printed-menu style: sticky category rail (desktop) /
  * Dinner–Drinks tab panel (mobile), active-section tracking, smooth scroll,
  * dietary filters, full-row section bands. */
@@ -239,6 +242,7 @@ export function MarketMenu({ menu }: { menu: ResolvedMenuSection[] }) {
             const visible = section.items.filter((item) => matches(item.dietary_tags));
             const kanji = SECTION_KANJI[section.category.slug];
             const groupBand = bandFor(section.category.slug);
+            const compact = COMPACT_SLUGS.includes(section.category.slug);
             return (
               <section
                 key={section.category.id}
@@ -289,11 +293,22 @@ export function MarketMenu({ menu }: { menu: ResolvedMenuSection[] }) {
                     Nothing here matches the selected filters.
                   </p>
                 ) : (
-                  <ul className="mt-2 px-1">
+                  <ul
+                    className={
+                      compact
+                        ? "mt-2 grid grid-cols-1 gap-x-12 px-1 sm:grid-cols-2"
+                        : "mt-2 px-1"
+                    }
+                  >
                     {visible.map((item) => (
-                      <li key={item.id} className="border-b border-seam py-4.5">
+                      <li
+                        key={item.id}
+                        className={`border-b border-seam ${compact ? "py-2.5" : "py-4.5"}`}
+                      >
                         <div className="flex items-baseline justify-between gap-6">
-                          <h3 className="m-item-name text-[13.5px]">
+                          <h3
+                            className={`m-item-name ${compact ? "text-[12.5px]" : "text-[13.5px]"}`}
+                          >
                             {item.name}
                             {item.dietary_tags.map((tag) => (
                               <span
@@ -305,12 +320,14 @@ export function MarketMenu({ menu }: { menu: ResolvedMenuSection[] }) {
                               </span>
                             ))}
                           </h3>
-                          <p className="shrink-0 text-[15px]">
+                          <p className={`shrink-0 ${compact ? "text-[13.5px]" : "text-[15px]"}`}>
                             {item.price !== null && (
                               <span className="m-price">{dollars(item.price)}</span>
                             )}
                             {item.price_note && (
-                              <span className="ml-2 text-[13px] text-tatami">
+                              <span
+                                className={`ml-2 text-tatami ${compact ? "text-[11.5px]" : "text-[13px]"}`}
+                              >
                                 {item.price !== null ? "· " : ""}
                                 {item.price_note}
                               </span>
