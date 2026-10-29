@@ -5,7 +5,7 @@
  * redirects) is suppressed. Flip to false and redeploy to restore the page
  * exactly as it was — no menu data is touched.
  */
-export const MENU_HIDDEN = true;
+export const MENU_HIDDEN = false;
 
 /** COMING_SOON: while true, the Chattanooga homepage opens with the
  * full-screen "coming soon" panel (construction note, open date, 3D room

@@ -14,10 +14,11 @@ export const revalidate = 300;
 
 export async function generateMetadata(): Promise<Metadata> {
   const location = await getCurrentLocation();
-  return pageMetadata(location, {
-    description: `${location.name} — sushi and Japanese kitchen at ${location.address_line1}, ${location.city}, ${location.state}. Fresh fish, hot bowls, sake, and cocktails.`,
-    path: "/",
-  });
+  const description =
+    location.slug === "chattanooga"
+      ? `${location.name} — high-end Asian fusion at ${location.address_line1}, ${location.city}, ${location.state}. Wok-fired plates, sushi, sake, and cocktails.`
+      : `${location.name} — sushi and Japanese kitchen at ${location.address_line1}, ${location.city}, ${location.state}. Fresh fish, hot bowls, sake, and cocktails.`;
+  return pageMetadata(location, { description, path: "/" });
 }
 
 export default async function HomePage() {

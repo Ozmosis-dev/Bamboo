@@ -3,6 +3,7 @@ import { JsonLd } from "@/components/JsonLd";
 import { MenuBrowser } from "@/components/MenuBrowser";
 import { MarketMenu } from "@/components/market/MarketMenu";
 import { getCurrentLocation, currentLocationSlug } from "@/lib/location";
+import { getSiteContent } from "@/lib/content";
 import { getMenuForLocation } from "@/lib/menu";
 import { menuJsonLd, pageMetadata } from "@/lib/seo";
 import { MENU_HIDDEN } from "@/lib/flags";
@@ -15,7 +16,10 @@ export async function generateMetadata(): Promise<Metadata> {
   const location = await getCurrentLocation();
   return pageMetadata(location, {
     title: "Menu",
-    description: `Full menu at ${location.name} in ${location.city} — sushi, hot food, cocktails, sake, and beer, with prices and dietary options.`,
+    description:
+      location.slug === "chattanooga"
+        ? `Full menu at ${location.name} in ${location.city} — Asian fusion plates, sushi, cocktails, sake, and beer, with prices and dietary options.`
+        : `Full menu at ${location.name} in ${location.city} — sushi, hot food, cocktails, sake, and beer, with prices and dietary options.`,
     path: "/menu",
   });
 }
@@ -24,9 +28,10 @@ export default async function MenuPage() {
   // Temporary 307 home while hidden, so indexed /menu links don't 404.
   if (MENU_HIDDEN) redirect("/");
   const slug = currentLocationSlug();
-  const [location, menu] = await Promise.all([
+  const [location, menu, content] = await Promise.all([
     getCurrentLocation(),
     getMenuForLocation(slug),
+    getSiteContent(slug),
   ]);
 
   if (slug === "chattanooga") {
@@ -44,7 +49,7 @@ export default async function MenuPage() {
             <div>
               <h1 className="m-serif text-4xl sm:text-5xl">Menu</h1>
               <p className="m-caps mt-2 text-[10.5px] text-washi/85">
-                Dinner · changes with the fish
+                {content.menu_tagline}
               </p>
             </div>
             <div className="flex flex-wrap gap-3">

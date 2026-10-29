@@ -89,7 +89,7 @@ export function defaultContent(slug: LocationSlug): SiteContent {
   return {
     coming_heading: "Something is taking shape on Market Street.",
     coming_subheading:
-      "We're building Chattanooga's home for sushi, spirits, and the long bamboo counter. The room is under construction — step inside the 3D render while we finish it.",
+      "We're building Chattanooga's home for high-end Asian fusion — wok-fired plates, sushi, spirits, and the long bamboo counter. The room is under construction — step inside the 3D render while we finish it.",
     coming_open_date: "February 1, 2027",
     hero_heading: copy.hero.heading,
     hero_subheading: copy.hero.subheading,
@@ -97,7 +97,10 @@ export function defaultContent(slug: LocationSlug): SiteContent {
     about_shared: copy.about.shared,
     about_local: copy.about.local,
     visit_notes: copy.visitNotes,
-    menu_tagline: "Dinner · changes with the fish",
+    menu_tagline:
+      slug === "chattanooga"
+        ? "Dinner · plates from across Asia"
+        : "Dinner · changes with the fish",
     contact_lead:
       "No reservation system, no forms — the fastest way to reach us is a call. We'll pick up between prep and service.",
   };

@@ -13,7 +13,12 @@ const GEO: Record<LocationSlug, { latitude: number; longitude: number }> = {
 
 const CITY_DESCRIPTOR: Record<LocationSlug, string> = {
   birmingham: "Sushi & Japanese Kitchen in Birmingham, AL",
-  chattanooga: "Sushi & Japanese Kitchen in Chattanooga, TN",
+  chattanooga: "Asian Fusion Restaurant in Chattanooga, TN",
+};
+
+const CUISINES: Record<LocationSlug, string[]> = {
+  birmingham: ["Japanese", "Sushi"],
+  chattanooga: ["Asian Fusion", "Asian", "Sushi"],
 };
 
 export function pageMetadata(
@@ -89,7 +94,7 @@ export function restaurantJsonLd(location: Location) {
     name: location.name,
     url: siteUrl(location),
     telephone: location.phone,
-    servesCuisine: ["Japanese", "Sushi"],
+    servesCuisine: CUISINES[location.slug],
     priceRange: "$$",
     address: {
       "@type": "PostalAddress",
