@@ -89,11 +89,9 @@ export const WALLS: WallSeg[] = [
   /* ---- envelope ---- */
   // west + south faces cut low (dollhouse cutaway) so the room stays visible
   W(0, 5.4, 0, 70, "brick", 1.5),
-  // north: storefront behind the sidewalk patio, door openings at both ends
-  W(9, 5.4, 45, 5.4, "glass"),
+  // north: brick-pier storefront behind the sidewalk patio (see
+  // STOREFRONTS), glazed double-door bays at both ends built in Exterior
   W(0, 5.4, 6, 5.4, "brick"),
-  W(6, 5.4, 9, 5.4, "glass", 6.5, 0.2), // door bay (103/104 corridor)
-  W(45, 5.4, 49, 5.4, "glass", 6.5, 0.2),
   // north face of the stair-core band (existing building, N.I.C.)
   W(49, 0, 77, 0, "brick"),
   // east dining onto the NE patio: brick-pier storefront (see STOREFRONTS),
@@ -304,6 +302,13 @@ export const STOREFRONTS: StorefrontRun[] = [
   { x: 97.4, z1: 51.6, z2: 66.3 }, // waiting patio / spirits bar front
   { z: 13.4, x1: 77, x2: 87.5 }, // NE patio, west of the doors
   { z: 13.4, x1: 90.5, x2: 97.4 }, // NE patio, east of the doors
+  { z: 5.4, x1: 9, x2: 45 }, // sidewalk patio, door bays at both ends
+];
+
+/* glazed double-door bays onto the sidewalk patio */
+export const PATIO_DOORS: Array<{ cx: number; w: number; z: number }> = [
+  { cx: 7.5, w: 3, z: 5.4 }, // west bay (103/104 corridor)
+  { cx: 47, w: 4, z: 5.4 }, // east bay
 ];
 
 /* ---------------------------------------------------------------- objects */

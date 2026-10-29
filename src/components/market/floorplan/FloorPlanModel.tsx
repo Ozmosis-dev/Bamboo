@@ -17,6 +17,7 @@ import {
   LABELS,
   LAV,
   PATIO_BENCHES,
+  PATIO_DOORS,
   PATIO_BENCH_TABLES,
   PATIO_BENCH_X,
   PENDANTS,
@@ -979,6 +980,29 @@ function Exterior({ mats }: { mats: Mats }) {
         <boxGeometry args={[11, 2.2, 0.4]} />
         <meshStandardMaterial map={sign} emissive="#5a4a30" emissiveIntensity={0.4} />
       </mesh>
+      {/* glazed double doors between the dining rooms and sidewalk patio */}
+      {PATIO_DOORS.map(({ cx, w, z }) => (
+        <group key={cx} position={[cx, 0, z]}>
+          {[-1, 0, 1].map((s) => (
+            <mesh key={s} material={mats.black} position={[(s * w) / 2, 3.25, 0]} castShadow>
+              <boxGeometry args={[0.2, 6.5, 0.4]} />
+            </mesh>
+          ))}
+          {[-w / 4, w / 4].map((dx) => (
+            <mesh key={dx} material={mats.glass} position={[dx, 3.2, 0]}>
+              <boxGeometry args={[w / 2 - 0.18, 6.1, 0.14]} />
+            </mesh>
+          ))}
+          <mesh material={mats.black} position={[0, 6.62, 0]}>
+            <boxGeometry args={[w + 0.25, 0.35, 0.5]} />
+          </mesh>
+          {[-0.4, 0.4].map((dx) => (
+            <mesh key={dx} material={mats.gold} position={[dx, 3.2, -0.26]}>
+              <cylinderGeometry args={[0.04, 0.04, 1.4, 6]} />
+            </mesh>
+          ))}
+        </group>
+      ))}
       {/* black storefront awnings: north glazing + east facade bays */}
       {[
         { x: 12.5, w: 12, z: 6.1, ry: 0 },
