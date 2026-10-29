@@ -11,6 +11,12 @@ export const IMAGE_SLOTS: { key: string; label: string; hint: string; fallback: 
     fallback: "/brand/hero-door.webp",
   },
   {
+    key: "coming_model_poster",
+    label: "Coming-soon model preview",
+    hint: "The small 3D-room image on the pre-opening panel.",
+    fallback: "/brand/floor-model-poster.jpg",
+  },
+  {
     key: "visit_storefront",
     label: "Visit page photo",
     hint: "The storefront photo beside hours on the Visit page.",

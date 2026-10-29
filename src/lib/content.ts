@@ -5,6 +5,9 @@ import type { LocationSlug } from "@/lib/types";
 /** Every owner-editable text on the site, keyed for the CMS. The file copy in
  * content/ provides the defaults; a site_copy row overrides per location. */
 export type SiteContent = {
+  coming_heading: string;
+  coming_subheading: string;
+  coming_open_date: string;
   hero_heading: string;
   hero_subheading: string;
   intro: string;
@@ -21,6 +24,22 @@ export const CONTENT_FIELDS: {
   hint: string;
   multiline?: boolean;
 }[] = [
+  {
+    key: "coming_heading",
+    label: "Coming-soon headline",
+    hint: "The big line on the pre-opening panel.",
+  },
+  {
+    key: "coming_subheading",
+    label: "Coming-soon note",
+    hint: "The construction note under the coming-soon headline.",
+    multiline: true,
+  },
+  {
+    key: "coming_open_date",
+    label: "Target opening",
+    hint: "Shown on the coming-soon panel, e.g. “February 1, 2027”.",
+  },
   { key: "hero_heading", label: "Homepage headline", hint: "The big line visitors see first." },
   {
     key: "hero_subheading",
@@ -68,6 +87,10 @@ export const CONTENT_FIELDS: {
 export function defaultContent(slug: LocationSlug): SiteContent {
   const copy = getCopy(slug);
   return {
+    coming_heading: "Something is taking shape on Market Street.",
+    coming_subheading:
+      "We're building Chattanooga's home for sushi, spirits, and the long bamboo counter. The room is under construction — step inside the 3D render while we finish it.",
+    coming_open_date: "February 1, 2027",
     hero_heading: copy.hero.heading,
     hero_subheading: copy.hero.subheading,
     intro: copy.intro,

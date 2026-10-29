@@ -6,3 +6,9 @@
  * exactly as it was — no menu data is touched.
  */
 export const MENU_HIDDEN = true;
+
+/** COMING_SOON: while true, the Chattanooga homepage opens with the
+ * full-screen "coming soon" panel (construction note, open date, 3D room
+ * preview) that scrolls away into the regular hero. Flip to false around
+ * opening day to remove it — nothing else on the page changes. */
+export const COMING_SOON = true;

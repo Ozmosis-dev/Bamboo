@@ -1,7 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { formatHoursEntry, telHref } from "@/lib/format";
-import { MENU_HIDDEN } from "@/lib/flags";
+import { COMING_SOON, MENU_HIDDEN } from "@/lib/flags";
+import { ComingSoon } from "./ComingSoon";
 import type { Location, ResolvedMenuSection } from "@/lib/types";
 import type { SiteContent } from "@/lib/content";
 import type { GalleryImage } from "@/lib/images";
@@ -47,6 +48,15 @@ export function MarketHome({
     <>
       <MarketIntro />
       <MarketFx />
+
+      {/* ------------------------------------- Pre-opening announcement */}
+      {COMING_SOON && (
+        <ComingSoon
+          content={content}
+          location={location}
+          poster={images.coming_model_poster}
+        />
+      )}
 
       {/* ------------------------------------------------------ Hero */}
       <section className="relative overflow-hidden bg-char-deep">
