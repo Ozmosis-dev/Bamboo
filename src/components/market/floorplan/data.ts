@@ -96,14 +96,13 @@ export const WALLS: WallSeg[] = [
   W(45, 5.4, 49, 5.4, "glass", 6.5, 0.2),
   // north face of the stair-core band (existing building, N.I.C.)
   W(49, 0, 77, 0, "brick"),
-  // east dining storefront onto the NE patio, with gaps for its doors
-  W(77, 13.4, 87.5, 13.4, "glass"),
-  W(90.5, 13.4, 97.4, 13.4, "glass"),
+  // east dining onto the NE patio: brick-pier storefront (see STOREFRONTS),
+  // with a door gap at x 87.5–90.5
   // east face (Market St — the front): the patios are OPEN to the street
-  // behind fences; the only built mass is the entry vestibule's glazing
-  // around the front door (z 44.8–48.6 opening)
-  W(105.5, 43.1, 105.5, 44.8, "glass"),
-  W(105.5, 48.6, 105.5, 51.6, "glass"),
+  // behind fences; the building face sits at x=97.4, where brick flanks
+  // frame the recessed front door (z 44.8–48.6 opening)
+  W(97.4, 43.1, 97.4, 44.8, "brick"),
+  W(97.4, 48.6, 97.4, 51.6, "brick"),
   // south party wall: z=70 west of the demise step, z=66.3 east of it
   W(0, 70, 30, 70, "brick", 1.5),
   W(30, 66.3, 30, 70, "brick", 1.5),
@@ -123,6 +122,9 @@ export const WALLS: WallSeg[] = [
   // with a sidewalk gate at z 37.5–40.5
   W(105.5, 0, 105.5, 37.5, "low"),
   W(105.5, 40.5, 105.5, 43.1, "low"),
+  // entry walk edges flanking the front gate (z 44.8–48.6)
+  W(105.5, 43.1, 105.5, 44.8, "low"),
+  W(105.5, 48.6, 105.5, 51.6, "low"),
   // waiting patio street edge
   W(105.5, 51.6, 105.5, 66.3, "low"),
 
@@ -153,11 +155,12 @@ export const WALLS: WallSeg[] = [
   // existing demising stubs between the two dining rooms
   { x1: 14.2, z1: 13.8, x2: 26.2, z2: 13.8, h: 5.5, t: 1.1, kind: "solid" },
   { x1: 42.0, z1: 13.8, x2: 49.0, z2: 13.8, h: 5.5, t: 1.1, kind: "solid" },
-  // vestibule / entry sequence at the southeast
+  // entry sequence at the southeast: glazed divider screens the entry walk
+  // from the dining patio; low rails separate it from the waiting patio
   inner(93.5, 43.1, 97.4, 43.1, EXT_H),
-  W(97.4, 43.1, 105.5, 43.1, "glass", EXT_H, 0.3), // vestibule north glazing
-  inner(97.4, 51.6, 99, 51.6, EXT_H),
-  inner(103, 51.6, 105.5, 51.6, EXT_H),
+  W(97.4, 43.1, 105.5, 43.1, "glass", EXT_H, 0.3),
+  W(97.4, 51.6, 99, 51.6, "low"),
+  W(103, 51.6, 105.5, 51.6, "low"),
 ];
 
 /* walk-in rooms rendered as walled boxes */
@@ -183,6 +186,7 @@ export const ZONES: Zone[] = [
   { x: 6, z: 0, w: 43, d: 5.4, color: COLORS.deck, kind: "deck" },
   { x: 77, z: 0, w: 28.5, d: 13.4, color: COLORS.deck, kind: "deck" },
   { x: 97.4, z: 13.4, w: 8.1, d: 29.7, color: COLORS.deck, kind: "deck" },
+  { x: 97.4, z: 43.1, w: 8.1, d: 8.5, color: COLORS.deck, kind: "deck" }, // entry walk
   { x: 97.4, z: 51.6, w: 8.1, d: 14.7, color: COLORS.deck, kind: "deck" },
   // kitchen + BOH slab
   { x: 0, z: 42.7, w: 25, d: 27.3, color: COLORS.charDeep, kind: "slab" },
@@ -278,15 +282,23 @@ for (const z of [19.6, 22.2, 27.5, 30.1, 32.7]) {
   CHAIRS.push({ x: 102.3, z, rot: R.W }); // east of the table, facing west
 }
 
-/* brick-pier + glass storefront between the east dining room and its patio
-   (the facade behind the patio in the exterior photo) */
-export const STOREFRONT = {
-  x: 97.4,
-  z1: 13.4,
-  z2: 43.1,
-  pierEvery: 5.6,
-  pierW: 1.2,
-};
+/* brick-pier + glass storefront runs (the facade in the exterior photo).
+   Each run is either north–south (fixed x, z1→z2) or east–west (fixed z,
+   x1→x2). Together they wrap the whole patio-facing shell: the east dining
+   patio, the entry-door flanks' neighbor bays, the waiting patio / spirits
+   bar front, and the NE patio face with its door gap at x 87.5–90.5. */
+export type StorefrontRun =
+  | { x: number; z1: number; z2: number }
+  | { z: number; x1: number; x2: number };
+
+export const STOREFRONT_PIERS = { every: 5.6, w: 1.2 };
+
+export const STOREFRONTS: StorefrontRun[] = [
+  { x: 97.4, z1: 13.4, z2: 43.1 }, // east dining patio
+  { x: 97.4, z1: 51.6, z2: 66.3 }, // waiting patio / spirits bar front
+  { z: 13.4, x1: 77, x2: 87.5 }, // NE patio, west of the doors
+  { z: 13.4, x1: 90.5, x2: 97.4 }, // NE patio, east of the doors
+];
 
 /* ---------------------------------------------------------------- objects */
 

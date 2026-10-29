@@ -23,7 +23,8 @@ import {
   PLANTERS,
   POS_DESK,
   ROOMS,
-  STOREFRONT,
+  STOREFRONTS,
+  STOREFRONT_PIERS,
   SPIRITS,
   STOOLS,
   SUSHI,
@@ -384,29 +385,43 @@ function Furniture({ mats }: { mats: Mats }) {
   );
 }
 
-/** Brick-pier + glass storefront between the east dining room and patio. */
+/** Brick-pier + glass storefront runs wrapping the patio-facing shell. */
 function Storefront({ mats }: { mats: Mats }) {
-  const { x, z1, z2, pierEvery, pierW } = STOREFRONT;
-  const piers: number[] = [];
-  for (let z = z1 + pierW / 2; z <= z2; z += pierEvery) piers.push(z);
-  piers.push(z2 - pierW / 2);
+  const { every, w: pierW } = STOREFRONT_PIERS;
   return (
     <group>
-      <mesh material={mats.glass} position={[x, 3.1, (z1 + z2) / 2]}>
-        <boxGeometry args={[0.25, 6.2, z2 - z1]} />
-      </mesh>
-      {piers.map((z, i) => (
-        <mesh key={i} material={mats.brick} position={[x, 3.25, z]} castShadow>
-          <boxGeometry args={[1.1, 6.5, pierW]} />
-        </mesh>
-      ))}
-      {/* brick spandrel + gold storefront header */}
-      <mesh material={mats.brick} position={[x, 7.0, (z1 + z2) / 2]} castShadow>
-        <boxGeometry args={[1.1, 1.4, z2 - z1 + pierW]} />
-      </mesh>
-      <mesh material={mats.gold} position={[x, 6.38, (z1 + z2) / 2]}>
-        <boxGeometry args={[1.2, 0.16, z2 - z1 + pierW]} />
-      </mesh>
+      {STOREFRONTS.map((run, ri) => {
+        // normalize both orientations into (length along axis, center, rotY)
+        const vertical = "x" in run; // run follows z, wall faces east/west
+        const a1 = vertical ? run.z1 : run.x1;
+        const a2 = vertical ? run.z2 : run.x2;
+        const len = a2 - a1;
+        const cx = vertical ? run.x : (run.x1 + run.x2) / 2;
+        const cz = vertical ? (run.z1 + run.z2) / 2 : run.z;
+        const rotY = vertical ? Math.PI / 2 : 0;
+        const piers: number[] = [];
+        for (let a = pierW / 2; a <= len; a += every) piers.push(a);
+        piers.push(len - pierW / 2);
+        return (
+          <group key={ri} position={[cx, 0, cz]} rotation={[0, rotY, 0]}>
+            <mesh material={mats.glass} position={[0, 3.1, 0]}>
+              <boxGeometry args={[len, 6.2, 0.25]} />
+            </mesh>
+            {piers.map((a, i) => (
+              <mesh key={i} material={mats.brick} position={[a - len / 2, 3.25, 0]} castShadow>
+                <boxGeometry args={[pierW, 6.5, 1.1]} />
+              </mesh>
+            ))}
+            {/* brick spandrel + gold storefront header */}
+            <mesh material={mats.brick} position={[0, 7.0, 0]} castShadow>
+              <boxGeometry args={[len + pierW, 1.4, 1.1]} />
+            </mesh>
+            <mesh material={mats.gold} position={[0, 6.38, 0]}>
+              <boxGeometry args={[len + pierW, 0.16, 1.2]} />
+            </mesh>
+          </group>
+        );
+      })}
     </group>
   );
 }
@@ -582,25 +597,26 @@ function Benches({ mats }: { mats: Mats }) {
 function Entry({ mats }: { mats: Mats }) {
   return (
     <group>
-      {/* THE front door: recessed vermilion double door on Market St,
-          flanked by vertical slat screens, per the facade photo */}
-      <mesh material={mats.verm} position={[105.3, 3.3, 46.7]} castShadow>
+      {/* THE front door: vermilion double door set INTO the building face
+          (x≈97.4), reached across the entry walk — flanked by vertical slat
+          screens on the brick, per the facade photo */}
+      <mesh material={mats.verm} position={[97.6, 3.3, 46.7]} castShadow>
         <boxGeometry args={[0.5, 6.6, 3.8]} />
       </mesh>
-      <mesh material={mats.gold} position={[105.0, 3.3, 46.7]}>
+      <mesh material={mats.gold} position={[97.95, 3.3, 46.7]}>
         <boxGeometry args={[0.1, 0.1, 3.3]} />
       </mesh>
       {[44.1, 49.3].map((z) => (
         <group key={z}>
           {Array.from({ length: 4 }, (_, i) => (
-            <mesh key={i} material={mats.black} position={[105.4, 3.3, z - 0.55 + i * 0.37]}>
+            <mesh key={i} material={mats.black} position={[98.05, 3.3, z - 0.55 + i * 0.37]}>
               <boxGeometry args={[0.3, 6.6, 0.14]} />
             </mesh>
           ))}
         </group>
       ))}
       {/* warm lintel glow over the door */}
-      <mesh position={[105.45, 6.9, 46.7]}>
+      <mesh position={[98.0, 6.9, 46.7]}>
         <boxGeometry args={[0.5, 0.18, 4.2]} />
         <meshStandardMaterial color="#c8a858" emissive="#e8b96a" emissiveIntensity={1.3} />
       </mesh>
@@ -722,8 +738,8 @@ function Exterior({ mats }: { mats: Mats }) {
       <mesh material={mats.plinth} position={[PLAN.width + 9, -0.1, PLAN.depth / 2]} receiveShadow>
         <boxGeometry args={[5, 0.12, PLAN.depth + 22]} />
       </mesh>
-      {/* main sign over the FRONT entrance on the Market St (east) face */}
-      <group position={[105.9, 8.9, 46.7]} rotation={[0, Math.PI / 2, 0]}>
+      {/* main sign over the FRONT entrance, mounted on the building face */}
+      <group position={[98.5, 8.9, 46.7]} rotation={[0, Math.PI / 2, 0]}>
         <mesh>
           <boxGeometry args={[15, 2.8, 0.5]} />
           <meshStandardMaterial map={sign} emissive="#5a4a30" emissiveIntensity={0.5} />
@@ -753,10 +769,12 @@ function Exterior({ mats }: { mats: Mats }) {
           <boxGeometry args={[a.w, 0.12, 3.2]} />
         </mesh>
       ))}
-      {/* awnings projecting from the storefront over the east patio */}
+      {/* awnings projecting from the storefront over the east + waiting patios */}
       {[
         { z: 19.5, w: 10 },
         { z: 32.5, w: 10 },
+        { z: 55.8, w: 6.5 },
+        { z: 62.6, w: 6.5 },
       ].map((a, i) => (
         <mesh
           key={`e${i}`}
