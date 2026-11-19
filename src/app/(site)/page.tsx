@@ -43,6 +43,7 @@ export default async function HomePage() {
         menu={menu}
         images={siteImages.slots}
         gallery={siteImages.gallery}
+        galleryExtra={siteImages.galleryExtra}
       />
     );
   }

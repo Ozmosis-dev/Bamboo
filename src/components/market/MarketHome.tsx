@@ -1,13 +1,14 @@
 import Image from "next/image";
 import Link from "next/link";
 import { formatHoursEntry, telHref } from "@/lib/format";
-import { COMING_SOON, MENU_HIDDEN } from "@/lib/flags";
+import { COMING_SOON, MENU_HIDDEN, PRICES_HIDDEN } from "@/lib/flags";
 import { ComingSoon } from "./ComingSoon";
 import type { Location, ResolvedMenuSection } from "@/lib/types";
 import type { SiteContent } from "@/lib/content";
 import type { GalleryImage } from "@/lib/images";
 import { MarketFx } from "./MarketFx";
 import { MarketIntro } from "./MarketIntro";
+import { MarketGalleryExpand } from "./MarketGalleryExpand";
 import { MarketMarquee } from "./MarketMarquee";
 import { DRINK_GROUPS, FOOD_SLUGS, SECTION_KANJI } from "./kanji";
 
@@ -34,6 +35,7 @@ export function MarketHome({
   menu,
   images,
   gallery,
+  galleryExtra = [],
 }: {
   content: SiteContent;
   location: Location;
@@ -41,6 +43,7 @@ export function MarketHome({
   menu: ResolvedMenuSection[];
   images: Record<string, string>;
   gallery: GalleryImage[];
+  galleryExtra?: GalleryImage[];
 }) {
   const { food, barRows } = categoryCards(menu);
 
@@ -171,6 +174,7 @@ export function MarketHome({
 
       {/* -------------------------------------------- Kitchen marquee */}
       <MarketMarquee items={gallery} />
+      <MarketGalleryExpand items={[...gallery, ...galleryExtra]} />
 
       {/* ------------------------------------------------- The menu, by course */}
       {!MENU_HIDDEN && (
@@ -200,6 +204,8 @@ export function MarketHome({
               </div>
               <h2 className="m-serif mt-6 text-4xl leading-tight sm:text-5xl">Menu</h2>
             </div>
+            {/* The printed menus carry prices, so their buttons hide with them. */}
+            {!PRICES_HIDDEN && (
             <div className="flex flex-wrap gap-3">
               {(
                 [
@@ -230,6 +236,7 @@ export function MarketHome({
                 </a>
               ))}
             </div>
+            )}
           </div>
 
           <ul data-fx-group className="mt-14">

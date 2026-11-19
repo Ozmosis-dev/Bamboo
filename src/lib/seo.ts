@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { MENU_HIDDEN } from "@/lib/flags";
+import { MENU_HIDDEN, PRICES_HIDDEN } from "@/lib/flags";
 import { siteUrl } from "@/lib/location";
 import { isClosedEntry } from "@/lib/format";
 import type { Location, LocationSlug, ResolvedMenuSection } from "@/lib/types";
@@ -95,7 +95,7 @@ export function restaurantJsonLd(location: Location) {
     url: siteUrl(location),
     telephone: location.phone,
     servesCuisine: CUISINES[location.slug],
-    priceRange: "$$",
+    ...(PRICES_HIDDEN ? {} : { priceRange: "$$" }),
     address: {
       "@type": "PostalAddress",
       streetAddress: location.address_line1,

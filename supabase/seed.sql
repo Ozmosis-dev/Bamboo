@@ -25,7 +25,7 @@ insert into locations (slug, name, domain, address_line1, city, state, zip, phon
   'bambooonmain.com',
   '423 Market St',
   'Chattanooga', 'TN', '37402',
-  '(423) 555-0177',
+  '(423) 205-2060',
   '[
     {"days": "Mon–Thu", "open": "17:00", "close": "21:30"},
     {"days": "Fri–Sat", "open": "17:00", "close": "22:30"},

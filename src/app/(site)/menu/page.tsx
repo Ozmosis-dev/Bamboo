@@ -6,7 +6,7 @@ import { getCurrentLocation, currentLocationSlug } from "@/lib/location";
 import { getSiteContent } from "@/lib/content";
 import { getMenuForLocation } from "@/lib/menu";
 import { menuJsonLd, pageMetadata } from "@/lib/seo";
-import { MENU_HIDDEN } from "@/lib/flags";
+import { MENU_HIDDEN, PRICES_HIDDEN } from "@/lib/flags";
 import { redirect } from "next/navigation";
 
 export const revalidate = 300;
@@ -18,8 +18,8 @@ export async function generateMetadata(): Promise<Metadata> {
     title: "Menu",
     description:
       location.slug === "chattanooga"
-        ? `Full menu at ${location.name} in ${location.city} — Asian fusion plates, sushi, cocktails, sake, and beer, with prices and dietary options.`
-        : `Full menu at ${location.name} in ${location.city} — sushi, hot food, cocktails, sake, and beer, with prices and dietary options.`,
+        ? `Full menu at ${location.name} in ${location.city} — Asian fusion plates, sushi, cocktails, sake, and beer, with ${PRICES_HIDDEN ? "" : "prices and "}dietary options.`
+        : `Full menu at ${location.name} in ${location.city} — sushi, hot food, cocktails, sake, and beer, with ${PRICES_HIDDEN ? "" : "prices and "}dietary options.`,
     path: "/menu",
   });
 }
@@ -52,6 +52,8 @@ export default async function MenuPage() {
                 {content.menu_tagline}
               </p>
             </div>
+            {/* The printed menus carry prices, so their buttons hide with them. */}
+            {!PRICES_HIDDEN && (
             <div className="flex flex-wrap gap-3">
               {(
                 [
@@ -82,6 +84,7 @@ export default async function MenuPage() {
                 </a>
               ))}
             </div>
+            )}
           </div>
         </section>
         <div className="relative pb-10">
@@ -101,8 +104,8 @@ export default async function MenuPage() {
         Menu
       </h1>
       <p className="mt-2 pb-6 text-ink-soft">
-        Served at {location.name}, {location.city}. Menu items and prices are
-        updated regularly.
+        Served at {location.name}, {location.city}. Menu items{" "}
+        {PRICES_HIDDEN ? "are" : "and prices are"} updated regularly.
       </p>
       <MenuBrowser menu={menu} />
       <p className="mt-12 border-t border-line pt-4 text-xs text-ink-soft">

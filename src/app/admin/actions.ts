@@ -214,16 +214,18 @@ export async function resetSlotImage(formData: FormData) {
 
 export async function addGalleryImage(formData: FormData) {
   const supabase = await requireUser();
-  const url = await uploadToBucket(supabase, formData.get("file") as File, "gallery");
+  // 'gallery' is the scrolling banner; 'food_gallery' the expanded grid.
+  const key = formData.get("key") === "food_gallery" ? "food_gallery" : "gallery";
+  const url = await uploadToBucket(supabase, formData.get("file") as File, key);
   const { data } = await supabase
     .from("site_images")
     .select("sort")
-    .eq("key", "gallery")
+    .eq("key", key)
     .order("sort", { ascending: false })
     .limit(1);
   const nextSort = (data?.[0]?.sort ?? 0) + 1;
   const { error } = await supabase.from("site_images").insert({
-    key: "gallery",
+    key,
     url,
     alt: String(formData.get("alt") ?? "").trim(),
     sort: nextSort,
