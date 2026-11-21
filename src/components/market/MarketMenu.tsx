@@ -126,6 +126,11 @@ export function MarketMenu({ menu }: { menu: ResolvedMenuSection[] }) {
           ))}
         </div>
         <div className="mt-2.5 flex flex-wrap gap-1.5">
+          {groupSections.length === 0 && (
+            <p className="m-caps px-1 py-1.5 text-[10.5px] text-tatami">
+              Coming soon
+            </p>
+          )}
           {groupSections.map((s) => {
             const slug = s.category.slug;
             const isCurrent = current === slug;
@@ -164,6 +169,11 @@ export function MarketMenu({ menu }: { menu: ResolvedMenuSection[] }) {
                     {label}
                     <span className="m-kanji font-normal text-gold/80">{glyph}</span>
                   </p>
+                  {sections.length === 0 && (
+                    <p className="m-caps mt-3 text-[11px] text-tatami">
+                      Coming soon
+                    </p>
+                  )}
                   <ul className="mt-3">
                     {sections.map((section) => {
                       const slug = section.category.slug;
@@ -377,6 +387,25 @@ export function MarketMenu({ menu }: { menu: ResolvedMenuSection[] }) {
               </section>
             );
           })}
+
+          {drinkSections.length === 0 && (
+            <section className="scroll-mt-44 pt-12 lg:scroll-mt-32">
+              <div className="m-verm relative overflow-hidden px-6 py-7 sm:px-8">
+                <span
+                  aria-hidden
+                  className="m-kanji absolute -top-5 right-3 text-[6rem] leading-none text-washi opacity-15"
+                >
+                  盃
+                </span>
+                <p className="m-eyebrow !text-[0.65rem]">The bar</p>
+                <p className="m-serif mt-2 text-3xl">Drinks</p>
+                <p className="mt-3 max-w-md text-sm leading-relaxed text-washi/90">
+                  Cocktails, sake, wine, and beer are coming soon. Check back
+                  for the full list.
+                </p>
+              </div>
+            </section>
+          )}
 
           <p className="mt-16 border-t border-seam pt-5 text-xs leading-relaxed text-tatami/80">
             *Consuming raw or undercooked meats, poultry, seafood, or shellfish may

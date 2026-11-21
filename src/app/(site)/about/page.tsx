@@ -139,7 +139,7 @@ export default async function AboutPage() {
           />
           <div className="relative mx-auto flex max-w-6xl flex-col items-start gap-8 px-5 py-20 sm:px-8 sm:py-24">
             <p data-fx="rise" className="m-serif max-w-2xl text-3xl leading-snug sm:text-5xl">
-              Dinner, Monday through Saturday. Walk-ins welcome.
+              Dinner, Monday through Saturday. No reservations, just walk in.
             </p>
             <div data-fx="rise" className="flex flex-wrap gap-5">
               {!MENU_HIDDEN && (

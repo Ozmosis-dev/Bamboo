@@ -13,7 +13,7 @@ export const MENU_HIDDEN = false;
  * homepage highlights drop theirs, JSON-LD omits offers, and the printed-menu
  * PDF buttons (which show prices) are hidden. Flip to false and redeploy to
  * restore — no menu data is touched, and the admin CMS always shows prices. */
-export const PRICES_HIDDEN = true;
+export const PRICES_HIDDEN = false;
 
 /** COMING_SOON: while true, the Chattanooga homepage opens with the
  * full-screen "coming soon" panel (construction note, open date, 3D room

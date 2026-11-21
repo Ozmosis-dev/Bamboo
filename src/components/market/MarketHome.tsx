@@ -209,8 +209,8 @@ export function MarketHome({
             <div className="flex flex-wrap gap-3">
               {(
                 [
+                  /* Drinks PDF returns when the drinks list lands. */
                   ["/menus/bamboo-food-menu.pdf", "PDF Food Menu"],
-                  ["/menus/bamboo-drinks-menu.pdf", "PDF Drink Menu"],
                 ] as const
               ).map(([href, label]) => (
                 <a

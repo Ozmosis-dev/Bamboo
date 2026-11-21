@@ -18,7 +18,7 @@ export async function generateMetadata(): Promise<Metadata> {
     title: "Menu",
     description:
       location.slug === "chattanooga"
-        ? `Full menu at ${location.name} in ${location.city} — Asian fusion plates, sushi, cocktails, sake, and beer, with ${PRICES_HIDDEN ? "" : "prices and "}dietary options.`
+        ? `Full menu at ${location.name} in ${location.city} — Asian fusion plates, sushi, and rolls, with ${PRICES_HIDDEN ? "" : "prices and "}dietary options. Drinks menu coming soon.`
         : `Full menu at ${location.name} in ${location.city} — sushi, hot food, cocktails, sake, and beer, with ${PRICES_HIDDEN ? "" : "prices and "}dietary options.`,
     path: "/menu",
   });
@@ -57,8 +57,8 @@ export default async function MenuPage() {
             <div className="flex flex-wrap gap-3">
               {(
                 [
+                  /* Drinks PDF returns when the drinks list lands. */
                   ["/menus/bamboo-food-menu.pdf", "Food PDF"],
-                  ["/menus/bamboo-drinks-menu.pdf", "Drinks PDF"],
                 ] as const
               ).map(([href, label]) => (
                 <a

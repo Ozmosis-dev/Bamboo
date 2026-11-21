@@ -16,7 +16,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const location = await getCurrentLocation();
   const description =
     location.slug === "chattanooga"
-      ? `${location.name} — high-end Asian fusion at ${location.address_line1}, ${location.city}, ${location.state}. Wok-fired plates, sushi, sake, and cocktails.`
+      ? `${location.name}: relaxed Asian fusion at ${location.address_line1}, ${location.city}, ${location.state}. Steaming noodle bowls, sushi, sake, and cocktails. Dinner only. No reservations, walk-ins welcome.`
       : `${location.name} — sushi and Japanese kitchen at ${location.address_line1}, ${location.city}, ${location.state}. Fresh fish, hot bowls, sake, and cocktails.`;
   return pageMetadata(location, { description, path: "/" });
 }
