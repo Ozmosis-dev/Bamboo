@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { getCopy } from "@content/index";
+import { ComingSoon } from "@/components/market/ComingSoon";
 import { MarketHome } from "@/components/market/MarketHome";
+import { MarketIntro } from "@/components/market/MarketIntro";
 import { getSiteContent } from "@/lib/content";
 import { getSiteImages } from "@/lib/images";
 import { formatHoursEntry, formatPrice, telHref } from "@/lib/format";
-import { MENU_HIDDEN } from "@/lib/flags";
+import { MENU_HIDDEN, SITE_HIDDEN } from "@/lib/flags";
 import { getCurrentLocation, getSisterLocation, currentLocationSlug } from "@/lib/location";
 import { getMenuForLocation } from "@/lib/menu";
 import { pageMetadata } from "@/lib/seo";
@@ -35,6 +37,22 @@ export default async function HomePage() {
       getSiteContent(slug),
       getSiteImages(),
     ]);
+    /* Pre-launch: the homepage is the coming-soon page alone — announcement,
+     * 3D render, open date, food carousel, menu link, map. */
+    if (SITE_HIDDEN) {
+      return (
+        <>
+          <MarketIntro />
+          <ComingSoon
+            content={content}
+            location={location}
+            poster={siteImages.slots.coming_model_poster}
+            backdrop={siteImages.slots.coming_backdrop}
+            gallery={siteImages.gallery}
+          />
+        </>
+      );
+    }
     return (
       <MarketHome
         content={content}

@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { telHref } from "@/lib/format";
-import { MENU_HIDDEN } from "@/lib/flags";
+import { MENU_HIDDEN, SITE_HIDDEN } from "@/lib/flags";
 import type { Location } from "@/lib/types";
 import { Lockup } from "./Lockup";
 
@@ -13,7 +13,10 @@ const nav = [
   { href: "/about", label: "About" },
   { href: "/visit", label: "Visit" },
   { href: "/contact", label: "Contact" },
-].filter((item) => !(MENU_HIDDEN && item.href === "/menu"));
+]
+  .filter((item) => !(MENU_HIDDEN && item.href === "/menu"))
+  /* coming-soon mode: only the menu stays browsable */
+  .filter((item) => !(SITE_HIDDEN && item.href !== "/menu"));
 
 export function MarketHeader({ location }: { location: Location }) {
   const [open, setOpen] = useState(false);

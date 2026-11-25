@@ -6,6 +6,8 @@ import { getCurrentLocation, currentLocationSlug } from "@/lib/location";
 import { pageMetadata } from "@/lib/seo";
 import { getSiteContent } from "@/lib/content";
 import { getSiteImages } from "@/lib/images";
+import { SITE_HIDDEN } from "@/lib/flags";
+import { redirect } from "next/navigation";
 
 export const revalidate = 300;
 
@@ -19,6 +21,8 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function ContactPage() {
+  // Coming-soon mode: only the homepage and menu are up.
+  if (SITE_HIDDEN && currentLocationSlug() === "chattanooga") redirect("/");
   const location = await getCurrentLocation();
 
   if (currentLocationSlug() === "chattanooga") {

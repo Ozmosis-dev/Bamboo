@@ -8,6 +8,8 @@ import { getCurrentLocation, currentLocationSlug } from "@/lib/location";
 import { pageMetadata } from "@/lib/seo";
 import { getSiteContent } from "@/lib/content";
 import { getSiteImages } from "@/lib/images";
+import { SITE_HIDDEN } from "@/lib/flags";
+import { redirect } from "next/navigation";
 
 export const revalidate = 300;
 
@@ -29,6 +31,8 @@ const LANDMARKS = [
 
 export default async function VisitPage() {
   const slug = currentLocationSlug();
+  // Coming-soon mode: only the homepage and menu are up.
+  if (SITE_HIDDEN && slug === "chattanooga") redirect("/");
   const location = await getCurrentLocation();
   const copy = getCopy(slug);
 

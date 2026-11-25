@@ -5,10 +5,14 @@ import Image from "next/image";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
+import Link from "next/link";
 import type { Location } from "@/lib/types";
 import type { SiteContent } from "@/lib/content";
+import type { GalleryImage } from "@/lib/images";
+import { MENU_HIDDEN } from "@/lib/flags";
 import FloorPlanViewer from "./floorplan/FloorPlanViewer";
 import { MarketMap } from "./MarketMap";
+import { MarketMarquee } from "./MarketMarquee";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
@@ -26,11 +30,13 @@ export function ComingSoon({
   location,
   poster,
   backdrop,
+  gallery = [],
 }: {
   content: SiteContent;
   location: Location;
   poster: string;
   backdrop: string;
+  gallery?: GalleryImage[];
 }) {
   const wrapRef = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState(false);
@@ -98,6 +104,28 @@ export function ComingSoon({
               clearProps: "all",
               scrollTrigger: {
                 trigger: "[data-cs-map]",
+                start: "top 78%",
+                once: true,
+              },
+            }
+          );
+        }
+
+        // Food carousel + menu link rise in like the map below them.
+        const foodEls = gsap.utils.toArray<HTMLElement>("[data-cs-f]", wrap);
+        if (foodEls.length) {
+          gsap.fromTo(
+            foodEls,
+            { y: 44, autoAlpha: 0 },
+            {
+              y: 0,
+              autoAlpha: 1,
+              duration: 0.9,
+              stagger: 0.14,
+              ease: "power3.out",
+              clearProps: "all",
+              scrollTrigger: {
+                trigger: "[data-cs-food]",
                 start: "top 78%",
                 once: true,
               },
@@ -278,21 +306,12 @@ export function ComingSoon({
             className="mt-8 flex flex-col items-center gap-1.5 sm:flex-row sm:items-baseline sm:gap-4"
           >
             <span className="m-eyebrow !text-[0.6rem]">Opening</span>
-            <span className="m-serif text-2xl text-gold-soft">
+            <span className="m-serif text-3xl text-gold-soft sm:text-4xl">
               {content.coming_open_date}
             </span>
           </div>
         </div>
 
-        {/* scroll cue */}
-        <div
-          data-cs
-          aria-hidden
-          className="relative mx-auto flex flex-col items-center gap-3 pb-7"
-        >
-          <p className="m-caps text-[10px] text-tatami/70">Scroll</p>
-          <span className="h-10 w-px animate-pulse bg-gradient-to-b from-gold to-transparent" />
-        </div>
       </section>
 
       {/* ---------------------------------------------- 3D room lightbox */}
@@ -350,6 +369,33 @@ export function ComingSoon({
             </p>
           </footer>
         </div>
+      )}
+
+      {/* --------------------------------- food preview + menu link */}
+      {gallery.length > 0 && (
+        <section
+          data-cs-food
+          aria-label="From the kitchen"
+          className="relative overflow-hidden pb-10 pt-6"
+        >
+          {!MENU_HIDDEN && (
+            <div data-cs-f className="flex justify-center px-5 pt-6">
+              <Link
+                href="/menu"
+                className="m-caps group inline-flex items-center gap-3.5 bg-verm px-9 py-4 text-[13px] text-washi transition-colors hover:bg-price"
+              >
+                See the menu
+                <span
+                  aria-hidden
+                  className="h-px w-6 bg-washi/70 transition-all duration-300 group-hover:w-10"
+                />
+              </Link>
+            </div>
+          )}
+          <div data-cs-f className="mt-12">
+            <MarketMarquee items={gallery} />
+          </div>
+        </section>
       )}
 
       {/* ------------------------------------------ neighborhood map */}

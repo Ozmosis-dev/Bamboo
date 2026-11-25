@@ -20,3 +20,11 @@ export const PRICES_HIDDEN = false;
  * preview) that scrolls away into the regular hero. Flip to false around
  * opening day to remove it — nothing else on the page changes. */
 export const COMING_SOON = true;
+
+/** SITE_HIDDEN: while true, the Chattanooga site is coming-soon only — the
+ * homepage renders just the pre-opening panel (render, open date, food
+ * carousel, menu link, map), /about /visit /contact 307 home, the header
+ * nav shrinks to Menu, and the sitemap trims to / and /menu. The full site
+ * (MarketHome, the hidden pages) is untouched underneath: flip to false and
+ * redeploy at launch to restore everything. Birmingham is unaffected. */
+export const SITE_HIDDEN = true;

@@ -4,7 +4,8 @@ import Link from "next/link";
 import { getCopy } from "@content/index";
 import { MarketPageHeader } from "@/components/market/MarketPage";
 import { telHref } from "@/lib/format";
-import { MENU_HIDDEN } from "@/lib/flags";
+import { MENU_HIDDEN, SITE_HIDDEN } from "@/lib/flags";
+import { redirect } from "next/navigation";
 import { getCurrentLocation, getSisterLocation, currentLocationSlug } from "@/lib/location";
 import { pageMetadata } from "@/lib/seo";
 import { getSiteContent } from "@/lib/content";
@@ -23,6 +24,8 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function AboutPage() {
   const slug = currentLocationSlug();
+  // Coming-soon mode: only the homepage and menu are up.
+  if (SITE_HIDDEN && slug === "chattanooga") redirect("/");
   const copy = getCopy(slug);
   const location = await getCurrentLocation();
 
