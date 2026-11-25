@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { formatHoursEntry, telHref } from "@/lib/format";
+import { HoursTicker } from "./HoursTicker";
 import { COMING_SOON, MENU_HIDDEN, PRICES_HIDDEN } from "@/lib/flags";
 import { ComingSoon } from "./ComingSoon";
 import type { Location, ResolvedMenuSection } from "@/lib/types";
@@ -147,14 +148,7 @@ export function MarketHome({
         <div data-hero className="relative border-y border-seam bg-char-deep">
           <div className="mx-auto grid max-w-6xl grid-cols-2 divide-seam px-5 sm:grid-cols-3 sm:divide-x sm:px-8">
             <div className="py-4 sm:pr-10">
-              <p className="m-eyebrow !text-[0.6rem]">
-                Tonight <span className="m-kanji font-normal">· 今夜</span>
-              </p>
-              {location.hours.filter((h) => h.open !== "closed").slice(0, 1).map((h) => (
-                <p key={h.days} className="m-serif mt-1.5 text-lg leading-snug">
-                  {formatHoursEntry(h)}
-                </p>
-              ))}
+              <HoursTicker hours={location.hours} />
             </div>
             <div className="py-4 sm:px-10">
               <p className="m-eyebrow !text-[0.6rem]">Find us</p>

@@ -96,7 +96,7 @@ export function defaultContent(slug: LocationSlug): SiteContent {
     coming_heading: "Something is taking shape on Market Street.",
     coming_subheading:
       "We're building Chattanooga a relaxed new home for Asian fusion: steaming noodle bowls, sushi cut to order, cocktails, and the long bamboo counter. The room is under construction. Step inside the 3D render while we finish it.",
-    coming_open_date: "February 1, 2027",
+    coming_open_date: "February 2027",
     coming_map_heading: "Find us on Market Street.",
     hero_heading: copy.hero.heading,
     hero_subheading: copy.hero.subheading,
