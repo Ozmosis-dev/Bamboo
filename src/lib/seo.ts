@@ -33,6 +33,18 @@ export function pageMetadata(
   const fullTitle = title
     ? `${title} | ${location.name} — ${CITY_DESCRIPTOR[location.slug]}`
     : `${location.name} — ${CITY_DESCRIPTOR[location.slug]}`;
+  /* Branded 1200×630 social card; Birmingham gets one when its brand lands. */
+  const ogImage =
+    location.slug === "chattanooga"
+      ? [
+          {
+            url: "/brand/og-card.png",
+            width: 1200,
+            height: 630,
+            alt: `${location.name} — Asian fusion, sushi, and noodle bowls in Chattanooga`,
+          },
+        ]
+      : undefined;
   return {
     metadataBase: new URL(base),
     title: fullTitle,
@@ -45,7 +57,9 @@ export function pageMetadata(
       siteName: location.name,
       type: "website",
       locale: "en_US",
+      ...(ogImage ? { images: ogImage } : {}),
     },
+    ...(ogImage ? { twitter: { card: "summary_large_image" as const } } : {}),
   };
 }
 
